@@ -1,0 +1,340 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS 變數定義 */
+:root {
+    /* 品牌色彩 */
+    --brand-blue: #3053D9;
+    --brand-red: #D23C3C;
+    --brand-yellow: #F5D400;
+
+    /* 灰階色彩 */
+    --almost-black: #161616;
+    --dark-gray: #888888;
+    --light-gray: #F5F5F5;
+    --light-gray-2: #D4D4D4;
+    --cancel-gray: #F0F0F0;
+    --white: #FFFFFF;
+}
+
+/* 全域基礎樣式 */
+@layer base {
+    * {
+        @apply box-border;
+    }
+
+    html {
+        @apply scroll-smooth;
+    }
+
+    body {
+        @apply bg-white text-almost-black font-source-sans;
+        font-display: swap;
+    }
+
+    /* 標題樣式 */
+    h1 {
+        @apply text-pc-h1;
+
+        @screen lg {
+            @apply text-phone-h1;
+        }
+    }
+
+    h2 {
+        @apply text-pc-h2;
+
+        @screen lg {
+            @apply text-phone-h2;
+        }
+    }
+
+    h3 {
+        @apply text-pc-h3;
+
+        @screen lg {
+            @apply text-phone-h3;
+        }
+    }
+
+    p {
+        @apply text-pc-liner;
+
+        @screen lg {
+            @apply text-phone-liner;
+        }
+    }
+
+    strong {
+        @apply text-pc-liner-bold;
+
+        @screen lg {
+            @apply text-phone-liner-bold;
+        }
+    }
+}
+
+/* 組件樣式 */
+@layer components {
+
+    /* 導覽列樣式 */
+    .navbar {
+        @apply fixed top-0 left-0 right-0 z-50 bg-white shadow-navbar transition-all duration-300;
+        height: 80px;
+    }
+
+    .navbar.scrolled {
+        @apply bg-white/95 backdrop-blur-md;
+    }
+
+    .navbar-brand {
+        @apply flex items-center space-x-2;
+    }
+
+    .navbar-nav {
+        @apply hidden md:flex items-center space-x-8;
+    }
+
+    .navbar-link {
+        @apply text-pc-liner-bold text-almost-black hover:text-brand-blue transition-colors duration-300 relative;
+    }
+
+    .navbar-link:hover::after {
+        @apply scale-x-100;
+    }
+
+    .navbar-link::after {
+        @apply content-[''] absolute -bottom-1 left-0 right-0 h-0.5 bg-brand-blue transform scale-x-0 transition-transform duration-300 origin-left;
+    }
+
+    /* Hero 區塊樣式 */
+    .hero {
+        @apply relative h-screen flex items-center justify-center text-center text-white;
+    }
+
+    .hero-background {
+        @apply absolute inset-0 z-0;
+    }
+
+    .hero-overlay {
+        @apply absolute inset-0 bg-black bg-opacity-50 z-10;
+    }
+
+    .hero-content {
+        @apply relative z-20 max-w-4xl mx-auto px-4;
+    }
+
+    .hero-title {
+        @apply text-pc-h0 mb-4;
+
+        @screen md {
+            @apply text-phone-h1;
+        }
+    }
+
+    /* 卡片樣式 */
+    .card {
+        @apply bg-white rounded-2xl p-6 shadow-card transition-all duration-300 border-t-4 border-transparent;
+    }
+
+    .card:hover {
+        @apply transform -translate-y-1 shadow-card-hover border-t-brand-blue;
+    }
+
+    /* 按鈕樣式 */
+    .btn {
+        @apply inline-flex items-center justify-center px-6 py-3 rounded-lg font-semibold text-center transition-all duration-300 cursor-pointer;
+    }
+
+    .btn-primary {
+        @apply bg-brand-blue text-white hover:bg-brand-red hover:-translate-y-0.5;
+    }
+
+    .btn-secondary {
+        @apply bg-brand-red text-white hover:bg-white hover:text-brand-red border-2 border-brand-red;
+    }
+
+    .btn-outline {
+        @apply border-2 border-brand-blue text-brand-blue hover:bg-brand-blue hover:text-white;
+    }
+
+    /* 區塊樣式 */
+    .section {
+        @apply py-25 px-4;
+    }
+
+    .section-gray {
+        @apply bg-light-gray;
+    }
+
+    .container {
+        @apply max-w-7xl mx-auto;
+    }
+
+    /* 網格樣式 */
+    .grid-3 {
+        @apply grid grid-cols-1 md:grid-cols-3 gap-8;
+    }
+
+    .grid-2 {
+        @apply grid grid-cols-1 lg:grid-cols-2 gap-8 items-center;
+    }
+
+    /* Footer 樣式 */
+    .footer-cta {
+        @apply bg-brand-blue text-white py-20 px-4 text-center;
+    }
+
+    .footer-main {
+        @apply bg-almost-black text-white py-10 px-4 text-center;
+    }
+
+    .social-icons {
+        @apply flex justify-center space-x-6 mb-4;
+    }
+
+    .social-icon {
+        @apply w-8 h-8 text-white hover:text-brand-red transition-colors duration-300;
+    }
+}
+
+/* 工具類別 */
+@layer utilities {
+
+    /* 動畫工具 */
+    .animate-fade-in-up {
+        animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.8s ease-out forwards;
+    }
+
+    .animate-slide-down {
+        animation: slideDown 0.3s ease-out forwards;
+    }
+
+    /* 延遲動畫 */
+    .animation-delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .animation-delay-400 {
+        animation-delay: 0.4s;
+    }
+
+    .animation-delay-600 {
+        animation-delay: 0.6s;
+    }
+
+    /* 文字樣式快捷鍵 */
+    .text-hero {
+        @apply text-pc-h0;
+
+        @screen md {
+            @apply text-phone-h1;
+        }
+    }
+
+    .text-section-title {
+        @apply text-pc-h1 text-center mb-8;
+
+        @screen md {
+            @apply text-phone-h1;
+        }
+    }
+
+    .text-card-title {
+        @apply text-pc-h2 mb-4;
+
+        @screen md {
+            @apply text-phone-h2;
+        }
+    }
+
+    /* 背景影片樣式 */
+    .bg-video {
+        @apply absolute inset-0 w-full h-full object-cover;
+    }
+
+    /* 響應式隱藏/顯示 */
+    .mobile-only {
+        @apply block md:hidden;
+    }
+
+    .desktop-only {
+        @apply hidden md:block;
+    }
+}
+
+/* 關鍵幀動畫 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 滾動條樣式 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-light-gray;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-dark-gray rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    @apply bg-brand-blue;
+}
+
+/* 選擇文字樣式 */
+::selection {
+    @apply bg-brand-blue text-white;
+}
+
+/* 焦點樣式 */
+:focus-visible {
+    @apply outline-2 outline-brand-blue outline-offset-2;
+}
+
+/* 印刷媒體樣式 */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+}
