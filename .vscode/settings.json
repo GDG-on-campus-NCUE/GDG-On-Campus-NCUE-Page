@@ -1,0 +1,9 @@
+{
+    "css.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore",
+    "less.lint.unknownAtRules": "ignore",
+    // recommend installing bradlc.vscode-tailwindcss (Tailwind CSS IntelliSense)
+    "tailwindCSS.includeLanguages": {
+        "plaintext": "html"
+    }
+}

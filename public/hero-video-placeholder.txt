@@ -1,0 +1,2 @@
+<!-- This is a placeholder file for the hero video -->
+<!-- In production, you would replace this with an actual MP4 video file -->
