@@ -7,6 +7,9 @@ module.exports = {
     ],
     theme: {
         extend: {
+            spacing: {
+                '18': '4.5rem', // 72px
+            },
             colors: {
                 background: 'var(--background)',
                 foreground: 'var(--foreground)',
@@ -28,18 +31,18 @@ module.exports = {
             },
             fontSize: {
                 // PC headings
-                'pc-h0': ['6rem', { lineHeight: '1' }], // 96px
-                'pc-h1': ['4rem', { lineHeight: '1' }], // 64px
-                'pc-h2': ['2.25rem', { lineHeight: '1' }], // 36px
+                'pc-h0': ['8rem', { lineHeight: '1' }], // 128px
+                'pc-h1': ['5.25rem', { lineHeight: '1' }], // 84px
+                'pc-h2': ['3rem', { lineHeight: '1' }], // 48px
                 'pc-h3': ['1.5rem', { lineHeight: '1' }], // 24px
                 'pc-liner-bold': ['1rem', { lineHeight: '1' }], // 16px
                 'pc-liner': ['1rem', { lineHeight: '1' }],
-                // Phone sizes
-                'phone-h1': ['2.25rem', { lineHeight: '1' }], // 36px
-                'phone-h2': ['1.25rem', { lineHeight: '1' }], // 20px
-                'phone-h3': ['0.875rem', { lineHeight: '1' }], // 14px
-                'phone-liner-bold': ['0.875rem', { lineHeight: '1' }],
-                'phone-liner': ['0.875rem', { lineHeight: '1' }],
+                // Phone sizes - 優化後的手機尺寸
+                'phone-h1': ['2.25rem', { lineHeight: '1.2' }], // 36px
+                'phone-h2': ['1.5rem', { lineHeight: '1.3' }], // 24px
+                'phone-h3': ['1.125rem', { lineHeight: '1.4' }], // 18px
+                'phone-liner-bold': ['1rem', { lineHeight: '1.5' }], // 16px
+                'phone-liner': ['1rem', { lineHeight: '1.6' }], // 16px
             },
         },
     },

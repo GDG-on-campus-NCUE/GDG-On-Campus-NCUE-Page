@@ -30,27 +30,32 @@ export default function Navbar() {
     ];
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen
-            ? 'bg-surface/70 backdrop-blur-xl border-b border-border'
+            ? 'bg-surface/90 backdrop-blur-xl border-b border-border shadow-lg'
             : 'bg-transparent border-b border-transparent'
         }`;
 
-    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white';
-    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-gray-200 hover:text-white';
+    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
+    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-white hover:text-gray-200 drop-shadow-md';
     const mobileIconColor = isScrolled || isMobileMenuOpen ? 'bg-heading' : 'bg-white';
+    const themeSwitcherColor = isScrolled || isMobileMenuOpen ? 'text-heading hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
 
     return (
         <nav className={navClasses}>
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
+                <div className="flex items-center justify-between h-16 md:h-24">
                     {/* Logo */}
                     <div className="flex-shrink-0">
-                        <a href="#" className="flex items-center space-x-3" aria-label="Homepage">
-                            <div className="w-8 h-8 bg-brand rounded-md flex items-center justify-center">
-                                <span className="text-white font-bold text-lg">G</span>
+                        <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
+                            <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
+                                <img 
+                                    src="/images/stickers/brackets.gif" 
+                                    alt="GDG Logo" 
+                                    className="w-full h-full object-contain"
+                                />
                             </div>
-                            <div className={`pc-liner-bold transition-colors duration-300 ${logoColor}`}>
-                                <span>Google Developer Groups</span>
-                                <div className="text-xs font-light opacity-80">on Campus NCUE</div>
+                            <div className={`transition-colors duration-300 ${logoColor}`}>
+                                <div className="phone-liner-bold md:pc-liner-bold">Google Developer Groups</div>
+                                <div className="text-xs md:text-sm font-light opacity-80">on Campus NCUE</div>
                             </div>
                         </a>
                     </div>
@@ -67,12 +72,12 @@ export default function Navbar() {
                                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
                             </button>
                         ))}
-                        <ThemeSwitcher />
+                        <ThemeSwitcher colorClass={themeSwitcherColor} />
                     </div>
 
                     {/* Mobile Menu Button */}
                     <div className="md:hidden flex items-center">
-                        <ThemeSwitcher />
+                        <ThemeSwitcher colorClass={themeSwitcherColor} />
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                             className="p-2 ml-2"
@@ -89,12 +94,12 @@ export default function Navbar() {
             {/* Mobile Menu */}
             <div className={`md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
                 }`}>
-                <div className="p-6 space-y-6">
+                <div className="p-4 space-y-4">
                     {navLinks.map(({ label, id }) => (
                         <button
                             key={id}
                             onClick={() => scrollToSection(id)}
-                            className="block w-full text-left phone-liner-bold text-heading hover:text-brand transition-colors duration-200"
+                            className="block w-full text-left phone-liner-bold text-heading hover:text-brand transition-colors duration-200 py-2"
                         >
                             {label}
                         </button>

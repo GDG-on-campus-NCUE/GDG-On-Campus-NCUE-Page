@@ -47,34 +47,34 @@ export default function Vision() {
     ];
 
     return (
-        <section id="vision" className="py-24 px-6 bg-transparent" ref={ref}>
-            <div className="max-w-6xl mx-auto">
+        <section id="vision" className="py-20 md:py-32 px-4 md:px-8 bg-transparent" ref={ref}>
+            <div className="max-w-7xl mx-auto">
                 {/* Header */}
-                <div className="text-center mb-16">
-                    <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                <div className="text-center mb-16 md:mb-24">
+                    <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 md:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                         我們的願景
                     </h2>
-                    <p className={`phone-h2 md:pc-h3 text-muted max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                    <p className={`phone-liner md:pc-h3 text-muted max-w-4xl mx-auto leading-relaxed transition-all duration-1000 px-4 md:px-0 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         style={{ transitionDelay: '0.2s' }}>
                         在這裡，你的 Code 不只存在於 GitHub，更運行在校園的日常。
                     </p>
                 </div>
 
                 {/* Cards Grid */}
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
                     {visionCards.map((card, index) => (
                         <div
                             key={index}
-                            className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                            className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                             style={{ transitionDelay: `${0.4 + index * 0.2}s` }}
                         >
-                            <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                            <div className="text-4xl md:text-5xl mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center md:text-left">
                                 {card.icon}
                             </div>
-                            <h3 className="phone-h2 md:pc-h2 text-heading mb-4">
+                            <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center md:text-left">
                                 {card.title}
                             </h3>
-                            <p className="phone-liner md:pc-liner text-muted leading-relaxed">
+                            <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center md:text-left">
                                 {card.description}
                             </p>
                         </div>
