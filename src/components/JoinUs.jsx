@@ -146,7 +146,7 @@ export default function JoinUs() {
                         style={{ transitionDelay: '1.1s' }}>
                         <div className="bg-background dark:bg-surface border-2 border-border rounded-xl p-4 md:p-5 max-w-2xl mx-auto shadow-lg">
                             <p className="phone-liner-bold md:pc-liner-bold text-heading mb-2 text-sm md:text-base">
-                                國立彰化師範大學 Google Developer Groups on Campus
+                                國立彰化師範大學 Google Developer Groups on Campus NCUE
                             </p>
                             <div className="flex flex-col md:flex-row items-center justify-center space-y-1 md:space-y-0 md:space-x-2">
                                 <span className="phone-liner md:pc-liner text-foreground/80 text-xs md:text-sm">
@@ -156,7 +156,7 @@ export default function JoinUs() {
                                     href="mailto:gdg.ncue@gmail.com"
                                     className="phone-liner-bold md:pc-liner-bold text-brand hover:text-brand-accent transition-colors duration-300 underline text-xs md:text-sm"
                                 >
-                                    gdg.ncue@gmail.com
+                                    gdg-core@ncuesa.org.tw
                                 </a>
                             </div>
                         </div>
@@ -169,14 +169,6 @@ export default function JoinUs() {
                             <p className="phone-liner md:pc-liner text-foreground/60 text-center md:text-left font-medium text-xs md:text-sm">
                                 © 2025 GDG on Campus NCUE. All Rights Reserved.
                             </p>
-                            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-                                <a href="#" className="phone-liner md:pc-liner text-foreground/60 hover:text-brand transition-colors duration-300 text-center font-medium underline hover:no-underline text-xs md:text-sm">
-                                    隱私政策
-                                </a>
-                                <a href="#" className="phone-liner md:pc-liner text-foreground/60 hover:text-brand transition-colors duration-300 text-center font-medium underline hover:no-underline text-xs md:text-sm">
-                                    服務條款
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>

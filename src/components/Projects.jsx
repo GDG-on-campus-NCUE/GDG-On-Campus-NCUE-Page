@@ -14,14 +14,14 @@ export default function Projects() {
         {
             status: 'completed',
             icon: '✅',
-            title: '已上線：生輔組 RPage 管理、建置生輔組獎助學金平台',
+            title: '已上線：代管生輔組 RPage 網站、建置生輔組獎助學金平台',
             description: 'scholarship.ncuesa.org.tw',
             link: 'https://scholarship.ncuesa.org.tw'
         },
         {
             status: 'planning',
             icon: '💡',
-            title: '規劃中：宿舍退宿管理系統、生輔組餐券管理系統、學生會投票系統',
+            title: '進行中：宿舍退宿管理系統、生輔組餐券管理系統、學生會投票系統',
             description: ''
         },
     ];
