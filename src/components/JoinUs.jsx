@@ -2,6 +2,10 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import linkedinIcon from '@/images/icon/linkedin.png';
+import instagramIcon from '@/images/icon/instagram.png';
+import gdgSticker from '@/images/icon/google_sticker_3.gif';
+import sliderGif from '@/images/stickers/slider.gif';
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
@@ -10,17 +14,17 @@ export default function JoinUs() {
     const socialLinks = [
         {
             name: 'LinkedIn',
-            icon: '/images/icon/linkedin.png',
+            icon: linkedinIcon,
             url: 'https://www.linkedin.com/in/gdg-on-campus-ncue-a9942a381',
         },
         {
             name: 'Instagram',
-            icon: '/images/icon/instagram.png',
+            icon: instagramIcon,
             url: 'https://www.instagram.com/gdg_ncue',
         },
         {
             name: 'GDG',
-            icon: '/images/icon/google_sticker_3.gif',
+            icon: gdgSticker,
             url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/',
         },
     ];
@@ -87,7 +91,7 @@ export default function JoinUs() {
                         className={`bg-white text-brand hover:bg-gray-100 border-2 border-white hover:border-gray-200 px-6 py-4 md:px-12 md:py-6 rounded-2xl transition-all duration-500 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 flex items-center justify-center space-x-3 md:space-x-4 mx-auto ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} w-full max-w-md md:max-w-lg`}
                         style={{ transitionDelay: '0.4s' }}>
                         <Image
-                            src="/images/stickers/slider.gif"
+                            src={sliderGif}
                             alt=""
                             width={48}
                             height={48}
@@ -121,8 +125,8 @@ export default function JoinUs() {
                                     style={{ transitionDelay: `${0.8 + index * 0.1}s` }}
                                 >
                                     <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-background border-2 border-border rounded-full flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                                        <Image
-                                            src={social.icon}
+                                                        <Image
+                                                            src={social.icon}
                                             alt={`${social.name} icon`}
                                             width={40}
                                             height={40}

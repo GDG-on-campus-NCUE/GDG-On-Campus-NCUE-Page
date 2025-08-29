@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import assemblyGif from '@/images/stickers/assembly.gif';
+import sliderGif from '@/images/stickers/slider.gif';
 
 
 export default function Hero() {
@@ -26,7 +28,7 @@ export default function Hero() {
             <div className="absolute inset-0 z-5 opacity-40 pointer-events-none">
                 {/* Large Central Background Element */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={320}
                     height={320}
@@ -35,7 +37,7 @@ export default function Hero() {
                 />
                 {/* Top Left */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={96}
                     height={96}
@@ -43,7 +45,7 @@ export default function Hero() {
                 />
                 {/* Top Right */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={80}
                     height={80}
@@ -52,7 +54,7 @@ export default function Hero() {
                 />
                 {/* Bottom Left */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={64}
                     height={64}
@@ -61,7 +63,7 @@ export default function Hero() {
                 />
                 {/* Bottom Right */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={112}
                     height={112}
@@ -70,7 +72,7 @@ export default function Hero() {
                 />
                 {/* Center subtle ones */}
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={48}
                     height={48}
@@ -78,7 +80,7 @@ export default function Hero() {
                     style={{ animationDelay: '1.5s' }}
                 />
                 <Image
-                    src="/images/stickers/assembly.gif"
+                    src={assemblyGif}
                     alt=""
                     width={56}
                     height={56}
@@ -136,7 +138,7 @@ export default function Hero() {
                     style={{ transitionDelay: '0.9s' }}
                 >
                     <Image
-                        src="/images/stickers/slider.gif"
+                        src={sliderGif}
                         alt=""
                         width={48}
                         height={48}

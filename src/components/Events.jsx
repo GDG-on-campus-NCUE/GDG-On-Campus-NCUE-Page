@@ -2,6 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import event_img_1 from '@/images/events/1.png';
+import event_img_2 from '@/images/events/2.png';
+import event_img_3 from '@/images/events/3.png';
+import event_img_4 from '@/images/events/4.png';
+import event_img_5 from '@/images/events/5.png';
+import assemblyGif from '@/images/stickers/assembly.gif';
 
 
 export default function Events() {
@@ -11,11 +17,11 @@ export default function Events() {
 
     // 活動圖片 - 使用 public 目錄中的圖片
     const eventImages = [
-        '/images/events/1.png',
-        '/images/events/2.png',
-        '/images/events/3.png',
-        '/images/events/4.png',
-        '/images/events/5.png'
+        event_img_1,
+        event_img_2,
+        event_img_3,
+        event_img_4,
+        event_img_5
     ];
 
     const highlights = [
@@ -122,7 +128,7 @@ export default function Events() {
                         <div className="mb-10 md:mb-12">
                             <div className="flex items-center space-x-3 mb-6 md:mb-8">
                                 <Image
-                                    src="/images/stickers/assembly.gif"
+                                    src={assemblyGif}
                                     alt=""
                                     width={40}
                                     height={40}

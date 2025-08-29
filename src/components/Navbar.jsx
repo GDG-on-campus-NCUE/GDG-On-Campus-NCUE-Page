@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import bracketsGif from '@/images/stickers/brackets.gif';
 import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Navbar() {
@@ -49,7 +50,7 @@ export default function Navbar() {
                         <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
                             <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
                                 <Image
-                                    src="/images/stickers/brackets.gif"
+                                    src={bracketsGif}
                                     alt="GDG Logo"
                                     width={64}
                                     height={64}
