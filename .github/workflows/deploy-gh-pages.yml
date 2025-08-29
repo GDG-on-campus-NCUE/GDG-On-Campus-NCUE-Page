@@ -1,39 +1,58 @@
-name: Deploy Next.js to GitHub Pages
+name: Deploy to GitHub Pages
 
+# 觸發條件
 on:
   push:
-    branches: [ main ]
+    branches: [ main ]       # 每次 push 到 main 分支就會執行
+  workflow_dispatch:         # 允許你在 GitHub Actions 頁面手動觸發
+
+# 給工作流程所需的權限
+permissions:
+  contents: read             # 允許讀取 repo 的內容
+  pages: write               # 允許寫入 GitHub Pages（發佈）
+  id-token: write            # 發佈時需要 OIDC token
+
+# 確保同一時間只跑一個部署流程，舊的會被取消
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
+  build:
+    runs-on: ubuntu-latest    # 工作跑在 Ubuntu Runner 上
+    container:
+      image: mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm
+      # 這裡指定跟你 devcontainer.json 一樣的 image，確保環境一致
 
     steps:
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v4
-
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+        # 把你的 repo 原始碼拉到 Runner（容器）裡
 
       - name: Install dependencies
         run: npm ci
+        # 用 npm ci 安裝 package.json / package-lock.json 裡的依賴
 
-      - name: Build (static export via next.config)
-        run: npx next build
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Build project
+        run: npm run build
+        # 依你的專案設定，會輸出到 dist/ 或 out/
+        # Vite 預設是 dist/，Next.js export 預設是 out/
+
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
+          # 把剛剛 build 出來的 dist/ 上傳為 artifact
+          # 如果你是 Next.js，這裡改成 ./out
 
   deploy:
-    needs: build
+    needs: build              # 等 build job 跑完才跑 deploy
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v1
+        id: deployment
+        uses: actions/deploy-pages@v4
+        # 把 build job 上傳的 artifact 部署到 GitHub Pages
