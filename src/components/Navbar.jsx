@@ -26,7 +26,7 @@ export default function Navbar() {
 
     const navLinks = [
         { label: '核心使命', id: 'vision' },
-        { label: '過往活動', id: 'events' },
+        { label: '活動回顧', id: 'events' },
         { label: '校園專案', id: 'projects' },
         { label: '加入我們', id: 'join' },
     ];

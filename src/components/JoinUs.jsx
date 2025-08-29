@@ -78,7 +78,7 @@ export default function JoinUs() {
                         準備好成為下一個改變者了嗎？
                     </h2>
                     <p className={`mb-8 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4 md:px-0 transition-all duration-1000 text-white/90 dark:text-slate-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ 
+                        style={{
                             fontSize: 'clamp(1rem, 2.5vw, 1.5rem)',
                             transitionDelay: '0.2s',
                             textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'
@@ -97,7 +97,7 @@ export default function JoinUs() {
                             height={48}
                             className="w-12 h-12 md:w-16 md:h-16 object-contain animate-pulse flex-shrink-0"
                         />
-                        <span 
+                        <span
                             className="font-bold leading-tight text-center text-gray-800"
                             style={{
                                 fontSize: 'clamp(1rem, 3vw, 1.5rem)',
@@ -125,8 +125,8 @@ export default function JoinUs() {
                                     style={{ transitionDelay: `${0.8 + index * 0.1}s` }}
                                 >
                                     <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-background border-2 border-border rounded-full flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                                                        <Image
-                                                            src={social.icon}
+                                        <Image
+                                            src={social.icon}
                                             alt={`${social.name} icon`}
                                             width={40}
                                             height={40}
@@ -150,9 +150,9 @@ export default function JoinUs() {
                             </p>
                             <div className="flex flex-col md:flex-row items-center justify-center space-y-1 md:space-y-0 md:space-x-2">
                                 <span className="phone-liner md:pc-liner text-foreground/80 text-xs md:text-sm">
-                                    ✉️ Email: 
+                                    ✉️ Email:
                                 </span>
-                                <a 
+                                <a
                                     href="mailto:gdg.ncue@gmail.com"
                                     className="phone-liner-bold md:pc-liner-bold text-brand hover:text-brand-accent transition-colors duration-300 underline text-xs md:text-sm"
                                 >
@@ -164,7 +164,7 @@ export default function JoinUs() {
 
                     {/* Divider */}
                     <div className="bg-background dark:bg-surface-muted rounded-t-xl pt-4 md:pt-6 mt-4 md:mt-6 px-6 md:px-8 -mx-6 md:-mx-8">
-                        <div className={`flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                        <div className={`flex flex-col md:flex-row justify-center items-center space-y-3 md:space-y-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                             style={{ transitionDelay: '1.3s' }}>
                             <p className="phone-liner md:pc-liner text-foreground/60 text-center font-medium text-xs md:text-sm">
                                 © 2025 GDG on Campus NCUE. All Rights Reserved.

@@ -1,11 +1,18 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+// 導入專業的 SVG 圖示
+import {
+    CodeBracketSquareIcon,
+    AcademicCapIcon,
+    GlobeAltIcon
+} from '@heroicons/react/24/outline';
 
 export default function Vision() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
 
+    // 動畫觸發的 useEffect hook (保持不變，效果很好)
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -28,28 +35,29 @@ export default function Vision() {
         };
     }, []);
 
+    // --- 使用重寫後的專業中文文案和 SVG 圖示 ---
     const visionCards = [
         {
-            title: "校園系統開發",
-            description: "協助學校開發系統、維護網站，並將 AI 技術帶入校園應用。",
-            icon: "💻"
+            title: "校園創新與影響力",
+            description: "我們將想法轉化為實際的校園應用。透過與學校的直接合作，我們打造並維護能優化師生日常生活的系統，將 AI 與現代技術帶入校園的核心。",
+            icon: CodeBracketSquareIcon
         },
         {
-            title: "前沿技術分享",
-            description: "主持社群，將前沿技術分享給充滿熱情的技術愛好者。",
-            icon: "🚀"
+            title: "成長與知識共享",
+            description: "保持技術領先。從 AI 工作坊到最新框架的深度探討，我們為熱情的開發者們創造一個充滿活力的空間，互相學習、分享專業，共同成長為技術領導者。",
+            icon: AcademicCapIcon
         },
         {
-            title: "資源整合",
-            description: "提供 Google 與合作夥伴的資源，並與他校社群組織合作。",
-            icon: "🌐"
+            title: "連結無限機遇",
+            description: "透過獨家資源釋放你的潛力。我們扮演著橋樑的角色，將成員與 Google、業界夥伴的廣大網絡連結。這是你通往導師指導、專案協作和更廣闊機愈的門戶。",
+            icon: GlobeAltIcon
         }
     ];
 
     return (
         <section id="vision" className="py-20 md:py-32 px-4 md:px-8 bg-transparent" ref={ref}>
             <div className="max-w-7xl mx-auto">
-                {/* Header */}
+                {/* Header with Chinese Content */}
                 <div className="text-center mb-16 md:mb-24">
                     <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 md:mb-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                         我們的願景
@@ -60,25 +68,28 @@ export default function Vision() {
                     </p>
                 </div>
 
-                {/* Cards Grid */}
+                {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div className="grid md:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
-                    {visionCards.map((card, index) => (
-                        <div
-                            key={index}
-                            className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                            style={{ transitionDelay: `${0.4 + index * 0.2}s` }}
-                        >
-                            <div className="text-4xl md:text-5xl mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center md:text-left">
-                                {card.icon}
+                    {visionCards.map((card, index) => {
+                        const IconComponent = card.icon;
+                        return (
+                            <div
+                                key={index}
+                                className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                                style={{ transitionDelay: `${0.4 + index * 0.2}s` }}
+                            >
+                                <div className="mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center md:text-left">
+                                    <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-brand mx-auto md:mx-0" />
+                                </div>
+                                <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center md:text-left">
+                                    {card.title}
+                                </h3>
+                                <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center md:text-left">
+                                    {card.description}
+                                </p>
                             </div>
-                            <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center md:text-left">
-                                {card.title}
-                            </h3>
-                            <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center md:text-left">
-                                {card.description}
-                            </p>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </section>

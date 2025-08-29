@@ -128,7 +128,7 @@ export default function Hero() {
                         transitionDelay: '0.6s'
                     }}
                 >
-                    賦能每一位創造者
+                    Go Fast Alone, Go Far Together
                 </h2>
 
                 <button
