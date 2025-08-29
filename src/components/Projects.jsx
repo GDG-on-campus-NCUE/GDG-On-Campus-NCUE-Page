@@ -7,22 +7,45 @@ export default function Projects() {
     const ref = useRef(null);
 
     const techStack = [
-        'Next.js', 'TypeScript', 'Tailwind CSS', 'Firebase', 'Vercel'
+        { name: 'Next.js', icon: '/images/tech/nextjs.svg' },
+        { name: 'TypeScript', icon: '/images/tech/typescript.svg' },
+        { name: 'Tailwind CSS', icon: '/images/tech/tailwindcss.svg' },
+        { name: 'Firebase', icon: '/images/tech/firebase.svg' },
+        { name: 'Vercel', icon: '/images/tech/vercel.svg' },
     ];
 
     const features = [
         {
-            status: 'completed',
-            icon: '✅',
-            title: '已上線：代管生輔組 RPage 網站、建置生輔組獎助學金平台',
-            description: 'scholarship.ncuesa.org.tw',
-            link: 'https://scholarship.ncuesa.org.tw'
+            status: '已上線',
+            title: '生輔組獎助學金平台',
+            description: '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，有效提升資訊透明度與申請效率。',
+            link: 'https://scholarship.ncuesa.org.tw',
+            tags: ['資訊整合', '使用者體驗', '校園服務']
         },
         {
-            status: 'planning',
-            icon: '💡',
-            title: '進行中：宿舍退宿管理系統、生輔組餐券管理系統、學生會投票系統',
-            description: ''
+            status: '已上線',
+            title: '代管生輔組 RPage 網站',
+            description: '我們接手並優化了學生生活輔導組的官方資訊頁面，確保資訊的即時更新與準確傳遞，為全校學生提供更可靠的資訊來源。',
+            link: 'https://www.ncue.edu.tw/p/412-1004-123.php',
+            tags: ['網站維護', '資訊發布']
+        },
+        {
+            status: '進行中',
+            title: '宿舍退宿管理系統',
+            description: '旨在數位化及簡化宿舍退宿流程，從申請、檢查到核准全程線上化，減少紙本作業，提升行政效率與學生便利性。',
+            tags: ['流程數位化', '行政效率']
+        },
+        {
+            status: '進行中',
+            title: '生輔組餐券管理系統',
+            description: '建立一套電子餐券系統，方便學生領取、使用，並提供後台數據追蹤，協助校方精準掌握餐券發放與核銷狀況。',
+            tags: ['電子票券', '數據分析']
+        },
+        {
+            status: '規劃中',
+            title: '學生會投票系統',
+            description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
+            tags: ['電子投票', '資訊安全']
         },
     ];
 
@@ -75,52 +98,67 @@ export default function Projects() {
                                     </p>
                                 </div>
 
-                                {/* Tech Stack */}
-                                <div className={`mb-10 md:mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '0.2s' }}>
+                                {/* Tech Stack Marquee */}
+                                <div className={`mb-10 md:mb-12 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.2s' }}>
                                     <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-6 font-bold">
                                         技術棧
                                     </h4>
-                                    <div className="flex flex-wrap gap-4">
-                                        {techStack.map((tech, index) => (
-                                            <span
-                                                key={tech}
-                                                className={`px-6 py-3 bg-brand/15 dark:bg-brand/10 text-brand border border-brand/20 rounded-full phone-liner md:pc-liner text-sm font-semibold transition-all duration-300 hover:bg-brand/25 dark:hover:bg-brand/20 transform hover:scale-105 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-                                                style={{ transitionDelay: `${0.4 + index * 0.1}s` }}
-                                            >
-                                                {tech}
-                                            </span>
-                                        ))}
+                                    <div className="relative w-full overflow-hidden bg-surface-muted/50 dark:bg-surface-muted/20 rounded-lg">
+                                        <div className="marquee-container flex">
+                                            {techStack.concat(techStack).map((tech, index) => (
+                                                <div key={index} className="flex items-center justify-center p-4 mx-4 flex-shrink-0">
+                                                    <img src={tech.icon} alt={tech.name} className="h-10 w-10 md:h-12 md:w-12 text-foreground" />
+                                                    <span className="ml-3 font-semibold text-foreground">{tech.name}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-surface via-transparent to-surface"></div>
                                     </div>
                                 </div>
 
-                                {/* Status List */}
-                                <div className="space-y-6 mb-10 md:mb-12">
+                                {/* Projects Grid */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-10 md:mb-12">
                                     {features.map((feature, index) => (
                                         <div
                                             key={index}
-                                            className={`flex items-start space-x-6 p-6 md:p-8 rounded-2xl border transition-all duration-500 ${feature.status === 'completed' ? 'bg-green-500/10 dark:bg-green-500/10 border-green-500/20' : 'bg-yellow-500/10 dark:bg-yellow-500/10 border-yellow-500/20'} ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}
-                                            style={{ transitionDelay: `${0.6 + index * 0.2}s` }}
+                                            className={`bg-surface rounded-2xl border border-border p-6 transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl ${
+                                                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+                                            }`}
+                                            style={{ transitionDelay: `${0.4 + index * 0.1}s` }}
                                         >
-                                            <span className="text-3xl md:text-4xl pt-1">{feature.icon}</span>
-                                            <div>
-                                                <h5 className="phone-liner-bold md:pc-liner-bold text-heading font-bold mb-2 leading-relaxed">
-                                                    {feature.title}
-                                                </h5>
-                                                {feature.link ? (
-                                                    <a
-                                                        href={feature.link}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="phone-liner md:pc-liner text-brand hover:underline font-medium hover:text-brand-accent"
-                                                    >
-                                                        {feature.description}
-                                                    </a>
-                                                ) : (
-                                                    <p className="phone-liner md:pc-liner text-foreground/80 dark:text-muted">
-                                                        {feature.description}
-                                                    </p>
-                                                )}
+                                            <div className="flex justify-between items-start mb-4">
+                                                <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
+                                                <span
+                                                    className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                        feature.status === '已上線' ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400' :
+                                                        feature.status === '進行中' ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400' :
+                                                        'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400'
+                                                    }`}
+                                                >
+                                                    {feature.status}
+                                                </span>
                                             </div>
+                                            <p className="phone-liner md:pc-liner text-foreground/80 dark:text-muted mb-4 leading-relaxed">
+                                                {feature.description}
+                                            </p>
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {feature.tags.map(tag => (
+                                                    <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                            {feature.link && (
+                                                 <a
+                                                    href={feature.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="phone-liner-bold md:pc-liner-bold text-brand hover:text-brand-accent font-medium transition-colors duration-300 flex items-center group"
+                                                >
+                                                    查看專案
+                                                    <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                                </a>
+                                            )}
                                         </div>
                                     ))}
                                 </div>

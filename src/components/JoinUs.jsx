@@ -166,7 +166,7 @@ export default function JoinUs() {
                     <div className="bg-background dark:bg-surface-muted rounded-t-xl pt-4 md:pt-6 mt-4 md:mt-6 px-6 md:px-8 -mx-6 md:-mx-8">
                         <div className={`flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                             style={{ transitionDelay: '1.3s' }}>
-                            <p className="phone-liner md:pc-liner text-foreground/60 text-center md:text-left font-medium text-xs md:text-sm">
+                            <p className="phone-liner md:pc-liner text-foreground/60 text-center font-medium text-xs md:text-sm">
                                 © 2025 GDG on Campus NCUE. All Rights Reserved.
                             </p>
                         </div>

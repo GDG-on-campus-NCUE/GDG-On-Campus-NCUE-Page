@@ -285,6 +285,16 @@ html {
   }
 }
 
+/* Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-container {
+  animation: marquee 30s linear infinite;
+}
+
 .mobile-full-width {
   @media (max-width: 768px) {
     width: 100%;
