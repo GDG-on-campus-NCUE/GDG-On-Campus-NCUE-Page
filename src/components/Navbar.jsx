@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -8,9 +9,11 @@ export default function Navbar() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 100);
+            setIsScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll);
+        // Set initial state
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -19,74 +22,79 @@ export default function Navbar() {
         setIsMobileMenuOpen(false);
     };
 
+    const navLinks = [
+        { label: '核心使命', id: 'vision' },
+        { label: '過往活動', id: 'events' },
+        { label: '校園專案', id: 'projects' },
+        { label: '加入我們', id: 'join' },
+    ];
+
+    const navClasses = `fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isMobileMenuOpen
+            ? 'bg-surface/70 backdrop-blur-xl border-b border-border'
+            : 'bg-transparent border-b border-transparent'
+        }`;
+
+    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white';
+    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-gray-200 hover:text-white';
+    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'bg-heading' : 'bg-white';
+
     return (
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? 'bg-white shadow-md'
-                : 'bg-transparent'
-            }`}>
-            <div className="max-w-7xl mx-auto px-8 lg:px-10">
+        <nav className={navClasses}>
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
-                    <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
-                            <span className="text-white font-bold text-sm">G</span>
-                        </div>
-                        <div className={`pc-liner-bold transition-colors duration-300 ${isScrolled ? 'text-gray-800' : 'text-white'
-                            }`}>
-                            <span>Google Developer Groups</span>
-                            <div className="text-xs font-light">on Campus NCUE</div>
-                        </div>
+                    <div className="flex-shrink-0">
+                        <a href="#" className="flex items-center space-x-3" aria-label="Homepage">
+                            <div className="w-8 h-8 bg-brand rounded-md flex items-center justify-center">
+                                <span className="text-white font-bold text-lg">G</span>
+                            </div>
+                            <div className={`pc-liner-bold transition-colors duration-300 ${logoColor}`}>
+                                <span>Google Developer Groups</span>
+                                <div className="text-xs font-light opacity-80">on Campus NCUE</div>
+                            </div>
+                        </a>
                     </div>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-8">
-                        {[
-                            { label: '核心使命', id: 'vision' },
-                            { label: '過往活動', id: 'events' },
-                            { label: '校園專案', id: 'projects' },
-                            { label: '加入我們', id: 'join' },
-                        ].map(({ label, id }) => (
+                    <div className="hidden md:flex items-center space-x-8">
+                        {navLinks.map(({ label, id }) => (
                             <button
                                 key={id}
                                 onClick={() => scrollToSection(id)}
-                                className={`pc-liner-bold transition-all duration-300 relative group ${isScrolled ? 'text-gray-800 hover:text-blue-600' : 'text-white hover:text-blue-200'
-                                    }`}
+                                className={`pc-liner-bold transition-all duration-300 relative group ${linkColor}`}
                             >
                                 {label}
-                                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all duration-300 group-hover:w-full"></div>
+                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
                             </button>
                         ))}
+                        <ThemeSwitcher />
                     </div>
 
                     {/* Mobile Menu Button */}
-                    <button
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        className="md:hidden p-2"
-                    >
-                        <div className={`w-6 h-0.5 transition-all duration-300 ${isScrolled ? 'bg-gray-800' : 'bg-white'
-                            } mb-1 ${isMobileMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
-                        <div className={`w-6 h-0.5 transition-all duration-300 ${isScrolled ? 'bg-gray-800' : 'bg-white'
-                            } mb-1 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></div>
-                        <div className={`w-6 h-0.5 transition-all duration-300 ${isScrolled ? 'bg-gray-800' : 'bg-white'
-                            } ${isMobileMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
-                    </button>
+                    <div className="md:hidden flex items-center">
+                        <ThemeSwitcher />
+                        <button
+                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            className="p-2 ml-2"
+                            aria-label="Open menu"
+                        >
+                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} ${isMobileMenuOpen ? 'rotate-45 translate-y-[5px]' : ''}`}></div>
+                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} my-1 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></div>
+                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} ${isMobileMenuOpen ? '-rotate-45 -translate-y-[5px]' : ''}`}></div>
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {/* Mobile Menu */}
-            <div className={`md:hidden fixed top-20 right-0 h-screen bg-white shadow-lg transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-                } w-80`}>
+            <div className={`md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
+                }`}>
                 <div className="p-6 space-y-6">
-                    {[
-                        { label: '核心使命', id: 'vision' },
-                        { label: '過往活動', id: 'events' },
-                        { label: '校園專案', id: 'projects' },
-                        { label: '加入我們', id: 'join' },
-                    ].map(({ label, id }) => (
+                    {navLinks.map(({ label, id }) => (
                         <button
                             key={id}
                             onClick={() => scrollToSection(id)}
-                            className="block w-full text-left phone-liner-bold text-gray-800 hover:text-blue-600 transition-colors duration-200"
+                            className="block w-full text-left phone-liner-bold text-heading hover:text-brand transition-colors duration-200"
                         >
                             {label}
                         </button>

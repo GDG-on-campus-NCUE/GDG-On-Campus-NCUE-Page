@@ -1,26 +1,46 @@
 @import "tailwindcss";
 
-:root {
-  /* Color Palette from Architecture */
-  --color-white: #FFFFFF;
-  --color-light-gray: #F5F5F5;
-  --color-light-gray-2: #D4D4D4;
-  --color-cancel-gray: #F0F0F0;
-  --color-dark-gray: #888888;
-  --color-almost-black: #161616;
-  --color-main-blue: #3053D9;
-  --color-main-red: #D23C3C;
-  --color-adorn-yellow: #F5D400;
+:root, [data-theme="light"] {
+  /* Light Theme Palette */
+  --background: #ffffff;
+  --foreground: #111827;
+  --surface: #ffffff;
+  --surface-muted: #f9fafb;
+  --border: #e5e7eb;
+  --muted: #6b7280;
+  --heading: #111827;
+  --brand: #2563eb;
+  --brand-accent: #1d4ed8;
+  --accent: #ef4444;
+  --warn: #f59e0b;
+  --text-on-brand: #ffffff;
 
   /* Font Variables */
   --font-source-sans: 'Source Sans 3', 'Source Sans Pro', Arial, Helvetica, sans-serif;
 }
 
+[data-theme="dark"] {
+  /* Dark Theme Palette */
+  --background: #0d1117;
+  --foreground: #e6edf3;
+  --surface: #161b22;
+  --surface-muted: #0d1117;
+  --border: #30363d;
+  --muted: #8b949e;
+  --heading: #e6edf3;
+  --brand: #388bfd;
+  --brand-accent: #58a6ff;
+  --accent: #f85149;
+  --warn: #e3b341;
+  --text-on-brand: #ffffff;
+}
+
 body {
-  background: var(--color-white);
-  color: var(--color-almost-black);
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-source-sans);
   line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Typography Classes */
@@ -147,4 +167,13 @@ html {
 
 .scale-in {
   animation: scaleIn 1.2s ease-out;
+}
+
+@keyframes background-pan {
+  from {
+    background-position: 0% center;
+  }
+  to {
+    background-position: -200% center;
+  }
 }

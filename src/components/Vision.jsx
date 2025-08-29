@@ -11,49 +11,52 @@ export default function Vision() {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setIsVisible(true);
+                    observer.unobserve(entry.target);
                 }
             },
-            { threshold: 0.3 }
+            { threshold: 0.2 }
         );
 
         if (ref.current) {
             observer.observe(ref.current);
         }
 
-        return () => observer.disconnect();
+        return () => {
+            if (ref.current) {
+                observer.unobserve(ref.current);
+            }
+        };
     }, []);
 
     const visionCards = [
         {
-            title: "校園技術賦能",
-            description: "協助開發與維護校園系統，引入 AI 技術優化學習與生活體驗，讓科技真正服務校園社群。",
+            title: "校園系統開發",
+            description: "協助學校開發系統、維護網站，並將 AI 技術帶入校園應用。",
             icon: "💻"
         },
         {
-            title: "技術社群驅動",
-            description: "舉辦分享會與工作坊，營造濃厚的學習氛圍，讓每位成員都能在技術路上持續成長。",
+            title: "前沿技術分享",
+            description: "主持社群，將前沿技術分享給充滿熱情的技術愛好者。",
             icon: "🚀"
         },
         {
-            title: "資源整合平台",
-            description: "串連 Google 與他校資源，提供豐富的合作機會，打造更廣闊的學習與發展平台。",
+            title: "資源整合",
+            description: "提供 Google 與合作夥伴的資源，並與他校社群組織合作。",
             icon: "🌐"
         }
     ];
 
     return (
-        <section id="vision" className="py-24 px-6" ref={ref}>
+        <section id="vision" className="py-24 px-6 bg-transparent" ref={ref}>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <h2 className={`pc-h1 md:pc-h1 phone-h1 text-gray-900 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                        }`}>
-                        連結開發者，共創校園新未來
+                    <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                        我們的願景
                     </h2>
-                    <p className={`pc-h3 md:pc-h3 phone-h2 text-gray-600 max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                        }`}
+                    <p className={`phone-h2 md:pc-h3 text-muted max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         style={{ transitionDelay: '0.2s' }}>
-                        我們是連結開發者、啟發創意、共創未來的技術社群。在這裡，每一行程式碼都承載著改變的力量，每一次交流都可能點燃創新的火花。
+                        在這裡，你的 Code 不只存在於 GitHub，更運行在校園的日常。
                     </p>
                 </div>
 
@@ -62,30 +65,20 @@ export default function Vision() {
                     {visionCards.map((card, index) => (
                         <div
                             key={index}
-                            className={`bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-transparent hover:border-blue-600 group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                                }`}
+                            className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                             style={{ transitionDelay: `${0.4 + index * 0.2}s` }}
                         >
                             <div className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-300">
                                 {card.icon}
                             </div>
-                            <h3 className="pc-h2 md:pc-h2 phone-h2 text-gray-900 mb-4">
+                            <h3 className="phone-h2 md:pc-h2 text-heading mb-4">
                                 {card.title}
                             </h3>
-                            <p className="pc-liner md:pc-liner phone-liner text-gray-600 leading-relaxed">
+                            <p className="phone-liner md:pc-liner text-muted leading-relaxed">
                                 {card.description}
                             </p>
                         </div>
                     ))}
-                </div>
-
-                {/* Bottom CTA */}
-                <div className={`text-center mt-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                    }`}
-                    style={{ transitionDelay: '1s' }}>
-                    <p className="pc-liner-bold md:pc-liner-bold phone-liner-bold text-gray-700">
-                        準備好與我們一起打造更美好的校園未來了嗎？
-                    </p>
                 </div>
             </div>
         </section>

@@ -8,18 +8,18 @@ module.exports = {
     theme: {
         extend: {
             colors: {
-                background: 'var(--color-background)',
-                foreground: 'var(--color-foreground)',
-                // design system colors from Arhitectrue.md
-                surface: '#FFFFFF',
-                'light-gray': '#F5F5F5',
-                'light-gray-2': '#D4D4D4',
-                border: '#F0F0F0',
-                muted: '#888888',
-                heading: '#161616',
-                brand: '#3053D9',
-                accent: '#D23C3C',
-                warn: '#F5D400',
+                background: 'var(--background)',
+                foreground: 'var(--foreground)',
+                surface: 'var(--surface)',
+                'surface-muted': 'var(--surface-muted)',
+                border: 'var(--border)',
+                muted: 'var(--muted)',
+                heading: 'var(--heading)',
+                brand: 'var(--brand)',
+                'brand-accent': 'var(--brand-accent)',
+                accent: 'var(--accent)',
+                warn: 'var(--warn)',
+                'text-on-brand': 'var(--text-on-brand)',
             },
             fontFamily: {
                 // fallback to system fonts; prefer Source Sans Pro if available
