@@ -38,6 +38,9 @@ jobs:
         # 依你的專案設定，會輸出到 dist/ 或 out/
         # Vite 預設是 dist/，Next.js export 預設是 out/
 
+      - name: Allow serving _next on GitHub Pages
+        run: touch out/.nojekyll
+
       - name: Upload build artifact
         uses: actions/upload-pages-artifact@v3
         with:
