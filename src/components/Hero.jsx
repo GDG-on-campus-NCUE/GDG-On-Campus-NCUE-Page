@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 
 export default function Hero() {
@@ -24,49 +25,63 @@ export default function Hero() {
             {/* GDG Assembly GIF Background Elements */}
             <div className="absolute inset-0 z-5 opacity-40 pointer-events-none">
                 {/* Large Central Background Element */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={320}
+                    height={320}
                     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 md:w-96 md:h-96 object-contain opacity-20 float-animation"
                     style={{ animationDelay: '0.5s' }}
                 />
                 {/* Top Left */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={96}
+                    height={96}
                     className="absolute top-16 left-8 w-24 h-24 md:w-32 md:h-32 object-contain float-animation"
                 />
                 {/* Top Right */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={80}
+                    height={80}
                     className="absolute top-20 right-12 w-20 h-20 md:w-28 md:h-28 object-contain float-animation-reverse"
                     style={{ animationDelay: '1s' }}
                 />
                 {/* Bottom Left */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={64}
+                    height={64}
                     className="absolute bottom-32 left-16 w-16 h-16 md:w-24 md:h-24 object-contain float-animation"
                     style={{ animationDelay: '2s' }}
                 />
                 {/* Bottom Right */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={112}
+                    height={112}
                     className="absolute bottom-24 right-8 w-28 h-28 md:w-36 md:h-36 object-contain float-animation-reverse"
                     style={{ animationDelay: '0.5s' }}
                 />
                 {/* Center subtle ones */}
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={48}
+                    height={48}
                     className="absolute top-1/3 left-1/4 w-12 h-12 md:w-16 md:h-16 object-contain float-animation opacity-60"
                     style={{ animationDelay: '1.5s' }}
                 />
-                <img 
-                    src="/images/stickers/assembly.gif" 
-                    alt="" 
+                <Image
+                    src="/images/stickers/assembly.gif"
+                    alt=""
+                    width={56}
+                    height={56}
                     className="absolute top-2/3 right-1/4 w-14 h-14 md:w-20 md:h-20 object-contain float-animation-reverse opacity-60"
                     style={{ animationDelay: '2.5s' }}
                 />
@@ -120,9 +135,11 @@ export default function Hero() {
                         } w-full max-w-xs md:max-w-sm lg:w-auto lg:max-w-none justify-center transform hover:scale-105 hover:shadow-lg hover:shadow-brand/40 shadow-xl`}
                     style={{ transitionDelay: '0.9s' }}
                 >
-                    <img 
-                        src="/images/stickers/slider.gif" 
-                        alt="" 
+                    <Image
+                        src="/images/stickers/slider.gif"
+                        alt=""
+                        width={48}
+                        height={48}
                         className="w-12 h-12 md:w-20 md:h-20 object-contain"
                     />
                     <span className="text-lg md:text-2xl font-bold text-white">探索我們的故事</span>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 
 export default function Events() {
@@ -70,19 +71,28 @@ export default function Events() {
                             >
                                 {eventImages.map((src, index) => (
                                     <div key={index} className="w-full flex-shrink-0 h-full">
-                                        <div className="w-full h-full">
-                                            <img 
-                                                src={src} 
+                                        <div className="w-full h-full relative">
+                                            <Image
+                                                src={src}
                                                 alt={`Build with AI Event #${index + 1}`}
-                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                fill
+                                                sizes="100vw"
+                                                className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                 onError={(e) => {
-                                                    // 如果圖片加載失敗，顯示佔位符
-                                                    e.target.style.display = 'none';
-                                                    e.target.nextElementSibling.style.display = 'flex';
+                                                    // 如果圖片加載失敗，隱藏 img 並顯示同父容器內的佔位符
+                                                    try {
+                                                        const img = e.target;
+                                                        img.style.display = 'none';
+                                                        const parent = img.closest('.w-full.h-full') || img.parentElement;
+                                                        const placeholder = parent?.querySelector('.placeholder');
+                                                        if (placeholder) placeholder.style.display = 'flex';
+                                                    } catch (err) {
+                                                        // noop
+                                                    }
                                                 }}
                                             />
                                             <div 
-                                                className="w-full h-full bg-gradient-to-br from-brand/70 to-purple-600/70 flex items-center justify-center"
+                                                className="placeholder absolute inset-0 w-full h-full bg-gradient-to-br from-brand/70 to-purple-600/70 flex items-center justify-center"
                                                 style={{ display: 'none' }}
                                             >
                                                 <span className="text-white text-xl font-semibold opacity-80">
@@ -111,9 +121,11 @@ export default function Events() {
                     <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'} lg:pl-12`} style={{ transitionDelay: '0.2s' }}>
                         <div className="mb-10 md:mb-12">
                             <div className="flex items-center space-x-3 mb-6 md:mb-8">
-                                <img 
-                                    src="/images/stickers/assembly.gif" 
-                                    alt="" 
+                                <Image
+                                    src="/images/stickers/assembly.gif"
+                                    alt=""
+                                    width={40}
+                                    height={40}
                                     className="w-8 h-8 md:w-10 md:h-10 object-contain"
                                 />
                                 <p className="phone-liner-bold md:pc-liner-bold text-brand">

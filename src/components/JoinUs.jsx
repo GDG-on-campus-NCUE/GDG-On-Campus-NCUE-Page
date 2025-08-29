@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
@@ -85,9 +86,11 @@ export default function JoinUs() {
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
                         className={`bg-white text-brand hover:bg-gray-100 border-2 border-white hover:border-gray-200 px-6 py-4 md:px-12 md:py-6 rounded-2xl transition-all duration-500 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 hover:scale-105 flex items-center justify-center space-x-3 md:space-x-4 mx-auto ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} w-full max-w-md md:max-w-lg`}
                         style={{ transitionDelay: '0.4s' }}>
-                        <img 
-                            src="/images/stickers/slider.gif" 
-                            alt="" 
+                        <Image
+                            src="/images/stickers/slider.gif"
+                            alt=""
+                            width={48}
+                            height={48}
                             className="w-12 h-12 md:w-16 md:h-16 object-contain animate-pulse flex-shrink-0"
                         />
                         <span 
@@ -118,9 +121,11 @@ export default function JoinUs() {
                                     style={{ transitionDelay: `${0.8 + index * 0.1}s` }}
                                 >
                                     <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-background border-2 border-border rounded-full flex items-center justify-center group-hover:bg-brand group-hover:border-brand transition-all duration-300 shadow-lg group-hover:shadow-xl">
-                                        <img 
-                                            src={social.icon} 
+                                        <Image
+                                            src={social.icon}
                                             alt={`${social.name} icon`}
+                                            width={40}
+                                            height={40}
                                             className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 object-contain transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-lg"
                                         />
                                     </div>

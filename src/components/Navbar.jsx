@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import ThemeSwitcher from './ThemeSwitcher';
 
 export default function Navbar() {
@@ -47,9 +48,11 @@ export default function Navbar() {
                     <div className="flex-shrink-0">
                         <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
                             <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
-                                <img 
-                                    src="/images/stickers/brackets.gif" 
-                                    alt="GDG Logo" 
+                                <Image
+                                    src="/images/stickers/brackets.gif"
+                                    alt="GDG Logo"
+                                    width={64}
+                                    height={64}
                                     className="w-full h-full object-contain"
                                 />
                             </div>
