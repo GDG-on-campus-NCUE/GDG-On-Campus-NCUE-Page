@@ -1,9 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-	output: 'export',
-	basePath: '/gdg_web',        // ⭐ 子路徑（一定要）
-  	assetPrefix: '/gdg_web/',    // ⭐ 靜態資源前綴（一定要）
-  	images: { unoptimized: true } // export 模式需要
-};
+// next.config.mjs
+const repo = 'gdg_web';
+const isProd = process.env.NODE_ENV === 'production';
 
-export default nextConfig;
+/** @type {import('next').NextConfig} */
+export default {
+  output: 'export',
+  basePath: isProd ? `/${repo}` : '',   // ⭐ 子路徑只在 production
+  images: { unoptimized: true },
+  // 不要再設 assetPrefix，避免前綴被加兩次
+  env: {
+    NEXT_PUBLIC_BASE_PATH: isProd ? `/${repo}` : ''
+  }
+};
