@@ -126,9 +126,10 @@ export default function Projects() {
                         <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-6 md:p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 w-full max-w-full box-border overflow-hidden ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
                             {/* [RWD 優化] 確保卡片在所有螢幕尺寸下都能正確顯示 */}
                             <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-4 text-center">
+                                {/* 桌面版加寬按鈕寬度 */}
                                 <button
                                     onClick={() => openLink('https://scholarship.ncuesa.org.tw/')}
-                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[280px] md:max-w-sm mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
+                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[280px] md:max-w-sm lg:max-w-lg mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
                                 >
                                     {/* 卡片模擬內容 */}
                                     <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
