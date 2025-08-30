@@ -3,16 +3,23 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
+import next_js_img from '@/images/tech/nextjs.svg'
+import ts_img from '@/images/tech/typescript.svg'
+import tailwind_img from '@/images/tech/tailwindcss.svg'
+import supa_img from '@/images/tech/supabase-seeklogo.png'
+import vercal_img from '@/images/tech/vercel.svg'
+
+
 export default function Projects() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
 
     const techStack = [
-        { name: 'Next.js', icon: '@/images/tech/nextjs.svg' },
-        { name: 'TypeScript', icon: '@/images/tech/typescript.svg' },
-        { name: 'Tailwind CSS', icon: '@/images/tech/tailwindcss.svg' },
-        { name: 'Firebase', icon: '@/images/tech/firebase.svg' },
-        { name: 'Vercel', icon: '@/images/tech/vercel.svg' },
+        { name: 'Next.js', icon: next_js_img },
+        { name: 'TypeScript', icon: ts_img },
+        { name: 'Tailwind CSS', icon: tailwind_img },
+        { name: 'Supabase', icon: supa_img },
+        { name: 'Vercel', icon: vercal_img },
     ];
 
     const features = [
@@ -30,7 +37,24 @@ export default function Projects() {
             link: 'https://www.ncue.edu.tw/p/412-1004-123.php',
             tags: ['網站維護', '資訊發布']
         },
-        // ... 其他專案資料
+        {
+            status: '進行中',
+            title: '宿舍退宿管理系統',
+            description: '旨在數位化及簡化宿舍退宿流程，從申請、檢查到核准全程線上化，減少紙本作業，提升行政效率與學生便利性。',
+            tags: ['流程數位化', '行政效率']
+        },
+        {
+            status: '進行中',
+            title: '生輔組餐券管理系統',
+            description: '建立一套電子餐券系統，方便學生領取、使用，並提供後台數據追蹤，協助校方精準掌握餐券發放與核銷狀況。',
+            tags: ['電子票券', '數據分析']
+        },
+        {
+            status: '規劃中',
+            title: '學生會投票系統',
+            description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
+            tags: ['電子投票', '資訊安全']
+        },
     ];
 
     useEffect(() => {
@@ -78,7 +102,8 @@ export default function Projects() {
                                 <h3 className="phone-h3 md:pc-h2 text-brand mb-4 font-bold">精選專案</h3>
                                 <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">獎學金資訊平台</h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
-                                    整合了全校繁雜的獎助學金資訊，並透過智慧篩選與個人化推薦，打造了一個清晰、易用的申請入口，讓好機會不再錯過。
+
+
                                 </p>
                                 <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">技術棧</h4>
                                 {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
@@ -98,31 +123,34 @@ export default function Projects() {
                         </div>
 
                         {/* 右側模型 (手機版會在下) */}
-                        <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
-                            {/* [RWD 優化] 移除 min-h-[480px]，讓高度由內容決定，並加入 aspect-ratio 讓它在堆疊時保持良好比例 */}
-                            <div className="w-full aspect-[3/4] max-h-[500px] flex items-center justify-center">
+                        <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-6 md:p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 w-full max-w-full box-border overflow-hidden ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
+                            {/* [RWD 優化] 確保卡片在所有螢幕尺寸下都能正確顯示 */}
+                            <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-4 text-center">
                                 <button
                                     onClick={() => openLink('https://scholarship.ncuesa.org.tw/')}
-                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-6 shadow-2xl max-w-sm w-full hover:bg-white/30 hover:scale-105 transition-all duration-300 group cursor-pointer relative z-10"
+                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[280px] md:max-w-sm mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
                                 >
-                                    <div className="space-y-3 md:space-y-4 mb-6">
-                                        <div className="h-3 md:h-4 bg-white/80 rounded w-3/4"></div>
-                                        <div className="h-2 md:h-3 bg-white/70 rounded w-full"></div>
-                                        <div className="h-2 md:h-3 bg-white/70 rounded w-5/6"></div>
-                                        <div className="bg-teal-400/70 rounded-lg p-3 md:p-4 space-y-2 border border-white/30 shadow-md">
-                                            <div className="h-2 md:h-3 bg-white/90 rounded w-2/3"></div>
-                                            <div className="h-2 bg-white/80 rounded w-full"></div>
+                                    {/* 卡片模擬內容 */}
+                                    <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
+                                        <div className="h-2 md:h-3 bg-white/80 rounded w-3/4"></div>
+                                        <div className="h-2 md:h-2 bg-white/70 rounded w-full"></div>
+                                        <div className="h-2 md:h-2 bg-white/70 rounded w-4/5"></div>
+                                        <div className="bg-teal-400/70 rounded-lg p-2 md:p-3 space-y-1 border border-white/30 shadow-md">
+                                            <div className="h-1.5 md:h-2 bg-white/90 rounded w-2/3"></div>
+                                            <div className="h-1.5 md:h-2 bg-white/80 rounded w-full"></div>
                                         </div>
-                                        <div className="bg-green-400/70 rounded-lg p-3 md:p-4 space-y-2 border border-white/30 shadow-md">
-                                            <div className="h-2 md:h-3 bg-white/90 rounded w-3/5"></div>
+                                        <div className="bg-green-400/70 rounded-lg p-2 md:p-3 space-y-1 border border-white/30 shadow-md">
+                                            <div className="h-1.5 md:h-2 bg-white/90 rounded w-3/5"></div>
                                         </div>
                                     </div>
-                                    <div className="text-center">
-                                        <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center shadow-lg mb-2 md:mb-3 group-hover:scale-110 transition-transform">
-                                            <span className="text-white text-2xl md:text-3xl">🎓</span>
+
+                                    {/* 底部資訊區塊 - 確保置中且不會爆版 */}
+                                    <div className="text-center w-full">
+                                        <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 transition-transform">
+                                            <span className="text-white text-xl md:text-2xl lg:text-3xl">🎓</span>
                                         </div>
-                                        <p className="font-semibold text-base md:text-lg text-white mt-2">獎學金平台</p>
-                                        <p className="text-xs text-white/90 mt-1">點擊訪問</p>
+                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">獎學金平台</p>
+                                        <p className="text-xs md:text-sm text-white/90 px-2">點擊訪問</p>
                                     </div>
                                 </button>
                             </div>
@@ -142,8 +170,8 @@ export default function Projects() {
                             <div className="flex justify-between items-start mb-4">
                                 <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${feature.status === '已上線' ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400' :
-                                        feature.status === '進行中' ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400' :
-                                            'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400'
+                                    feature.status === '進行中' ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400' :
+                                        'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400'
                                     }`}>
                                     {feature.status}
                                 </span>

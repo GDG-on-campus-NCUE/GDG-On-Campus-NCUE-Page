@@ -3,11 +3,11 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
-import gdgLogo from '@/images/icon/google_developer_groups_logo.svg';
-import githubIcon from '@/images/icon/github.svg';
-import instagramIcon from '@/images/icon/instagram.svg';
-import gdgCommunityIcon from '@/images/icon/gdg_community.svg';
-import lineIcon from '@/images/icon/line.svg';
+import gdgLogo from '@/images/icon/brackets.gif';
+import githubIcon from '@/images/icon/github (1).png';
+import instagramIcon from '@/images/icon/instagram.png';
+import gdgCommunityIcon from '@/images/icon/google_sticker_3.gif';
+import lineIcon from '@/images/icon/line.png';
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
@@ -40,7 +40,7 @@ export default function JoinUs() {
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             <div className="relative py-20 md:py-32 px-4 md:px-8 text-center overflow-hidden bg-surface">
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-tr from-brand/20 via-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
-                
+
                 <div className="relative z-10">
                     <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                         你的程式碼，是校園的下一個未來。
@@ -48,7 +48,7 @@ export default function JoinUs() {
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要你對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。
                     </p>
-                    
+
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
                         className={`inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
@@ -73,7 +73,7 @@ export default function JoinUs() {
                                 一個由學生主導、Google 支持的校園技術方舟。我們致力於連結校園與真實世界，透過實戰專案、前沿分享與社群協作，賦能每一位懷抱理想的開發者。
                             </p>
                         </div>
-                        
+
                         <div className={`flex flex-col md:items-end gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }}>
                             <div>
                                 <h3 className="font-bold text-heading mb-4 text-left md:text-right">關注我們</h3>
@@ -84,10 +84,17 @@ export default function JoinUs() {
                                             href={social.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="group w-12 h-12 bg-surface-muted border border-border rounded-full flex items-center justify-center transition-all duration-300 hover:bg-brand hover:border-brand hover:scale-110"
                                             title={social.name}
+                                            aria-label={social.name}
+                                            className="group w-12 h-12 bg-surface-muted border border-border rounded-full flex items-center justify-center transition-transform duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-brand/30 hover:border-brand hover:bg-gradient-to-br hover:from-brand/10 hover:to-purple-600/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
                                         >
-                                            <Image src={social.icon} alt={social.name} width={24} height={24} className="w-6 h-6 transition-all duration-300 group-hover:invert group-hover:brightness-0" />
+                                            <Image
+                                                src={social.icon}
+                                                alt={social.name}
+                                                width={24}
+                                                height={24}
+                                                className="w-6 h-6 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
+                                            />
                                         </a>
                                     ))}
                                 </div>
