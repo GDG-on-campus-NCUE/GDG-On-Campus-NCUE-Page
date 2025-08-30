@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
 import ThemeSwitcher from './ThemeSwitcher';
 
@@ -14,7 +15,7 @@ export default function Navbar() {
             setIsScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll);
-        // Set initial state
+        // 設定初始狀態
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -38,14 +39,15 @@ export default function Navbar() {
 
     const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
     const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'bg-heading' : 'bg-white';
+    // 根據滾動與漢堡選單狀態切換 icon 顏色
+    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white';
     const themeSwitcherColor = isScrolled || isMobileMenuOpen ? 'text-heading hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
 
     return (
         <nav className={navClasses}>
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16 md:h-24">
-                    {/* Logo */}
+                    {/* 標誌區塊 */}
                     <div className="flex-shrink-0">
                         <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
                             <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
@@ -64,7 +66,7 @@ export default function Navbar() {
                         </a>
                     </div>
 
-                    {/* Desktop Menu */}
+                    {/* 桌面版選單 */}
                     <div className="hidden md:flex items-center space-x-8">
                         {navLinks.map(({ label, id }) => (
                             <button
@@ -79,25 +81,38 @@ export default function Navbar() {
                         <ThemeSwitcher colorClass={themeSwitcherColor} />
                     </div>
 
-                    {/* Mobile Menu Button */}
+                    {/* 手機版漢堡選單按鈕 */}
                     <div className="md:hidden flex items-center">
                         <ThemeSwitcher colorClass={themeSwitcherColor} />
                         <button
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            className="p-2 ml-2"
-                            aria-label="Open menu"
+                            className={`p-2 ml-2 transition-colors duration-300 ${mobileIconColor}`}
+                            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                            aria-expanded={isMobileMenuOpen}
                         >
-                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} ${isMobileMenuOpen ? 'rotate-45 translate-y-[5px]' : ''}`}></div>
-                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} my-1 ${isMobileMenuOpen ? 'opacity-0' : ''}`}></div>
-                            <div className={`w-6 h-0.5 transition-all duration-300 ${mobileIconColor} ${isMobileMenuOpen ? '-rotate-45 -translate-y-[5px]' : ''}`}></div>
+                            {isMobileMenuOpen ? (
+                                // 開啟時顯示關閉 icon
+                                <XMarkIcon className="w-6 h-6" />
+                            ) : (
+                                // 關閉時顯示漢堡 icon
+                                <Bars3Icon className="w-6 h-6" />
+                            )}
                         </button>
                     </div>
                 </div>
             </div>
-
-            {/* Mobile Menu */}
-            <div className={`md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
-                }`}>
+            {/* 手機版下拉選單與模糊背景 */}
+            {isMobileMenuOpen && (
+                // 模糊背景層，點擊可關閉選單
+                <div
+                    className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                ></div>
+            )}
+            <div
+                className={`md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
+                    }`}
+            >
                 <div className="p-4 space-y-4">
                     {navLinks.map(({ label, id }) => (
                         <button
