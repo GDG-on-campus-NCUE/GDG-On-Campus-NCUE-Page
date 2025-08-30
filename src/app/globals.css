@@ -313,34 +313,45 @@ html {
   }
 }
 
-/* Marquee animation - 多層無縫輪播 */
-@keyframes marquee-seamless {
+/* Marquee animation - 無縫滾動效果 */
+@keyframes marquee-scroll {
   0% {
     transform: translateX(0);
   }
-  100% {
-    transform: translateX(-16.666%); /* 移動六分之一，因為有6份複製 */
-  }
-}
 
-@keyframes marquee-offset {
-  0% {
-    transform: translateX(-16.666%);
-  }
   100% {
-    transform: translateX(-33.333%);
+    transform: translateX(-50%);
+    /* 移動50%，因為我們有重複的內容 */
   }
 }
 
 .marquee-container {
-  animation: marquee-seamless 15s linear infinite;
-  width: 600%; /* 6份複製需要600%寬度 */
-  /* 確保有足夠空間進行無縫循環 */
+  animation: marquee-scroll 45s linear infinite;
+  width: max-content;
+  /* 讓容器寬度適應內容 */
+  display: flex;
 }
 
 .marquee-container:hover {
   animation-play-state: paused;
   /* 滑鼠懸停時暫停動畫 */
+}
+
+/* 為每個技術棧項目添加淡入動畫 */
+.marquee-container>div {
+  animation: fadeInScale 0.8s ease-out both;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* 備用方案 - 雙層輪播 */
@@ -350,7 +361,8 @@ html {
 
 .marquee-layer-2 {
   animation: marquee-offset 15s linear infinite;
-  animation-delay: -7.5s; /* 延遲一半時間，創造無縫效果 */
+  animation-delay: -7.5s;
+  /* 延遲一半時間，創造無縫效果 */
 }
 
 .mobile-full-width {

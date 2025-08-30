@@ -108,14 +108,20 @@ export default function Projects() {
                                 {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
                                 <div className="relative w-full overflow-hidden rounded-lg bg-surface/50">
                                     <div className="marquee-container flex text-foreground whitespace-nowrap">
-                                        {techStack.concat(techStack, techStack, techStack, techStack, techStack).map((tech, index) => (
-                                            <div key={index} className="flex items-center p-3 mx-3 md:p-4 md:mx-4 flex-shrink-0 min-w-fit">
-                                                <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
-                                                    <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" />
+                                        {Array.from({ length: 12 }, (_, setIndex) =>
+                                            techStack.map((tech, techIndex) => (
+                                                <div
+                                                    key={`${setIndex}-${techIndex}`}
+                                                    className="flex items-center p-3 mx-3 md:p-4 md:mx-4 flex-shrink-0 min-w-fit"
+                                                    style={{ animationDelay: `${(setIndex * techStack.length + techIndex) * 0.2}s` }}
+                                                >
+                                                    <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
+                                                        <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" />
+                                                    </div>
+                                                    <span className="text-sm md:text-base font-semibold">{tech.name}</span>
                                                 </div>
-                                                <span className="text-sm md:text-base font-semibold">{tech.name}</span>
-                                            </div>
-                                        ))}
+                                            ))
+                                        ).flat()}
                                     </div>
                                     <div className="absolute inset-y-0 left-0 w-12 md:w-16 bg-gradient-to-r from-surface to-transparent pointer-events-none z-10"></div>
                                     <div className="absolute inset-y-0 right-0 w-12 md:w-16 bg-gradient-to-l from-surface to-transparent pointer-events-none z-10"></div>
@@ -126,11 +132,11 @@ export default function Projects() {
                         {/* 右側模型 (手機版會在下) */}
                         <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-6 md:p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 w-full max-w-full box-border overflow-hidden ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
                             {/* [RWD 優化] 確保卡片在所有螢幕尺寸下都能正確顯示 */}
-                            <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-4 text-center">
+                            <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-2 text-center">
                                 {/* 桌面版加寬按鈕寬度 */}
                                 <button
                                     onClick={() => openLink('https://scholarship.ncuesa.org.tw/')}
-                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[320px] md:max-w-md lg:max-w-xl xl:max-w-2xl mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
+                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full max-w-[90%] md:max-w-[80%] lg:max-w-[75%] xl:max-w-[70%] mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
                                 >
                                     {/* 卡片模擬內容 */}
                                     <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
