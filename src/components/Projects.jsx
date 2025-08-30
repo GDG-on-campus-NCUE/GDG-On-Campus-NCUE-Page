@@ -95,7 +95,7 @@ export default function Projects() {
                 {/* --- 區段二：主要專案展示 (RWD 已重構) --- */}
                 <div className="bg-surface rounded-3xl shadow-2xl overflow-hidden mb-16 md:mb-24">
                     {/* [RWD 優化] 在 lg 以下的螢幕，會自動變為單欄上下堆疊 */}
-                    <div className="grid lg:grid-cols-2">
+                    <div className="grid grid-cols-1 lg:grid-cols-2">
                         {/* 左側內容 (手機版會在上) */}
                         <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 lg:order-1">
                             <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.4s' }}>
