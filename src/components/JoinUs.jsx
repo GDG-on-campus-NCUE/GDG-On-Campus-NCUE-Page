@@ -19,6 +19,24 @@ export default function JoinUs() {
         { name: 'GDG Community', icon: gdgCommunityIcon, url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/' },
     ];
 
+    // 色彩調色盤（取自圖中色標）
+    const colorPalette = [
+        '#4285F4', // Blue 500
+        '#34A853', // Green 500
+        '#F9AB00', // Yellow 600
+        '#EA4335', // Red 500
+        '#57CAFF', // Halftone Blue
+        '#5CDB6F', // Halftone Green
+        '#FFD427', // Halftone Yellow
+        '#FF7DAF', // Halftone Red
+        '#C3ECF6', // Pastel Blue
+        '#C6FFC6', // Pastel Green
+        '#FFE7A5', // Pastel Yellow
+        '#F8D8D8', // Pastel Red
+    ];
+    // 目前使用的色彩索引
+    const [colorIndex, setColorIndex] = useState(0);
+
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
             if (entry.isIntersecting) {
@@ -31,6 +49,15 @@ export default function JoinUs() {
         return () => { if (ref.current) observer.unobserve(ref.current) };
     }, []);
 
+    // 當區塊可見時開始切換文字色彩
+    useEffect(() => {
+        if (!isVisible) return;
+        const timer = setInterval(() => {
+            setColorIndex((prev) => (prev + 1) % colorPalette.length);
+        }, 2000);
+        return () => clearInterval(timer);
+    }, [isVisible]);
+
     const openLink = (url) => {
         window.open(url, '_blank', 'noopener,noreferrer');
     }
@@ -42,7 +69,10 @@ export default function JoinUs() {
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-tr from-brand/20 via-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
 
                 <div className="relative z-10">
-                    <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <h2
+                        className={`phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                        style={{ color: colorPalette[colorIndex] }}
+                    >
                         你的程式碼，是校園的下一個未來。
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
