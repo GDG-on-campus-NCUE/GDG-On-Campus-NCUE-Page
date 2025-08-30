@@ -103,14 +103,15 @@ export default function Navbar() {
             </div>
             {/* 手機版下拉選單與模糊背景 */}
             {isMobileMenuOpen && (
-                // 模糊背景層，點擊可關閉選單
+                // 背景遮罩，附帶毛玻璃效果，點擊可關閉選單
                 <div
-                    className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-sm z-40"
+                    className="md:hidden fixed inset-0 bg-background/30 backdrop-blur-md z-40"
                     onClick={() => setIsMobileMenuOpen(false)}
                 ></div>
             )}
+            {/* 毛玻璃選單容器 */}
             <div
-                className={`md:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-xl transition-all duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
+                className={`md:hidden absolute top-full left-0 w-full bg-surface/60 backdrop-blur-lg transition-all duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
                     }`}
             >
                 <div className="p-4 space-y-4">
