@@ -79,9 +79,10 @@ export default function JoinUs() {
                         我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要你對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。
                     </p>
 
+                    {/* 手機版寬度全滿，桌機保持原樣 */}
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
-                        className={`inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                        className={`w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
                         <Image src={lineIcon} alt="Line Icon" width={28} height={28} className="w-6 h-6 md:w-7 md:h-7" />
@@ -92,11 +93,12 @@ export default function JoinUs() {
             </div>
 
             {/* === 區塊二：頁尾 (Footer) - 全新設計與文案 === */}
-            <footer className="bg-surface border-t border-border py-12 md:py-16 px-4 md:px-8">
+            <footer className="bg-surface border-t border-border py-12 md:py-16 px-6 md:px-8">
                 <div className="max-w-7xl mx-auto">
+                    {/* 手機置中排版，桌機維持雙欄 */}
                     <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-10">
-                        <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.6s' }}>
-                            <a href="#" className="inline-block mb-4">
+                        <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.6s' }}>
+                            <a href="#" className="inline-block mb-4 md:mb-6">
                                 <Image src={gdgLogo} alt="GDG on Campus NCUE Logo" width={200} height={40} />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
@@ -104,10 +106,10 @@ export default function JoinUs() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col md:items-end gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }}>
+                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }}>
                             <div>
-                                <h3 className="font-bold text-heading mb-4 text-left md:text-right">關注我們</h3>
-                                <div className="flex items-center justify-start md:justify-end gap-x-4">
+                                <h3 className="font-bold text-heading mb-4">關注我們</h3>
+                                <div className="flex items-center justify-center md:justify-end gap-x-4">
                                     {socialLinks.map((social) => (
                                         <a
                                             key={social.name}
@@ -129,7 +131,7 @@ export default function JoinUs() {
                                     ))}
                                 </div>
                             </div>
-                            <div className="flex items-center gap-x-2 text-sm text-muted">
+                            <div className="flex items-center justify-center md:justify-end gap-x-2 text-sm text-muted">
                                 <EnvelopeIcon className="w-5 h-5 text-brand" />
                                 <a href="mailto:gdg-core@ncuesa.org.tw" className="hover:text-brand transition-colors">
                                     gdg-core@ncuesa.org.tw
