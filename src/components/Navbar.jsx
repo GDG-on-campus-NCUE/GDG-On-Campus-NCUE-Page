@@ -106,14 +106,14 @@ export default function Navbar() {
             {isMobileMenuOpen && (
                 // 背景遮罩，附帶毛玻璃效果，點擊可關閉選單
                 <div
-                    // 強化背景模糊與遮罩透明度，使下拉選單內容更清晰
-                    className="md:hidden fixed inset-0 bg-background/50 backdrop-blur-xl z-40"
+                    // 提高遮罩不透明度與模糊程度，讓選單更易閱讀
+                    className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-lg z-40"
                     onClick={() => setIsMobileMenuOpen(false)}
                 ></div>
             )}
             {/* 毛玻璃選單容器 */}
             <div
-                className={`md:hidden absolute top-full left-0 w-full bg-surface/70 backdrop-blur-xl transition-[max-height] duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border' : 'max-h-0'
+                className={`md:hidden absolute top-full left-0 w-full bg-surface/80 backdrop-blur-lg transition-[max-height] duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border shadow-lg' : 'max-h-0'
                     }`}
             >
                 <div className="p-4 space-y-4">
