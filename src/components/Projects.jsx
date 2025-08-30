@@ -34,7 +34,7 @@ export default function Projects() {
             status: '已上線',
             title: '代管生輔組 RPage 網站',
             description: '我們接手並優化了學生生活輔導組的官方資訊頁面，確保資訊的即時更新與準確傳遞，為全校學生提供更可靠的資訊來源。',
-            link: 'https://www.ncue.edu.tw/p/412-1004-123.php',
+            link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4293.php',
             tags: ['網站維護', '資訊發布']
         },
         {
