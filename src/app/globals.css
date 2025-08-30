@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root, [data-theme="light"] {
+:root,
+[data-theme="light"] {
   /* Light Theme Palette - Google/GDG Brand Colors */
   --background: #ffffff;
   --foreground: #202124;
@@ -47,7 +48,8 @@ body {
 .pc-h0 {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 128px; /* 增加從 96px */
+  font-size: 128px;
+  /* 增加從 96px */
   line-height: auto;
   letter-spacing: 0px;
 }
@@ -55,7 +57,8 @@ body {
 .pc-h1 {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 84px; /* 增加從 64px */
+  font-size: 84px;
+  /* 增加從 64px */
   line-height: auto;
   letter-spacing: 0px;
 }
@@ -63,7 +66,8 @@ body {
 .pc-h2 {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 48px; /* 增加從 36px */
+  font-size: 48px;
+  /* 增加從 36px */
   line-height: auto;
   letter-spacing: 0px;
 }
@@ -96,23 +100,28 @@ body {
 .phone-h1 {
   font-family: var(--font-source-sans);
   font-weight: 700;
-  font-size: 36px; /* 調整為適合手機的大小 */
-  line-height: 1.2; /* 改善行高 */
+  font-size: 36px;
+  /* 調整為適合手機的大小 */
+  line-height: 1.2;
+  /* 改善行高 */
   letter-spacing: -0.02em;
 }
 
 .phone-h2 {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 24px; /* 調整大小 */
-  line-height: 1.3; /* 改善行高 */
+  font-size: 24px;
+  /* 調整大小 */
+  line-height: 1.3;
+  /* 改善行高 */
   letter-spacing: -0.01em;
 }
 
 .phone-h3 {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 18px; /* 增加可讀性 */
+  font-size: 18px;
+  /* 增加可讀性 */
   line-height: 1.4;
   letter-spacing: 0px;
 }
@@ -120,16 +129,20 @@ body {
 .phone-liner-bold {
   font-family: var(--font-source-sans);
   font-weight: 600;
-  font-size: 16px; /* 提高可讀性 */
+  font-size: 16px;
+  /* 提高可讀性 */
   line-height: 1.5;
   letter-spacing: 0px;
 }
 
 .phone-liner {
   font-family: var(--font-source-sans);
-  font-weight: 400; /* 調整字重 */
-  font-size: 16px; /* 提高可讀性 */
-  line-height: 1.6; /* 改善可讀性 */
+  font-weight: 400;
+  /* 調整字重 */
+  font-size: 16px;
+  /* 提高可讀性 */
+  line-height: 1.6;
+  /* 改善可讀性 */
   letter-spacing: 0px;
 }
 
@@ -140,34 +153,39 @@ html {
 
 /* 手機版面優化 */
 @media (max-width: 768px) {
+
   /* 隱藏手機上不必要的滾動條 */
   body {
     overflow-x: hidden;
   }
-  
+
   /* 優化按鈕觸摸體驗 */
   button {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    min-height: 44px; /* iOS 建議的最小觸摸目標 */
+    min-height: 44px;
+    /* iOS 建議的最小觸摸目標 */
   }
-  
+
   /* 優化輸入體驗 */
-  input, textarea, select {
-    font-size: 16px; /* 防止 iOS Safari 縮放 */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+    /* 防止 iOS Safari 縮放 */
   }
-  
+
   /* 確保內容不會太靠近邊緣 */
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   /* 優化導航欄在小屏幕上的間距 */
   .navbar-mobile {
     padding: 0.75rem 1rem;
   }
-  
+
   /* 確保圖片響應式 */
   img {
     max-width: 100%;
@@ -226,9 +244,12 @@ html {
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -238,24 +259,31 @@ html {
   from {
     background-position: 0% center;
   }
+
   to {
     background-position: -200% center;
   }
 }
 
 @keyframes float {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(-10px) rotate(5deg);
   }
 }
 
 @keyframes float-reverse {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0px) rotate(0deg);
   }
+
   50% {
     transform: translateY(10px) rotate(-5deg);
   }
@@ -285,14 +313,44 @@ html {
   }
 }
 
-/* Marquee animation */
-@keyframes marquee {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+/* Marquee animation - 多層無縫輪播 */
+@keyframes marquee-seamless {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-16.666%); /* 移動六分之一，因為有6份複製 */
+  }
+}
+
+@keyframes marquee-offset {
+  0% {
+    transform: translateX(-16.666%);
+  }
+  100% {
+    transform: translateX(-33.333%);
+  }
 }
 
 .marquee-container {
-  animation: marquee 30s linear infinite;
+  animation: marquee-seamless 15s linear infinite;
+  width: 600%; /* 6份複製需要600%寬度 */
+  /* 確保有足夠空間進行無縫循環 */
+}
+
+.marquee-container:hover {
+  animation-play-state: paused;
+  /* 滑鼠懸停時暫停動畫 */
+}
+
+/* 備用方案 - 雙層輪播 */
+.marquee-layer-1 {
+  animation: marquee-seamless 15s linear infinite;
+}
+
+.marquee-layer-2 {
+  animation: marquee-offset 15s linear infinite;
+  animation-delay: -7.5s; /* 延遲一半時間，創造無縫效果 */
 }
 
 .mobile-full-width {

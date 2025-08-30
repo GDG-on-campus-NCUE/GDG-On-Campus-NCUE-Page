@@ -102,22 +102,23 @@ export default function Projects() {
                                 <h3 className="phone-h3 md:pc-h2 text-brand mb-4 font-bold">精選專案</h3>
                                 <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">獎學金資訊平台</h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
-
-
+                                    整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，讓每位同學都能找到適合的獎助學金機會。
                                 </p>
                                 <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">技術棧</h4>
                                 {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
-                                <div className="relative w-full overflow-hidden rounded-lg">
-                                    <div className="marquee-container flex text-foreground">
-                                        {techStack.concat(techStack).map((tech, index) => (
-                                            <div key={index} className="flex items-center p-2 mx-2 md:p-4 md:mx-4 flex-shrink-0">
-                                                <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-10 md:w-10" />
-                                                <span className="ml-2 md:ml-3 text-sm md:text-base font-semibold">{tech.name}</span>
+                                <div className="relative w-full overflow-hidden rounded-lg bg-surface/50">
+                                    <div className="marquee-container flex text-foreground whitespace-nowrap">
+                                        {techStack.concat(techStack, techStack, techStack, techStack, techStack).map((tech, index) => (
+                                            <div key={index} className="flex items-center p-3 mx-3 md:p-4 md:mx-4 flex-shrink-0 min-w-fit">
+                                                <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
+                                                    <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" />
+                                                </div>
+                                                <span className="text-sm md:text-base font-semibold">{tech.name}</span>
                                             </div>
                                         ))}
                                     </div>
-                                    <div className="absolute inset-y-0 left-0 w-8 md:w-16 bg-gradient-to-r from-surface to-transparent"></div>
-                                    <div className="absolute inset-y-0 right-0 w-8 md:w-16 bg-gradient-to-l from-surface to-transparent"></div>
+                                    <div className="absolute inset-y-0 left-0 w-12 md:w-16 bg-gradient-to-r from-surface to-transparent pointer-events-none z-10"></div>
+                                    <div className="absolute inset-y-0 right-0 w-12 md:w-16 bg-gradient-to-l from-surface to-transparent pointer-events-none z-10"></div>
                                 </div>
                             </div>
                         </div>
@@ -129,7 +130,7 @@ export default function Projects() {
                                 {/* 桌面版加寬按鈕寬度 */}
                                 <button
                                     onClick={() => openLink('https://scholarship.ncuesa.org.tw/')}
-                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[280px] md:max-w-sm lg:max-w-lg mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
+                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full sm:w-auto max-w-[320px] md:max-w-md lg:max-w-xl xl:max-w-2xl mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
                                 >
                                     {/* 卡片模擬內容 */}
                                     <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
