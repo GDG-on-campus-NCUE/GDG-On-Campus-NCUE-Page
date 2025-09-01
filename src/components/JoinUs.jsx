@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, ArrowUpIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import gdgLogo from '@/images/icon/brackets.gif';
 import githubIcon from '@/images/icon/github (1).png';
 import instagramIcon from '@/images/icon/instagram.png';
@@ -92,12 +92,16 @@ export default function JoinUs() {
                 </div>
             </div>
 
-            {/* === 區塊二：頁尾 (Footer) - 全新設計與文案 === */}
-            <footer className="bg-surface border-t border-border py-12 md:py-16 px-6 md:px-8">
-                <div className="max-w-7xl mx-auto">
-                    {/* 手機置中排版，桌機維持雙欄 */}
-                    <div className="grid md:grid-cols-2 gap-8 md:gap-12 mb-10">
-                        <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.6s' }}>
+            {/* === 區塊二：頁尾 (Footer) - 重新設計與互動 === */}
+            <footer className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted py-16 md:py-20 px-6 md:px-8">
+                {/* 裝飾用漸層光暈 */}
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.15),transparent)]"></div>
+
+                <div className="relative max-w-7xl mx-auto">
+                    {/* RWD 三欄版面，中間為回頂端按鈕 */}
+                    <div className="grid md:grid-cols-3 gap-12 mb-12">
+                        {/* 左側：社群介紹 */}
+                        <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.6s' }}>
                             <a href="#" className="inline-block mb-4 md:mb-6">
                                 <Image src={gdgLogo} alt="GDG on Campus NCUE Logo" width={200} height={40} />
                             </a>
@@ -106,7 +110,20 @@ export default function JoinUs() {
                             </p>
                         </div>
 
-                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '0.8s' }}>
+                        {/* 中間：回到頂端按鈕 */}
+                        <div className={`flex flex-col items-center justify-center gap-y-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
+                            <button
+                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                                className="group w-14 h-14 rounded-full bg-brand text-text-on-brand flex items-center justify-center shadow-lg shadow-brand/30 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                                aria-label="回到頂端"
+                            >
+                                <ArrowUpIcon className="w-6 h-6 transition-transform duration-300 group-hover:-translate-y-1" />
+                            </button>
+                            <span className="text-sm text-muted">回到頂端</span>
+                        </div>
+
+                        {/* 右側：社群連結與聯絡方式 */}
+                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
                             <div>
                                 <h3 className="font-bold text-heading mb-4">關注我們</h3>
                                 <div className="flex items-center justify-center md:justify-end gap-x-4">
@@ -118,7 +135,7 @@ export default function JoinUs() {
                                             rel="noopener noreferrer"
                                             title={social.name}
                                             aria-label={social.name}
-                                            className="group w-12 h-12 bg-surface-muted border border-border rounded-full flex items-center justify-center transition-transform duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-brand/30 hover:border-brand hover:bg-gradient-to-br hover:from-brand/10 hover:to-purple-600/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                                            className="group w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-brand/30 hover:bg-gradient-to-br hover:from-brand/10 hover:to-purple-600/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
                                         >
                                             <Image
                                                 src={social.icon}
@@ -140,7 +157,7 @@ export default function JoinUs() {
                         </div>
                     </div>
 
-                    <div className={`border-t border-border pt-8 mt-8 text-center text-xs text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
+                    <div className={`mt-12 text-center text-xs text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
                         <p>© {new Date().getFullYear()} GDG on Campus NCUE. All Rights Reserved.</p>
                     </div>
                 </div>
