@@ -42,13 +42,13 @@ export default function ScrollToTop() {
                         stroke="currentColor"
                         fill="none"
                     />
-                    {/* 進度圓環 */}
+                    {/* 進度圓環，改用醒目的強調色避免與背景混淆 */}
                     <circle
                         cx="50"
                         cy="50"
                         r="45"
                         strokeWidth="8"
-                        className="text-brand"
+                        className="text-accent"
                         stroke="currentColor"
                         fill="none"
                         strokeLinecap="round"
