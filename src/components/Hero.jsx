@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/hooks/useLanguage';
 import Image from 'next/image';
 import assemblyGif from '@/images/stickers/assembly.gif';
 import sliderGif from '@/images/stickers/slider.gif';
@@ -8,6 +9,7 @@ import sliderGif from '@/images/stickers/slider.gif';
 
 export default function Hero() {
     const [isLoaded, setIsLoaded] = useState(false);
+    const { language } = useLanguage();
 
     useEffect(() => {
         setIsLoaded(true);
@@ -144,7 +146,9 @@ export default function Hero() {
                         height={48}
                         className="w-12 h-12 md:w-20 md:h-20 object-contain"
                     />
-                    <span className="text-lg md:text-2xl font-bold text-white">探索我們的故事</span>
+                    <span className="text-lg md:text-2xl font-bold text-white">
+                        {language === 'zh' ? '探索我們的故事' : 'Explore Our Story'}
+                    </span>
                     <svg
                         className="w-5 h-5 md:w-7 md:h-7 group-hover:translate-y-1 transition-transform duration-300 text-white"
                         fill="none"

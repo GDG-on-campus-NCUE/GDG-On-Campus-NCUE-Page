@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { useLanguage } from '@/hooks/useLanguage';
 import gdgLogo from '@/images/icon/brackets.gif';
 import githubIcon from '@/images/icon/github (1).png';
 import instagramIcon from '@/images/icon/instagram.png';
@@ -12,6 +13,7 @@ import lineIcon from '@/images/icon/line.png';
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
+    const { language } = useLanguage();
 
     const socialLinks = [
         { name: 'GitHub', icon: githubIcon, url: 'https://github.com/GDG-on-campus-NCUE' },
@@ -73,10 +75,12 @@ export default function JoinUs() {
                         className={`phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         style={{ color: colorPalette[colorIndex] }}
                     >
-                        你的程式碼，是校園的下一個未來。
+                        {language === 'zh' ? '你的程式碼，是校園的下一個未來。' : 'Your code is the next future of campus.'}
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
-                        我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要你對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。
+                        {language === 'zh'
+                            ? '我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要你對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。'
+                            : 'We believe every line of code carries the power to change. Wherever you start, if you love technology and want to turn ideas into reality, this is the community to connect and grow.'}
                     </p>
 
                     {/* 手機版寬度全滿，桌機保持原樣 */}
@@ -86,7 +90,7 @@ export default function JoinUs() {
                         style={{ transitionDelay: '0.4s' }}
                     >
                         <Image src={lineIcon} alt="Line Icon" width={28} height={28} className="w-6 h-6 md:w-7 md:h-7" />
-                        <span>立即加入 Line 社群</span>
+                        <span>{language === 'zh' ? '立即加入 Line 社群' : 'Join our Line group now'}</span>
                         <ArrowRightIcon className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                 </div>
@@ -106,14 +110,16 @@ export default function JoinUs() {
                                 <Image src={gdgLogo} alt="GDG on Campus NCUE Logo" width={200} height={40} />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
-                                一個由學生主導、Google 支持的校園技術方舟。我們致力於連結校園與真實世界，透過實戰專案、前沿分享與社群協作，賦能每一位懷抱理想的開發者。
+                                {language === 'zh'
+                                    ? '一個由學生主導、Google 支持的校園技術方舟。我們致力於連結校園與真實世界，透過實戰專案、前沿分享與社群協作，賦能每一位懷抱理想的開發者。'
+                                    : 'A student-led, Google-supported tech hub. We bridge campus and the real world through practical projects, cutting-edge talks and community collaboration to empower every aspiring developer.'}
                             </p>
                         </div>
 
                         {/* 右側：社群連結與聯絡方式 */}
                         <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
                             <div>
-                                <h3 className="font-bold text-heading mb-4">關注我們</h3>
+                                <h3 className="font-bold text-heading mb-4">{language === 'zh' ? '關注我們' : 'Follow Us'}</h3>
                                 <div className="flex items-center justify-center md:justify-end gap-x-4">
                                     {socialLinks.map((social) => (
                                         <a

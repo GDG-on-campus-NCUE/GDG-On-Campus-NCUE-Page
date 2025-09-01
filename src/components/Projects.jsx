@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { useLanguage } from '@/hooks/useLanguage';
 
 import next_js_img from '@/images/tech/nextjs.svg'
 import ts_img from '@/images/tech/typescript.svg'
@@ -13,6 +14,7 @@ import vercal_img from '@/images/tech/vercel.svg'
 export default function Projects() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
+    const { language } = useLanguage();
 
     const techStack = [
         { name: 'Next.js', icon: next_js_img },
@@ -22,40 +24,77 @@ export default function Projects() {
         { name: 'Vercel', icon: vercal_img },
     ];
 
-    const features = [
-        {
-            status: '已上線',
-            title: '生輔組獎助學金平台',
-            description: '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，有效提升資訊透明度與申請效率。',
-            link: 'https://scholarship.ncuesa.org.tw',
-            tags: ['資訊整合', '使用者體驗', '校園服務']
-        },
-        {
-            status: '已上線',
-            title: '代管生輔組 RPage 網站',
-            description: '我們接手並優化了學生生活輔導組的官方資訊頁面，確保資訊的即時更新與準確傳遞，為全校學生提供更可靠的資訊來源。',
-            link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4293.php',
-            tags: ['網站維護', '資訊發布']
-        },
-        {
-            status: '進行中',
-            title: '宿舍退宿管理系統',
-            description: '旨在數位化及簡化宿舍退宿流程，從申請、檢查到核准全程線上化，減少紙本作業，提升行政效率與學生便利性。',
-            tags: ['流程數位化', '行政效率']
-        },
-        {
-            status: '進行中',
-            title: '生輔組餐券管理系統',
-            description: '建立一套電子餐券系統，方便學生領取、使用，並提供後台數據追蹤，協助校方精準掌握餐券發放與核銷狀況。',
-            tags: ['電子票券', '數據分析']
-        },
-        {
-            status: '規劃中',
-            title: '學生會投票系統',
-            description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
-            tags: ['電子投票', '資訊安全']
-        },
-    ];
+    const featureData = {
+        zh: [
+            {
+                status: '已上線',
+                title: '生輔組獎助學金平台',
+                description: '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，有效提升資訊透明度與申請效率。',
+                link: 'https://scholarship.ncuesa.org.tw',
+                tags: ['資訊整合', '使用者體驗', '校園服務']
+            },
+            {
+                status: '已上線',
+                title: '代管生輔組 RPage 網站',
+                description: '我們接手並優化了學生生活輔導組的官方資訊頁面，確保資訊的即時更新與準確傳遞，為全校學生提供更可靠的資訊來源。',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4293.php',
+                tags: ['網站維護', '資訊發布']
+            },
+            {
+                status: '進行中',
+                title: '宿舍退宿管理系統',
+                description: '旨在數位化及簡化宿舍退宿流程，從申請、檢查到核准全程線上化，減少紙本作業，提升行政效率與學生便利性。',
+                tags: ['流程數位化', '行政效率']
+            },
+            {
+                status: '進行中',
+                title: '生輔組餐券管理系統',
+                description: '建立一套電子餐券系統，方便學生領取、使用，並提供後台數據追蹤，協助校方精準掌握餐券發放與核銷狀況。',
+                tags: ['電子票券', '數據分析']
+            },
+            {
+                status: '規劃中',
+                title: '學生會投票系統',
+                description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
+                tags: ['電子投票', '資訊安全']
+            },
+        ],
+        en: [
+            {
+                status: 'Released',
+                title: 'Scholarship Platform',
+                description: 'Integrates campus and external scholarship information with an easy-to-use interface. Smart filtering and personalized recommendations improve transparency and application efficiency.',
+                link: 'https://scholarship.ncuesa.org.tw',
+                tags: ['Information Integration', 'User Experience', 'Campus Service']
+            },
+            {
+                status: 'Released',
+                title: 'Student Affairs RPage Site',
+                description: 'We maintain and enhance the Student Affairs Division website, ensuring timely updates and accurate information for all students.',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4293.php',
+                tags: ['Site Maintenance', 'Information Release']
+            },
+            {
+                status: 'In Progress',
+                title: 'Dorm Checkout System',
+                description: 'Digitizes and streamlines the dorm checkout process from application to approval, reducing paperwork and improving administrative efficiency.',
+                tags: ['Workflow Digitalization', 'Administrative Efficiency']
+            },
+            {
+                status: 'In Progress',
+                title: 'Meal Voucher Management System',
+                description: 'Creates an electronic meal voucher system with backend tracking to help the school monitor distribution and redemption.',
+                tags: ['E-ticket', 'Data Analysis']
+            },
+            {
+                status: 'Planning',
+                title: 'Student Union Voting System',
+                description: 'Develops a secure, fair and transparent online voting platform for elections and major issues, encouraging student participation in public affairs.',
+                tags: ['E-Voting', 'Cybersecurity']
+            },
+        ]
+    };
+    const features = featureData[language];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -85,10 +124,12 @@ export default function Projects() {
                 {/* --- 區段一：介紹 (RWD 已優化) --- */}
                 <div className="text-center mb-16 md:mb-24">
                     <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        你的 Code，運行在校園日常
+                        {language === 'zh' ? '你的 Code，運行在校園日常' : 'Your code powers daily campus life'}
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
-                        我們不只打造酷炫的專案，更要解決校園的真實問題。從獎學金平台到宿舍管理系統，我們的技術真正服務於每一位同學。
+                        {language === 'zh'
+                            ? '我們不只打造酷炫的專案，更要解決校園的真實問題。從獎學金平台到宿舍管理系統，我們的技術真正服務於每一位同學。'
+                            : 'We build not just cool projects but real solutions for campus problems. From scholarship platforms to dorm systems, our tech serves every student.'}
                     </p>
                 </div>
 
@@ -99,12 +140,20 @@ export default function Projects() {
                         {/* 左側內容 (手機版會在上) */}
                         <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 lg:order-1">
                             <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.4s' }}>
-                                <h3 className="phone-h3 md:pc-h2 text-brand mb-4 font-bold">精選專案</h3>
-                                <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">獎學金資訊平台</h2>
+                                <h3 className="phone-h3 md:pc-h2 text-brand mb-4 font-bold">
+                                    {language === 'zh' ? '精選專案' : 'Featured Project'}
+                                </h3>
+                                <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">
+                                    {language === 'zh' ? '獎學金資訊平台' : 'Scholarship Info Platform'}
+                                </h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
-                                    整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，讓每位同學都能找到適合的獎助學金機會。
+                                    {language === 'zh'
+                                        ? '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，讓每位同學都能找到適合的獎助學金機會。'
+                                        : 'Integrates scholarship information inside and outside campus, giving students a clear and easy application entry. Smart filtering and personalized recommendations help every student find the right opportunities.'}
                                 </p>
-                                <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">技術棧</h4>
+                                <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">
+                                    {language === 'zh' ? '技術棧' : 'Tech Stack'}
+                                </h4>
                                 {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
                                 <div className="relative w-full overflow-hidden rounded-lg bg-surface/50">
                                     <div className="marquee-container flex text-foreground whitespace-nowrap">
@@ -157,8 +206,8 @@ export default function Projects() {
                                         <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 transition-transform">
                                             <span className="text-white text-xl md:text-2xl lg:text-3xl">🎓</span>
                                         </div>
-                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">獎學金平台</p>
-                                        <p className="text-xs md:text-sm text-white/90 px-2">點擊訪問</p>
+                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">{language === 'zh' ? '獎學金平台' : 'Scholarship Platform'}</p>
+                                        <p className="text-xs md:text-sm text-white/90 px-2">{language === 'zh' ? '點擊訪問' : 'Visit site'}</p>
                                     </div>
                                 </button>
                             </div>
@@ -168,7 +217,7 @@ export default function Projects() {
 
                 {/* --- 區段三：更多專案 (RWD 已優化) --- */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24">
-                    {features.filter(f => f.title !== '生輔組獎助學金平台').map((feature, index) => (
+                    {features.slice(1).map((feature, index) => (
                         <div
                             key={index}
                             className={`bg-surface rounded-2xl border border-border p-6 flex flex-col transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
@@ -177,22 +226,29 @@ export default function Projects() {
                             {/* 卡片內容保持不變，它的 RWD 已經做得很好 */}
                             <div className="flex justify-between items-start mb-4">
                                 <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
-                                <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${feature.status === '已上線' ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400' :
-                                    feature.status === '進行中' ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400' :
-                                        'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400'
-                                    }`}>
-                                    {feature.status}
-                                </span>
+                                  {(() => {
+                                      const statusClass =
+                                          feature.status === '已上線' || feature.status === 'Released'
+                                              ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
+                                              : feature.status === '進行中' || feature.status === 'In Progress'
+                                                  ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
+                                                  : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
+                                      return (
+                                          <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
+                                              {feature.status}
+                                          </span>
+                                      );
+                                  })()}
                             </div>
                             <p className="phone-liner md:pc-liner text-muted mb-4 leading-relaxed flex-grow">{feature.description}</p>
                             <div className="flex flex-wrap gap-2 mb-4">
-                                {feature.tags.map(tag => (
-                                    <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
-                                ))}
+                                  {feature.tags.map(tag => (
+                                      <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
+                                  ))}
                             </div>
                             {feature.link && (
                                 <a href={feature.link} target="_blank" rel="noopener noreferrer" className="phone-liner-bold text-brand hover:text-brand-accent font-medium transition-colors group flex items-center mt-auto">
-                                    查看專案
+                                    {language === 'zh' ? '查看專案' : 'View Project'}
                                     <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                                 </a>
                             )}
@@ -209,7 +265,7 @@ export default function Projects() {
                         <svg aria-hidden="true" className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                         </svg>
-                        <span>探索我們的 GitHub</span>
+                        <span>{language === 'zh' ? '探索我們的 GitHub' : 'Explore our GitHub'}</span>
                     </button>
                 </div>
             </div>
