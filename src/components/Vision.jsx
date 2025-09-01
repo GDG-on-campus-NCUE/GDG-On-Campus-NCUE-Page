@@ -14,14 +14,12 @@ export default function Vision() {
     const ref = useRef(null);
     const { language } = useLanguage();
 
-    // 動畫觸發的 useEffect hook，當區塊完全進入視窗時啟動
+    // 動畫觸發的 useEffect hook，監控區塊進出視窗
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.unobserve(entry.target);
-                }
+                // 依據可見狀態切換動畫
+                setIsVisible(entry.isIntersecting);
             },
             // threshold 設為 1 代表元素完全進入視窗才觸發
             { threshold: 1 }
