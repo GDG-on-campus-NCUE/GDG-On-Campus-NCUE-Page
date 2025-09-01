@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/hooks/useLanguage';
 import Image from 'next/image';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
 import ThemeSwitcher from './ThemeSwitcher';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -25,12 +27,20 @@ export default function Navbar() {
         setIsMobileMenuOpen(false);
     };
 
-    const navLinks = [
-        { label: '核心使命', id: 'vision' },
-        { label: '活動回顧', id: 'events' },
-        { label: '校園專案', id: 'projects' },
-        { label: '加入我們', id: 'join' },
-    ];
+    const { language } = useLanguage();
+    const navLinks = language === 'zh'
+        ? [
+            { label: '核心使命', id: 'vision' },
+            { label: '活動回顧', id: 'events' },
+            { label: '校園專案', id: 'projects' },
+            { label: '加入我們', id: 'join' },
+        ]
+        : [
+            { label: 'Our Vision', id: 'vision' },
+            { label: 'Events', id: 'events' },
+            { label: 'Projects', id: 'projects' },
+            { label: 'Join Us', id: 'join' },
+        ];
 
     // 讓導覽列維持毛玻璃效果，僅針對顏色變化做轉場以避免滾動時位置產生位移
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
@@ -81,11 +91,13 @@ export default function Navbar() {
                                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
                                 </button>
                             ))}
+                            <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                         </div>
 
                         {/* 手機版漢堡選單按鈕 */}
                         <div className="md:hidden flex items-center">
+                            <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

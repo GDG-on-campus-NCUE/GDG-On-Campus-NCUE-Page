@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '@/hooks/useLanguage';
 import Image from 'next/image';
 import event_img_1 from '@/images/events/1.png';
 import event_img_2 from '@/images/events/2.png';
@@ -14,6 +15,7 @@ export default function Events() {
     const [isVisible, setIsVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState(0);
     const ref = useRef(null);
+    const { language } = useLanguage();
 
     // 活動圖片 - 使用 public 目錄中的圖片
     const eventImages = [
@@ -24,11 +26,17 @@ export default function Events() {
         event_img_5
     ];
 
-    const highlights = [
-        { icon: '🤖', text: 'n8n 工作坊：親手打造自動化 Line Bot' },
-        { icon: '💡', text: '提示工程：從零到一啟動 AI 原力' },
-        { icon: '🔥', text: '社群火花：點燃對技術的熱情與潛能' },
-    ];
+    const highlights = language === 'zh'
+        ? [
+            { icon: '🤖', text: 'n8n 工作坊：親手打造自動化 Line Bot' },
+            { icon: '💡', text: '提示工程：從零到一啟動 AI 原力' },
+            { icon: '🔥', text: '社群火花：點燃對技術的熱情與潛能' },
+        ]
+        : [
+            { icon: '🤖', text: 'n8n workshop: build an automated Line bot' },
+            { icon: '💡', text: 'Prompt engineering: ignite your AI power from zero' },
+            { icon: '🔥', text: 'Community sparks: fuel passion and potential for tech' },
+        ];
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -135,15 +143,18 @@ export default function Events() {
                                     className="w-8 h-8 md:w-10 md:h-10 object-contain"
                                 />
                                 <p className="phone-liner-bold md:pc-liner-bold text-brand">
-                                    回顧我們的「Build with AI 2025」
+                                    {language === 'zh' ? '回顧我們的「Build with AI 2025」' : 'Review of "Build with AI 2025"'}
                                 </p>
                             </div>
                             <h2 className="phone-h1 md:pc-h1 text-heading mb-6 md:mb-8 leading-tight">
-                                不只是一場活動，<br className="hidden md:block" />
-                                而是一場技術革命的開端。
+                                {language === 'zh'
+                                    ? <>不只是一場活動，<br className="hidden md:block" />而是一場技術革命的開端。</>
+                                    : <>More than just an event,<br className="hidden md:block" />it was the start of a tech revolution.</>}
                             </h2>
                             <p className="phone-liner md:pc-liner text-muted mb-8 md:mb-10 leading-relaxed">
-                                我們將 AI 的力量帶入校園，打破技術壁壘，引導每位參與者從零到一啟動自己的 AI 原力。透過無程式碼的 n8n 工作坊，現場夥伴都親手打造出能解決實際問題的自動化 Line 聊天機器人。
+                                {language === 'zh'
+                                    ? '我們將 AI 的力量帶入校園，打破技術壁壘，引導每位參與者從零到一啟動自己的 AI 原力。透過無程式碼的 n8n 工作坊，現場夥伴都親手打造出能解決實際問題的自動化 Line 聊天機器人。'
+                                    : 'We brought the power of AI to campus, breaking technical barriers and guiding every participant to kickstart their AI journey. In the no-code n8n workshop, attendees built automated Line chatbots to solve real problems.'}
                             </p>
                         </div>
 

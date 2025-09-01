@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
+import { useLanguage } from '@/hooks/useLanguage';
 
 // 懸浮回到頂端按鈕，外圈顯示頁面滾動進度
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
+    const { language } = useLanguage();
 
     useEffect(() => {
         // 計算頁面滾動百分比
@@ -57,7 +59,7 @@ export default function ScrollToTop() {
                 {/* 內部回頂按鈕 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    aria-label="回到頂端"
+                    aria-label={language === 'zh' ? '回到頂端' : 'Back to top'}
                     className="absolute inset-0 m-2 rounded-full bg-brand text-text-on-brand flex items-center justify-center shadow-lg shadow-brand/30 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
                 >
                     <ArrowUpIcon className="w-5 h-5" />
