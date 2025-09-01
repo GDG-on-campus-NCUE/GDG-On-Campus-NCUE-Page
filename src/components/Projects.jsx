@@ -114,10 +114,8 @@ export default function Projects() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.unobserve(entry.target);
-                }
+                // 依據可見狀態切換動畫
+                setIsVisible(entry.isIntersecting);
             },
             { threshold: 0.1 }
         );

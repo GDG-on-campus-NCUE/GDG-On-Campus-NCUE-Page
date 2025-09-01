@@ -41,9 +41,8 @@ export default function Events() {
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                }
+                // 依據可見狀態切換動畫
+                setIsVisible(entry.isIntersecting);
             },
             { threshold: 0.2 }
         );
