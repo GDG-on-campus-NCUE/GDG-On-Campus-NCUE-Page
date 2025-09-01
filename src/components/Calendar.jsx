@@ -33,13 +33,17 @@ export default function Calendar() {
                 <h2 className="phone-h1 md:pc-h2 text-heading text-center mb-8">
                     {language === 'zh' ? '行事曆' : 'Calendar'}
                 </h2>
-                <div className="rounded-xl overflow-hidden shadow-lg border border-border">
+                <div className="rounded-xl overflow-hidden shadow-lg border border-border relative">
                     <iframe
                         src={calendarSrc}
                         className="w-full h-[500px] md:h-[700px]"
                         frameBorder="0"
                         scrolling="no"
                     />
+                    {/* 在暗色主題時加入灰色遮罩，不影響點擊 */}
+                    {theme === 'dark' && (
+                        <div className="pointer-events-none absolute inset-0 bg-gray-500/50" />
+                    )}
                 </div>
             </div>
         </section>
