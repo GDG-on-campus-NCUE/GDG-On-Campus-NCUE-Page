@@ -3,31 +3,25 @@
 import { useState, useEffect, useCallback } from 'react';
 
 export const useTheme = () => {
-    const [theme, setTheme] = useState(null); // 初始為 null 避免閃爍
+    const [theme, setTheme] = useState(() => {
+        // 從 <html> 取得目前主題，避免重新載入時閃爍
+        if (typeof document !== 'undefined') {
+            return document.documentElement.getAttribute('data-theme') || 'light';
+        }
+        return 'light';
+    });
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        // 檢查系統偏好
-        const getInitialTheme = () => {
-            if (typeof window !== 'undefined') {
-                const storedTheme = localStorage.getItem('theme');
-                if (storedTheme) {
-                    return storedTheme;
-                }
-                // 如果沒有儲存的主題，使用系統偏好
-                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-            }
-            return 'light';
-        };
-
-        const initialTheme = getInitialTheme();
-        setTheme(initialTheme);
-        document.documentElement.setAttribute('data-theme', initialTheme);
+        // 初始化時標記為已載入，並確保 localStorage 有主題設定
+        if (typeof window !== 'undefined' && !localStorage.getItem('theme')) {
+            localStorage.setItem('theme', theme);
+        }
         setIsLoaded(true);
-    }, []);
+    }, [theme]);
 
     const toggleTheme = useCallback(() => {
-        if (!isLoaded) return; // 防止在未加載完成時切換
+        if (!isLoaded) return; // 防止在未載入完成前切換
         
         const newTheme = theme === 'light' ? 'dark' : 'light';
         setTheme(newTheme);
