@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
 import assemblyGif from '@/images/stickers/assembly.gif';
 import sliderGif from '@/images/stickers/slider.gif';
@@ -10,6 +11,7 @@ import sliderGif from '@/images/stickers/slider.gif';
 export default function Hero() {
     const [isLoaded, setIsLoaded] = useState(false);
     const { language } = useLanguage();
+    const { theme } = useTheme();
 
     useEffect(() => {
         setIsLoaded(true);
@@ -21,12 +23,12 @@ export default function Hero() {
 
     return (
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
-            {/* Animated Gradient Background */}
+            {/* 動畫漸層背景 */}
             <div
-                className="absolute inset-0 z-0 bg-gradient-to-r from-blue-600 via-indigo-700 to-blue-600 bg-[length:200%_auto] animate-[background-pan_15s_linear_infinite]">
-            </div>
+                className={`absolute inset-0 z-0 bg-gradient-to-r bg-[length:200%_auto] animate-[background-pan_15s_linear_infinite] ${theme === 'light' ? 'from-blue-100 via-indigo-200 to-blue-100' : 'from-blue-600 via-indigo-700 to-blue-600'}`}
+            ></div>
             
-            {/* GDG Assembly GIF Background Elements */}
+            {/* GDG 組裝 GIF 背景元素 */}
             <div className="absolute inset-0 z-5 opacity-40 pointer-events-none">
                 {/* Large Central Background Element */}
                 <Image
@@ -91,7 +93,8 @@ export default function Hero() {
                 />
             </div>
             
-            <div className="absolute inset-0 z-8 bg-black/40"></div>
+            {/* 依主題調整覆蓋色 */}
+            <div className={`absolute inset-0 z-8 ${theme === 'light' ? 'bg-white/60' : 'bg-black/40'}`}></div>
 
 
             {/* Content */}
