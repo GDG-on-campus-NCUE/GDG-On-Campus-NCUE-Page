@@ -21,8 +21,8 @@ export default function Vision() {
                 // 依據可見狀態切換動畫
                 setIsVisible(entry.isIntersecting);
             },
-            // threshold 設為 1 代表元素完全進入視窗才觸發
-            { threshold: 1 }
+            // 將 threshold 降至 0.2 並擴大 rootMargin，讓區塊在部分進出視窗時仍能保持顯示
+            { threshold: 0.2, rootMargin: '20% 0px 20% 0px' }
         );
 
         if (ref.current) {
