@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
@@ -12,7 +11,6 @@ import LanguageSwitcher from './LanguageSwitcher';
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { theme } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -52,17 +50,11 @@ export default function Navbar() {
             : 'bg-surface/50'
         }`;
 
-    // 依據主題與滾動狀態決定顏色
-    const baseLogoColor = theme === 'light' ? 'text-heading' : 'text-white drop-shadow-lg';
-    const baseLinkColor = theme === 'light' ? 'text-muted hover:text-heading' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const baseIconColor = theme === 'light' ? 'text-heading' : 'text-white';
-    const baseSwitcherColor = theme === 'light' ? 'text-heading hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
-
-    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : baseLogoColor;
-    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : baseLinkColor;
+    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
+    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-white hover:text-gray-200 drop-shadow-md';
     // 根據滾動與漢堡選單狀態切換 icon 顏色
-    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'text-heading' : baseIconColor;
-    const themeSwitcherColor = isScrolled || isMobileMenuOpen ? 'text-heading hover:text-brand' : baseSwitcherColor;
+    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white';
+    const themeSwitcherColor = isScrolled || isMobileMenuOpen ? 'text-heading hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
 
     return (
         <>

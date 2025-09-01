@@ -102,16 +102,7 @@ export default function Hero() {
                 <h1
                     className={`mb-6 transition-all duration-1000 drop-shadow-lg leading-tight ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                         }`}
-                    style={theme === 'light' ? {
-                        // 亮色主題改為深色文字
-                        fontSize: 'clamp(3rem, 8vw, 8rem)',
-                        fontWeight: '700',
-                        fontFamily: 'var(--font-source-sans)',
-                        color: 'var(--heading)',
-                        textShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
-                        transitionDelay: '0.3s'
-                    } : {
-                        // 暗色主題維持彩色漸層文字
+                    style={{ 
                         fontSize: 'clamp(3rem, 8vw, 8rem)',
                         fontWeight: '700',
                         fontFamily: 'var(--font-source-sans)',
@@ -130,16 +121,7 @@ export default function Hero() {
                 <h2
                     className={`mb-8 md:mb-10 transition-all duration-1000 drop-shadow-md leading-relaxed ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                         }`}
-                    style={theme === 'light' ? {
-                        // 亮色主題使用深色文字
-                        fontSize: 'clamp(1.5rem, 4vw, 3rem)',
-                        fontWeight: '600',
-                        fontFamily: 'var(--font-source-sans)',
-                        color: 'var(--heading)',
-                        textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-        transitionDelay: '0.6s'
-                    } : {
-                        // 暗色主題維持淡色漸層
+                    style={{ 
                         fontSize: 'clamp(1.5rem, 4vw, 3rem)',
                         fontWeight: '600',
                         fontFamily: 'var(--font-source-sans)',
