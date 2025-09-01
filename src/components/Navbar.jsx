@@ -32,10 +32,10 @@ export default function Navbar() {
         { label: '加入我們', id: 'join' },
     ];
 
-    // 僅針對顏色變化做轉場，避免滾動時位置產生位移
-    const navClasses = `fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${isScrolled || isMobileMenuOpen
-            ? 'bg-surface/90 backdrop-blur-xl shadow-lg'
-            : 'bg-transparent'
+    // 讓導覽列維持毛玻璃效果，僅針對顏色變化做轉場以避免滾動時位置產生位移
+    const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
+            ? 'bg-surface/90 shadow-lg'
+            : 'bg-surface/50'
         }`;
 
     const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
