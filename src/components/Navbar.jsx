@@ -105,10 +105,9 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* 毛玻璃選單容器 */}
+                {/* 手機版下拉選單，透過高度變化實現滑動效果 */}
                 <div
-                    className={`md:hidden absolute top-full left-0 w-full bg-surface/80 backdrop-blur-lg transition-[max-height] duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen shadow-lg' : 'max-h-0'
-                        }`}
+                    className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 shadow-lg' : 'max-h-0'}`}
                 >
                     <div className="p-4 space-y-4">
                         {navLinks.map(({ label, id }) => (
