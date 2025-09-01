@@ -25,36 +25,21 @@ export default function ScrollToTop() {
         };
     }, []);
 
-    const radius = 26;
-    const circumference = 2 * Math.PI * radius;
-    const dashOffset = circumference - progress * circumference;
-
     return (
         <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
             <div className="relative w-14 h-14">
-                {/* 外部進度環 */}
-                <svg className="absolute inset-0 w-full h-full -rotate-90">
-                    <circle
-                        cx="28"
-                        cy="28"
-                        r={radius}
-                        strokeWidth="4"
-                        className="text-border stroke-current"
-                        fill="transparent"
-                    />
-                    <circle
-                        cx="28"
-                        cy="28"
-                        r={radius}
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                        className="text-brand stroke-current"
-                        fill="transparent"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={dashOffset}
-                    />
-                </svg>
-                {/* 內部回頂按鈕 */}
+                {/* 進度環背景 */}
+                <div className="absolute inset-0 rounded-full border-4 border-border" />
+                {/* 進度環 */}
+                <div
+                    className="absolute inset-0 rounded-full text-brand"
+                    style={{
+                        background: `conic-gradient(from -90deg, currentColor ${progress * 100}%, transparent 0)`,
+                        WebkitMask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 calc(100% - 4px))',
+                        mask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 calc(100% - 4px))',
+                    }}
+                />
+                {/* 回到頂端按鈕 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     aria-label="回到頂端"
