@@ -30,17 +30,35 @@ export default function ScrollToTop() {
     return (
         <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50">
             <div className="relative w-14 h-14">
-                {/* 進度環背景 */}
-                <div className="absolute inset-0 rounded-full border-4 border-border" />
-                {/* 進度環 */}
-                <div
-                    className="absolute inset-0 rounded-full text-brand"
-                    style={{
-                        background: `conic-gradient(from -90deg, currentColor ${progress * 100}%, transparent 0)`,
-                        WebkitMask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 calc(100% - 4px))',
-                        mask: 'radial-gradient(farthest-side, #0000 calc(100% - 4px), #000 calc(100% - 4px))',
-                    }}
-                />
+                {/* 使用 SVG 繪製圓周進度環 */}
+                <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                    {/* 背景圓環 */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        strokeWidth="8"
+                        className="text-border"
+                        stroke="currentColor"
+                        fill="none"
+                    />
+                    {/* 進度圓環 */}
+                    <circle
+                        cx="50"
+                        cy="50"
+                        r="45"
+                        strokeWidth="8"
+                        className="text-brand"
+                        stroke="currentColor"
+                        fill="none"
+                        strokeLinecap="round"
+                        style={{
+                            strokeDasharray: 2 * Math.PI * 45,
+                            strokeDashoffset: (1 - progress) * 2 * Math.PI * 45,
+                            transition: 'stroke-dashoffset 0.2s ease-out',
+                        }}
+                    />
+                </svg>
                 {/* 回到頂端按鈕 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
