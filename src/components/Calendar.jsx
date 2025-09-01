@@ -38,8 +38,8 @@ export default function Calendar() {
                     <iframe
                         src={calendarSrc}
                         className="w-full h-[500px] md:h-[700px]"
-                        /* 暗色主題時套用 CSS 濾鏡反轉色彩 */
-                        style={{ filter: theme === 'dark' ? 'invert(1) hue-rotate(180deg)' : undefined }}
+                        /* 根據主題套用或移除色彩反轉遮罩 */
+                        style={{ filter: theme === 'dark' ? 'invert(1) hue-rotate(180deg)' : 'none' }}
                         frameBorder="0"
                         scrolling="no"
                     />
