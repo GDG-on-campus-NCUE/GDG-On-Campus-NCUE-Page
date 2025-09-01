@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowRightIcon, ArrowUpIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import gdgLogo from '@/images/icon/brackets.gif';
 import githubIcon from '@/images/icon/github (1).png';
 import instagramIcon from '@/images/icon/instagram.png';
@@ -98,8 +98,8 @@ export default function JoinUs() {
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.15),transparent)]"></div>
 
                 <div className="relative max-w-7xl mx-auto">
-                    {/* RWD 三欄版面，中間為回頂端按鈕 */}
-                    <div className="grid md:grid-cols-3 gap-12 mb-12">
+                    {/* RWD 兩欄版面 */}
+                    <div className="grid md:grid-cols-2 gap-12 mb-12">
                         {/* 左側：社群介紹 */}
                         <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.6s' }}>
                             <a href="#" className="inline-block mb-4 md:mb-6">
@@ -110,20 +110,8 @@ export default function JoinUs() {
                             </p>
                         </div>
 
-                        {/* 中間：回到頂端按鈕 */}
-                        <div className={`flex flex-col items-center justify-center gap-y-4 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
-                            <button
-                                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                                className="group w-14 h-14 rounded-full bg-brand text-text-on-brand flex items-center justify-center shadow-lg shadow-brand/30 transition-transform duration-300 hover:scale-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
-                                aria-label="回到頂端"
-                            >
-                                <ArrowUpIcon className="w-6 h-6 transition-transform duration-300 group-hover:-translate-y-1" />
-                            </button>
-                            <span className="text-sm text-muted">回到頂端</span>
-                        </div>
-
                         {/* 右側：社群連結與聯絡方式 */}
-                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
+                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
                             <div>
                                 <h3 className="font-bold text-heading mb-4">關注我們</h3>
                                 <div className="flex items-center justify-center md:justify-end gap-x-4">
