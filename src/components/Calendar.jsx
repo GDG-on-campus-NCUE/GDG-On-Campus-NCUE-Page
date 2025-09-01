@@ -34,6 +34,7 @@ export default function Calendar() {
                 </h2>
                 <div className="rounded-xl overflow-hidden shadow-lg border border-border relative">
                     <iframe
+                        key={theme} // 主題切換時重新載入以套用濾鏡
                         src={calendarSrc}
                         className="w-full h-[500px] md:h-[700px]"
                         /* 根據主題套用或移除色彩反轉遮罩 */

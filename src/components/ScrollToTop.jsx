@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTheme } from '@/hooks/useTheme';
 
 // 懸浮回到頂端按鈕，外圈顯示頁面滾動進度
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
     const { language } = useLanguage();
+    const { theme } = useTheme();
 
     useEffect(() => {
         // 計算頁面滾動百分比
@@ -32,13 +34,13 @@ export default function ScrollToTop() {
             <div className="relative w-14 h-14">
                 {/* 使用 SVG 繪製圓周進度環 */}
                 <svg className="absolute inset-0 w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                    {/* 背景圓環 */}
+                    {/* 背景圓環：亮色主題使用較深色避免不明顯 */}
                     <circle
                         cx="50"
                         cy="50"
                         r="45"
                         strokeWidth="8"
-                        className="text-border"
+                        className={theme === 'light' ? 'text-muted' : 'text-border'}
                         stroke="currentColor"
                         fill="none"
                     />
