@@ -14,7 +14,7 @@ export default function Vision() {
     const ref = useRef(null);
     const { language } = useLanguage();
 
-    // 動畫觸發的 useEffect hook (保持不變，效果很好)
+    // 動畫觸發的 useEffect hook，當區塊完全進入視窗時啟動
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -23,7 +23,8 @@ export default function Vision() {
                     observer.unobserve(entry.target);
                 }
             },
-            { threshold: 0.2 }
+            // threshold 設為 1 代表元素完全進入視窗才觸發
+            { threshold: 1 }
         );
 
         if (ref.current) {
@@ -97,8 +98,9 @@ export default function Vision() {
                         return (
                             <div
                                 key={index}
-                                className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-xl hover:shadow-brand/20 hover:-translate-y-2 transition-all duration-300 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                                style={{ transitionDelay: `${0.4 + index * 0.2}s` }}
+                                // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
+                                className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                style={{ transitionDelay: `${index * 0.15}s` }}
                             >
                                 <div className="mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center md:text-left">
                                     <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-brand mx-auto md:mx-0" />
