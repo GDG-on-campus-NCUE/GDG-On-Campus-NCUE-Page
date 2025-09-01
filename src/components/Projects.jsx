@@ -226,25 +226,25 @@ export default function Projects() {
                             {/* 卡片內容保持不變，它的 RWD 已經做得很好 */}
                             <div className="flex justify-between items-start mb-4">
                                 <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
-                                  {(() => {
-                                      const statusClass =
-                                          feature.status === '已上線' || feature.status === 'Released'
-                                              ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
-                                              : feature.status === '進行中' || feature.status === 'In Progress'
-                                                  ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
-                                                  : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
-                                      return (
-                                          <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
-                                              {feature.status}
-                                          </span>
-                                      );
-                                  })()}
+                                {(() => {
+                                    const statusClass =
+                                        feature.status === '已上線' || feature.status === 'Released'
+                                            ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
+                                            : feature.status === '進行中' || feature.status === 'In Progress'
+                                                ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
+                                                : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
+                                    return (
+                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
+                                            {feature.status}
+                                        </span>
+                                    );
+                                })()}
                             </div>
                             <p className="phone-liner md:pc-liner text-muted mb-4 leading-relaxed flex-grow">{feature.description}</p>
                             <div className="flex flex-wrap gap-2 mb-4">
-                                  {feature.tags.map(tag => (
-                                      <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
-                                  ))}
+                                {feature.tags.map(tag => (
+                                    <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
+                                ))}
                             </div>
                             {feature.link && (
                                 <a href={feature.link} target="_blank" rel="noopener noreferrer" className="phone-liner-bold text-brand hover:text-brand-accent font-medium transition-colors group flex items-center mt-auto">

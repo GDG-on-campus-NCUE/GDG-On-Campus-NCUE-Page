@@ -10,7 +10,7 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata = {
-  title: "GDG on Campus NCUE | Build with AI",
+  title: "GDG On Campus NCUE | Build with AI",
   description: "不只是一場活動，而是一場技術革命的開端。回顧我們的「Build with AI 2025」：賦能每一位創造者。",
   icons: {
     icon: "/gdg_web/favicon.ico",

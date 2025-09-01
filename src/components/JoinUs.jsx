@@ -90,7 +90,7 @@ export default function JoinUs() {
                         style={{ transitionDelay: '0.4s' }}
                     >
                         <Image src={lineIcon} alt="Line Icon" width={28} height={28} className="w-6 h-6 md:w-7 md:h-7" />
-                        <span>{language === 'zh' ? '立即加入 Line 社群' : 'Join our Line group now'}</span>
+                        <span>{language === 'zh' ? '立即加入 LINE 社群' : 'Join our LINE group now'}</span>
                         <ArrowRightIcon className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
                 </div>
@@ -152,7 +152,7 @@ export default function JoinUs() {
                     </div>
 
                     <div className={`mt-12 text-center text-xs text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
-                        <p>© {new Date().getFullYear()} GDG on Campus NCUE. All Rights Reserved.</p>
+                        <p>© {new Date().getFullYear()} GDG On Campus NCUE. All Rights Reserved.</p>
                     </div>
                 </div>
             </footer>
