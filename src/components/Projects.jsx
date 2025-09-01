@@ -96,6 +96,21 @@ export default function Projects() {
     };
     const features = featureData[language];
 
+    // 取出除精選專案外的其他專案
+    const otherFeatures = features.slice(1);
+
+    // 根據專案數量計算桌面版欄數（平方根上取整）
+    const columnCount = Math.ceil(Math.sqrt(otherFeatures.length));
+
+    // 將欄數對應到 Tailwind 的欄位 class
+    const columnClass = {
+        1: 'lg:grid-cols-1',
+        2: 'lg:grid-cols-2',
+        3: 'lg:grid-cols-3',
+        4: 'lg:grid-cols-4',
+        5: 'lg:grid-cols-5',
+    }[columnCount] || 'lg:grid-cols-3';
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -216,8 +231,8 @@ export default function Projects() {
                 </div>
 
                 {/* --- 區段三：更多專案 (RWD 已優化) --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24">
-                    {features.slice(1).map((feature, index) => (
+                <div className={`grid grid-cols-1 md:grid-cols-2 ${columnClass} gap-6 md:gap-8 mb-16 md:mb-24`}>
+                    {otherFeatures.map((feature, index) => (
                         <div
                             key={index}
                             className={`bg-surface rounded-2xl border border-border p-6 flex flex-col transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
