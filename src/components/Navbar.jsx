@@ -34,8 +34,8 @@ export default function Navbar() {
 
     // 僅針對顏色變化做轉場，避免滾動時位置產生位移
     const navClasses = `fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${isScrolled || isMobileMenuOpen
-            ? 'bg-surface/90 backdrop-blur-xl border-b border-border shadow-lg'
-            : 'bg-transparent border-b border-transparent'
+            ? 'bg-surface/90 backdrop-blur-xl shadow-lg'
+            : 'bg-transparent'
         }`;
 
     const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
@@ -107,7 +107,7 @@ export default function Navbar() {
 
                 {/* 毛玻璃選單容器 */}
                 <div
-                    className={`md:hidden absolute top-full left-0 w-full bg-surface/80 backdrop-blur-lg transition-[max-height] duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen border-t border-border shadow-lg' : 'max-h-0'
+                    className={`md:hidden absolute top-full left-0 w-full bg-surface/80 backdrop-blur-lg transition-[max-height] duration-300 ease-in-out overflow-hidden z-50 ${isMobileMenuOpen ? 'max-h-screen shadow-lg' : 'max-h-0'
                         }`}
                 >
                     <div className="p-4 space-y-4">
@@ -127,7 +127,7 @@ export default function Navbar() {
             {/* 背景遮罩，移到 nav 之外以確保固定定位相對於視窗 */}
             {isMobileMenuOpen && (
                 <div
-                    className="md:hidden fixed inset-0 bg-background/60 backdrop-blur-lg z-40"
+                    className="md:hidden fixed inset-0 bg-background/60 z-40"
                     onClick={() => setIsMobileMenuOpen(false)}
                 ></div>
             )}
