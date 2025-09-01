@@ -33,12 +33,14 @@ export default function Navbar() {
             { label: '核心使命', id: 'vision' },
             { label: '活動回顧', id: 'events' },
             { label: '校園專案', id: 'projects' },
+            { label: '社群行程', id: 'calendar' }, // 新增社群行程
             { label: '加入我們', id: 'join' },
         ]
         : [
             { label: 'Our Vision', id: 'vision' },
             { label: 'Events', id: 'events' },
             { label: 'Projects', id: 'projects' },
+            { label: 'Schedule', id: 'calendar' }, // 新增社群行程
             { label: 'Join Us', id: 'join' },
         ];
 
