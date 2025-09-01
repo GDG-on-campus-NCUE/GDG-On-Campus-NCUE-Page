@@ -48,7 +48,14 @@
   - 項目狀態列表（已上線/規劃中）
   - Mockup 設計預覽
 
-### 6. **JoinUs** (`/src/components/JoinUs.jsx`)
+### 6. **Calendar** (`/src/components/Calendar.jsx`)
+- **功能**: 官方行事曆展示
+- **特色**:
+  - Google Calendar 嵌入式視圖
+  - 依主題切換背景顏色
+  - 響應式高度與淡入動畫
+
+### 7. **JoinUs** (`/src/components/JoinUs.jsx`)
 - **功能**: 加入我們 + Footer
 - **特色**:
   - 雙區段設計（藍色 CTA + 黑色 Footer）
