@@ -22,8 +22,8 @@ export default function Calendar() {
         return () => { if (ref.current) observer.unobserve(ref.current); };
     }, []);
 
-    // Google Calendar 來源網址，依據主題切換背景顏色
-    const calendarSrc = `https://calendar.google.com/calendar/embed?src=c_c9a15fa8927d18cb8a0729ce86aa1801a579a04d11368df860950c15f6c04af4%40group.calendar.google.com&ctz=Asia%2FTaipei&bgcolor=${theme === 'dark' ? '%23000000' : '%23ffffff'}`;
+    // Google Calendar 來源網址，背景維持白色以方便在深色主題下反轉顏色
+    const calendarSrc = `https://calendar.google.com/calendar/embed?src=c_c9a15fa8927d18cb8a0729ce86aa1801a579a04d11368df860950c15f6c04af4%40group.calendar.google.com&ctz=Asia%2FTaipei&bgcolor=%23ffffff`;
 
     return (
         <section id="calendar" className="bg-surface-muted py-20 md:py-32 px-4 md:px-6" ref={ref}>
@@ -38,6 +38,10 @@ export default function Calendar() {
                         frameBorder="0"
                         scrolling="no"
                     />
+                    {theme === 'dark' && (
+                        // 色彩反轉遮罩，覆蓋在 iframe 上並允許滑鼠穿透
+                        <div className="absolute inset-0 bg-white mix-blend-difference pointer-events-none" />
+                    )}
                 </div>
             </div>
         </section>
