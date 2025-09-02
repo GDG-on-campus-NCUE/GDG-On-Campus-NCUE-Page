@@ -44,21 +44,10 @@ export default function ScrollToTop() {
             <div className="relative w-12 h-12 aspect-square">
                 {/* 使用 SVG 建立圓形進度環，避免手機瀏覽器變形問題 */}
                 <svg
-                    className="absolute inset-0 -rotate-90"
+                    className="absolute inset-0 -rotate-90 w-full h-full"
                     viewBox="0 0 48 48"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <defs>
-                        {/* Google 色系的線性漸層 */}
-                        <linearGradient id="progressGradient" gradientTransform="rotate(45)">
-                            <stop offset="0%" stopColor="#ea4335" />
-                            <stop offset="25%" stopColor="#fbbc04" />
-                            <stop offset="50%" stopColor="#34a853" />
-                            <stop offset="75%" stopColor="#4285f4" />
-                            <stop offset="100%" stopColor="#ea4335" />
-                        </linearGradient>
-                    </defs>
-
                     {/* 背景圓環 */}
                     <circle
                         cx="24"
@@ -69,20 +58,38 @@ export default function ScrollToTop() {
                         className={useLightStyle ? 'stroke-border' : 'stroke-slate-600'}
                     />
 
-                    {/* 依捲動進度繪製的彩色圓環 */}
-                    <circle
-                        cx="24"
-                        cy="24"
-                        r={radius}
-                        stroke="url(#progressGradient)"
-                        strokeWidth="4"
-                        fill="none"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={circumference * (1 - progress)}
-                        strokeLinecap="round"
-                    />
-                </svg>
+                    {/* 依捲動進度繪製的彩色圓周 */}
+                    {[
+                        { color: '#ea4335', start: 0 }, // 紅：第一象限
+                        { color: '#fbbc04', start: 0.25 }, // 黃：第四象限
+                        { color: '#34a853', start: 0.5 }, // 綠：第三象限
+                        { color: '#4285f4', start: 0.75 }, // 藍：第二象限
+                    ].map(({ color, start }) => {
+                        const segment = 0.25; // 每一象限所占的比例
+                        const progressInSegment = Math.min(
+                            Math.max(progress - start, 0),
+                            segment,
+                        );
 
+                        return (
+                            <circle
+                                key={color}
+                                cx="24"
+                                cy="24"
+                                r={radius}
+                                stroke={color}
+                                strokeWidth="4"
+                                fill="none"
+                                strokeDasharray={`${progressInSegment * circumference} ${circumference}`}
+                                strokeDashoffset={
+                                    circumference * (1 - start - progressInSegment)
+                                }
+                                strokeLinecap="round"
+                            />
+                        );
+                    })}
+                </svg>
+                
                 {/* 置中按鈕 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
