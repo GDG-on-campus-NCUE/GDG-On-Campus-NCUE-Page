@@ -3,10 +3,13 @@
 import { useEffect, useState } from 'react';
 import { ArrowUpIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTheme } from '@/hooks/useTheme';
 
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
+    const [isScrolled, setIsScrolled] = useState(false); // 追蹤是否離開頂部
     const { language } = useLanguage();
+    const { theme } = useTheme();
     const circumference = 2 * Math.PI * 45; // r = 45
 
     useEffect(() => {
@@ -15,17 +18,21 @@ export default function ScrollToTop() {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const newProgress = docHeight > 0 ? scrollTop / docHeight : 0;
             setProgress(newProgress);
+            setIsScrolled(scrollTop > 10); // 檢查是否已經捲動離開頂部
         };
 
         updateProgress();
         window.addEventListener('scroll', updateProgress, { passive: true });
         window.addEventListener('resize', updateProgress);
-        
+
         return () => {
             window.removeEventListener('scroll', updateProgress);
             window.removeEventListener('resize', updateProgress);
         };
     }, []);
+
+    // 在淺色主題下，離開 Hero 後改用淺色樣式
+    const useLightStyle = theme === 'light' && isScrolled;
 
     return (
         // flex-shrink-0 可防止按鈕在 flex 容器中被壓縮
@@ -58,7 +65,7 @@ export default function ScrollToTop() {
                         cy="50"
                         r="45"
                         strokeWidth="8"
-                        className="text-border" // 使用中性的軌道顏色
+                        className={useLightStyle ? 'text-border' : 'text-slate-600'} // 根據狀態切換軌道顏色
                         stroke="currentColor"
                         fill="none"
                     />
@@ -88,15 +95,15 @@ export default function ScrollToTop() {
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     aria-label={language === 'zh' ? '回到頂端' : 'Back to top'}
-                    className="
+                    className={`
                         absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                        w-9 h-9 aspect-square rounded-full /* 強制 1:1 比例 */
+                        w-9 h-9 aspect-square rounded-full
                         flex items-center justify-center
                         shadow-lg transition-transform duration-300 hover:scale-110
                         focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2
-                        bg-surface/70 backdrop-blur-sm
-                        text-foreground
-                    "
+                        backdrop-blur-sm
+                        ${useLightStyle ? 'bg-surface/70 text-foreground' : 'bg-slate-800/70 text-white'}
+                    `}
                 >
                     <ArrowUpIcon className="w-5 h-5" />
                 </button>

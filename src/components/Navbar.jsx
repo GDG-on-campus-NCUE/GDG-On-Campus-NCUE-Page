@@ -45,18 +45,18 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    // === 修改：顏色判斷邏輯加入 theme ===
-    const isAtTopInLightTheme = !isScrolled && !isMobileMenuOpen && theme === 'light';
+    // === 根據主題與捲動狀態判斷是否使用淺色樣式 ===
+    const useLightStyle = theme === 'light' && (isScrolled || isMobileMenuOpen);
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
             : 'bg-transparent' // 在頂部時完全透明
         }`;
 
-    const logoColor = isAtTopInLightTheme ? 'text-slate-800' : 'text-white drop-shadow-lg';
-    const linkColor = isAtTopInLightTheme ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const mobileIconColor = isAtTopInLightTheme ? 'text-slate-800' : 'text-white';
-    const themeSwitcherColor = isAtTopInLightTheme ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const logoColor = useLightStyle ? 'text-slate-800' : 'text-white drop-shadow-lg';
+    const linkColor = useLightStyle ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileIconColor = useLightStyle ? 'text-slate-800' : 'text-white';
+    const themeSwitcherColor = useLightStyle ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
 
     return (
         <>
