@@ -126,6 +126,15 @@ export default function Vision() {
         container.addEventListener('scroll', handleScroll);
         window.addEventListener('resize', handleScroll);
 
+        // 取得卡片寬度與間距
+        const getStep = () => {
+            const first = cardRefs.current[0];
+            if (!first) return 0;
+            const style = window.getComputedStyle(container);
+            const gap = parseFloat(style.columnGap || style.gap || '0');
+            return first.offsetWidth + gap;
+        };
+
         // 針對滑鼠滾輪的水平滾動轉換
         const handleWheel = (e) => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
@@ -134,7 +143,8 @@ export default function Vision() {
             const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
             if ((!atEnd && e.deltaY > 0) || (!atStart && e.deltaY < 0)) {
                 e.preventDefault();
-                container.scrollLeft += e.deltaY;
+                const step = getStep();
+                container.scrollBy({ left: (e.deltaY > 0 ? 1 : -1) * step, behavior: 'smooth' });
             }
         };
         container.addEventListener('wheel', handleWheel, { passive: false });
@@ -144,25 +154,25 @@ export default function Vision() {
         const handleTouchStart = (e) => {
             startY = e.touches[0].clientY;
         };
-        const handleTouchMove = (e) => {
-            const dy = startY - e.touches[0].clientY;
+        const handleTouchEnd = (e) => {
+            const dy = startY - e.changedTouches[0].clientY;
             const atStart = container.scrollLeft === 0;
             const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
-            if ((!atEnd && dy > 0) || (!atStart && dy < 0)) {
+            if ((!atEnd && dy > 30) || (!atStart && dy < -30)) {
                 e.preventDefault();
-                container.scrollLeft += dy;
+                const step = getStep();
+                container.scrollBy({ left: (dy > 0 ? 1 : -1) * step, behavior: 'smooth' });
             }
-            startY = e.touches[0].clientY;
         };
         container.addEventListener('touchstart', handleTouchStart, { passive: false });
-        container.addEventListener('touchmove', handleTouchMove, { passive: false });
+        container.addEventListener('touchend', handleTouchEnd, { passive: false });
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
             container.removeEventListener('wheel', handleWheel);
             container.removeEventListener('touchstart', handleTouchStart);
-            container.removeEventListener('touchmove', handleTouchMove);
+            container.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
 
@@ -173,19 +183,22 @@ export default function Vision() {
                 title: '校園創新與影響力',
                 description: '我們將想法轉化為實際的校園應用。透過與學校的直接合作，我們打造並維護能優化師生日常生活的系統，將 AI 與現代技術帶入校園的核心。',
                 outline: CodeBracketSquareIconOutline,
-                solid: CodeBracketSquareIconSolid
+                solid: CodeBracketSquareIconSolid,
+                color: '#4285F4' // Google 藍
             },
             {
                 title: '成長與知識共享',
                 description: '保持技術領先。從 AI 工作坊到最新框架的深度探討，我們為熱情的開發者們創造一個充滿活力的空間，互相學習、分享專業，共同成長為技術領導者。',
                 outline: AcademicCapIconOutline,
-                solid: AcademicCapIconSolid
+                solid: AcademicCapIconSolid,
+                color: '#EA4335' // Google 紅
             },
             {
                 title: '連結無限機遇',
                 description: '透過獨家資源釋放你的潛力。我們扮演著橋樑的角色，將成員與 Google、業界夥伴的廣大網絡連結。這是你通往導師指導、專案協作和更廣闊機愈的門戶。',
                 outline: GlobeAltIconOutline,
-                solid: GlobeAltIconSolid
+                solid: GlobeAltIconSolid,
+                color: '#FBBC05' // Google 黃
             }
         ]
         : [
@@ -193,24 +206,27 @@ export default function Vision() {
                 title: 'Campus Innovation and Impact',
                 description: 'We turn ideas into real campus applications. By collaborating directly with the university, we build and maintain systems that improve daily life, bringing AI and modern tech to the heart of campus.',
                 outline: CodeBracketSquareIconOutline,
-                solid: CodeBracketSquareIconSolid
+                solid: CodeBracketSquareIconSolid,
+                color: '#4285F4' // Google 藍
             },
             {
                 title: 'Growth and Knowledge Sharing',
                 description: 'Stay at the cutting edge. From AI workshops to deep dives into the latest frameworks, we create an energetic space for passionate developers to learn, share expertise and grow into tech leaders together.',
                 outline: AcademicCapIconOutline,
-                solid: AcademicCapIconSolid
+                solid: AcademicCapIconSolid,
+                color: '#EA4335' // Google 紅
             },
             {
                 title: 'Connecting Endless Opportunities',
                 description: 'Unlock your potential with exclusive resources. We serve as a bridge linking members to Google and industry partners, opening doors to mentorship, project collaboration and broader opportunities.',
                 outline: GlobeAltIconOutline,
-                solid: GlobeAltIconSolid
+                solid: GlobeAltIconSolid,
+                color: '#FBBC05' // Google 黃
             }
         ];
 
     return (
-        <section id="vision" className="py-20 md:py-32 px-4 md:px-8 bg-transparent" ref={ref}>
+        <section id="vision" className="py-20 md:py-32 px-4 md:px-8 bg-transparent select-none" ref={ref}>
             <div className="max-w-7xl mx-auto">
                 {/* Header with Chinese Content */}
                 <div className="text-center mb-16 md:mb-24">
@@ -228,7 +244,7 @@ export default function Vision() {
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto overflow-y-hidden no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12"
+                    className="flex overflow-x-auto overflow-y-hidden no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
@@ -248,7 +264,7 @@ export default function Vision() {
                                 <span className="sheen pointer-events-none"></span>
                                 <div className="mb-6 md:mb-8 text-center relative w-10 h-10 md:w-12 md:h-12 mx-auto">
                                     <Outline className="absolute inset-0 w-full h-full text-brand transition-opacity duration-300 group-hover:opacity-0 group-focus:opacity-0" />
-                                    <Solid className="absolute inset-0 w-full h-full text-brand opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100" />
+                                    <Solid className="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100" style={{ color: card.color }} />
                                 </div>
                                 <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center">
                                     {card.title}
