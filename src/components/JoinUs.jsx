@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
@@ -11,6 +11,23 @@ import githubIcon from '@/images/icon/github.png';
 import instagramIcon from '@/images/icon/instagram.png';
 import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
 import lineIcon from '@/images/icon/line.png';
+
+// Gmail 圖示，使用 SVG 繪製
+function GmailIcon({ className = '' }) {
+    return (
+        <svg
+            className={className}
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            {/* 簡化版 Gmail 標誌 */}
+            <path
+                fill="currentColor"
+                d="M21.8 3H2.2A2.2 2.2 0 0 0 0 5.2v13.6A2.2 2.2 0 0 0 2.2 21h19.6a2.2 2.2 0 0 0 2.2-2.2V5.2A2.2 2.2 0 0 0 21.8 3zm0 2.2v.1L12 12.3 2.2 5.3v-.1h19.6zM21.8 18.8H2.2V6.8l9.8 7.5 9.8-7.5v12z"
+            />
+        </svg>
+    );
+}
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
@@ -30,7 +47,7 @@ export default function JoinUs() {
         },
         {
             name: 'Gmail',
-            icon: EnvelopeIcon,
+            icon: GmailIcon,
             url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
             labelZh: 'GDG mail 通知',
             labelEn: 'GDG Mail Notifications',
@@ -191,7 +208,8 @@ export default function JoinUs() {
                                 </div>
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-x-2 text-sm text-muted">
-                                <EnvelopeIcon className="w-5 h-5 text-brand" />
+                                <GmailIcon className="w-5 h-5 text-brand" />
+                                <span>{language === 'zh' ? '聯絡我們' : 'Contact Us'}</span>
                                 <a href="mailto:gdg-core@ncuesa.org.tw" className="hover:text-brand transition-colors">
                                     gdg-core@ncuesa.org.tw
                                 </a>
