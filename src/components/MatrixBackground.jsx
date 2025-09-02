@@ -2,7 +2,6 @@
 
 import { useRef, useEffect } from 'react';
 
-// 這一版我們將還原您最喜歡的早期風格，同時保留主題切換功能
 const MatrixBackground = ({ codeString }) => { 
     const canvasRef = useRef(null);
 
@@ -13,7 +12,6 @@ const MatrixBackground = ({ codeString }) => {
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
-        // 保留：從 CSS 讀取顏色，這是實現動態主題切換的關鍵
         const getThemeColors = () => {
             const styles = getComputedStyle(document.documentElement);
             return {
@@ -27,12 +25,9 @@ const MatrixBackground = ({ codeString }) => {
         const codeChars = codeString.replace(/\s/g, '');
         const codeLength = codeChars.length;
 
-        // === 還原：使用早期版本的視覺參數 ===
         const fontSize = 14; 
-        const speed = 18; // 大幅提升速度，接近早期版本 drop.y += fontSize 的效果
-
-        // === 折衷：保留微小的水平間距，防止字元完全重疊 ===
-        const columnWidth = fontSize + 4; // 僅保留 4px 間距，增加密度
+        const speed = 18;
+        const columnWidth = fontSize + 4;
 
         let columns = 0;
         let rainDrops = [];
@@ -58,21 +53,16 @@ const MatrixBackground = ({ codeString }) => {
 
             for (let i = 0; i < rainDrops.length; i++) {
                 const drop = rainDrops[i];
-                
-                // === 核心還原：移除程式碼串的 for 迴圈，只繪製一個字元 ===
                 const text = codeChars[drop.charIndex];
-
-                // 使用簡化的顏色邏輯，突出顯示括號，其他都用最亮的 head 顏色
                 ctx.fillStyle = '{}[]()'.includes(text) ? colors.brackets : colors.head;
                 
                 ctx.fillText(text, i * columnWidth, drop.y);
 
-                // === 還原：使用早期版本的重設邏輯 ===
                 if (drop.y > canvas.height && Math.random() > 0.98) {
                     drop.y = 0;
                     drop.charIndex = Math.floor(Math.random() * codeLength);
                 } else {
-                    drop.y += speed; // 使用新的高速變數
+                    drop.y += speed;
                 }
 
                 drop.charIndex = (drop.charIndex + 1) % codeLength;
