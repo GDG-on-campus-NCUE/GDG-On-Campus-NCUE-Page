@@ -13,6 +13,50 @@ export default function Vision() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
     const { language } = useLanguage();
+    const cardRefs = useRef([]);
+
+    // 3D 傾斜與掃掠光效的滑鼠事件處理函式
+    const handleMouseMove = (e, index) => {
+        const card = cardRefs.current[index];
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const rotateX = ((y - rect.height / 2) / rect.height) * -15;
+        const rotateY = ((x - rect.width / 2) / rect.width) * 15;
+        card.style.transition = 'transform 0.1s ease-out';
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    };
+
+    const handleMouseEnter = (e, index) => {
+        const card = cardRefs.current[index];
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const fromLeft = x < rect.width / 2;
+        const sheen = card.querySelector('.sheen');
+        if (sheen) {
+            sheen.style.transition = 'none';
+            sheen.style.opacity = '1';
+            sheen.style.transform = fromLeft
+                ? 'translateX(-100%) rotate(45deg)'
+                : 'translateX(100%) rotate(45deg)';
+            requestAnimationFrame(() => {
+                sheen.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
+                sheen.style.transform = fromLeft
+                    ? 'translateX(100%) rotate(45deg)'
+                    : 'translateX(-100%) rotate(45deg)';
+                sheen.style.opacity = '0';
+            });
+        }
+    };
+
+    const handleMouseLeave = (index) => {
+        const card = cardRefs.current[index];
+        if (!card) return;
+        card.style.transition = 'transform 0.4s ease-out';
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+    };
 
     // 動畫觸發的 useEffect hook，監控區塊進出視窗
     useEffect(() => {
@@ -96,17 +140,22 @@ export default function Vision() {
                         return (
                             <div
                                 key={index}
+                                ref={(el) => (cardRefs.current[index] = el)}
+                                onMouseMove={(e) => handleMouseMove(e, index)}
+                                onMouseEnter={(e) => handleMouseEnter(e, index)}
+                                onMouseLeave={() => handleMouseLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                             >
-                                <div className="mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center md:text-left">
-                                    <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-brand mx-auto md:mx-0" />
+                                <span className="sheen pointer-events-none"></span>
+                                <div className="mb-6 md:mb-8 group-hover:scale-110 transition-transform duration-300 text-center">
+                                    <IconComponent className="w-10 h-10 md:w-12 md:h-12 text-brand mx-auto" />
                                 </div>
-                                <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center md:text-left">
+                                <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center">
                                     {card.title}
                                 </h3>
-                                <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center md:text-left">
+                                <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center">
                                     {card.description}
                                 </p>
                             </div>
