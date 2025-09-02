@@ -101,7 +101,8 @@ export default function Vision() {
 
         const handleScroll = () => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
-            const center = window.innerWidth / 2;
+            const rectContainer = container.getBoundingClientRect();
+            const center = rectContainer.left + rectContainer.width / 2; // 以容器中心作為基準
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const rect = card.getBoundingClientRect();
@@ -109,7 +110,7 @@ export default function Vision() {
                 const distance = Math.abs(center - cardCenter);
                 const scale = Math.max(0.9, 1.1 - distance / center);
                 const rotateY = ((center - cardCenter) / center) * 15;
-                const blur = Math.min(distance / 40, 4);
+                const blur = distance < 30 ? 0 : Math.min(distance / 40, 4); // 中央卡片保持清晰
                 card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale})`;
                 card.style.filter = `blur(${blur}px)`;
                 card.style.opacity = scale > 1 ? '1' : '0.6';
@@ -122,9 +123,24 @@ export default function Vision() {
         handleScroll();
         container.addEventListener('scroll', handleScroll);
         window.addEventListener('resize', handleScroll);
+
+        const handleWheel = (e) => {
+            if (window.innerWidth >= 768) return; // 僅在手機版運作
+            if (e.deltaY === 0) return;
+            const atStart = container.scrollLeft === 0;
+            const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
+            if ((!atEnd && e.deltaY > 0) || (!atStart && e.deltaY < 0)) {
+                e.preventDefault();
+                container.scrollLeft += e.deltaY;
+            }
+        };
+
+        container.addEventListener('wheel', handleWheel, { passive: false });
+
         return () => {
             container.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
+            container.removeEventListener('wheel', handleWheel);
         };
     }, []);
 
@@ -190,7 +206,7 @@ export default function Vision() {
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12"
+                    className="flex overflow-x-auto overflow-y-hidden no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
