@@ -98,38 +98,43 @@ export default function Vision() {
         };
     }, []);
 
-    // 手機版滾動時簡單縮放與光暈效果
+    // 手機版使用 IntersectionObserver 偵測卡片位置
     useEffect(() => {
-        const handleScroll = () => {
-            if (window.innerWidth >= 768) return; // 僅在手機版運作
-            const center = window.innerHeight / 2;
-            cardRefs.current.forEach((card) => {
-                if (!card) return;
-                const rect = card.getBoundingClientRect();
-                const cardCenter = rect.top + rect.height / 2;
-                const distance = Math.abs(center - cardCenter);
-                const scale = Math.max(0.9, 1 - distance / (center * 1.5));
-                card.style.transform = `scale(${scale})`;
-                const isActive = scale > 0.98;
-                // 邊框顏色與光暈效果
-                card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
-                card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
-                // ICON 依據狀態切換顏色
-                const outlineIcon = card.querySelector('.icon-outline');
-                const solidIcon = card.querySelector('.icon-solid');
-                if (outlineIcon && solidIcon) {
-                    outlineIcon.style.opacity = isActive ? '0' : '1';
-                    solidIcon.style.opacity = isActive ? '1' : '0';
-                }
-            });
-        };
+        if (window.innerWidth >= 768) return; // 僅在手機版運作
 
-        handleScroll();
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', handleScroll);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    const card = entry.target;
+                    const isActive = entry.isIntersecting;
+                    // 進入視窗中間時放大並顯示光暈
+                    card.style.transform = `scale(${isActive ? 1 : 0.9})`;
+                    card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
+                    card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
+                    // ICON 依據狀態切換顏色
+                    const outlineIcon = card.querySelector('.icon-outline');
+                    const solidIcon = card.querySelector('.icon-solid');
+                    if (outlineIcon && solidIcon) {
+                        outlineIcon.style.opacity = isActive ? '0' : '1';
+                        solidIcon.style.opacity = isActive ? '1' : '0';
+                    }
+                });
+            },
+            {
+                // 觀察元素進入視窗中間附近時觸發
+                root: null,
+                threshold: 0.5,
+            }
+        );
+
+        cardRefs.current.forEach((card) => {
+            if (card) observer.observe(card);
+        });
+
         return () => {
-            window.removeEventListener('scroll', handleScroll);
-            window.removeEventListener('resize', handleScroll);
+            cardRefs.current.forEach((card) => {
+                if (card) observer.unobserve(card);
+            });
         };
     }, []);
 
