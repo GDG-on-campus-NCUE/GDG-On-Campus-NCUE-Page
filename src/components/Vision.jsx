@@ -113,13 +113,22 @@ export default function Vision() {
                 const scale = Math.max(0.85, 1 - distance / (center * 1.2));
                 const rotateY = ((center - cardCenter) / center) * 20;
                 const translateY = scale > 0.98 ? -10 : 0;
+                // 依據捲動位置調整卡片的縮放與位移
                 card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale}) translateY(${translateY}px)`;
                 card.style.filter = 'none'; // 移除模糊效果
                 card.style.opacity = scale > 0.95 ? '1' : '0.5';
                 card.style.zIndex = scale > 0.95 ? '1' : '0';
-                card.style.borderColor = scale > 0.95 ? 'var(--color-brand)' : 'var(--color-border)';
-                const sheen = card.querySelector('.sheen');
-                if (sheen) sheen.style.opacity = scale > 0.98 ? '1' : '0';
+                const isActive = scale > 0.95;
+                // 邊框顏色與光暈效果
+                card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
+                card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
+                // ICON 依據狀態切換顏色
+                const outlineIcon = card.querySelector('.icon-outline');
+                const solidIcon = card.querySelector('.icon-solid');
+                if (outlineIcon && solidIcon) {
+                    outlineIcon.style.opacity = isActive ? '0' : '1';
+                    solidIcon.style.opacity = isActive ? '1' : '0';
+                }
             });
         };
 
@@ -245,7 +254,7 @@ export default function Vision() {
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
+                    className="flex overflow-x-auto overflow-y-visible no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
@@ -261,11 +270,13 @@ export default function Vision() {
                                 className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group flex-shrink-0 w-60 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                                 tabIndex={0}
+                                data-color={card.color}
                             >
-                                <span className="sheen pointer-events-none"></span>
+                                {/* 手機版不顯示動態光效 */}
+                                <span className="sheen pointer-events-none hidden md:block"></span>
                                 <div className="mb-6 md:mb-8 text-center relative w-10 h-10 md:w-12 md:h-12 mx-auto">
-                                    <Outline className="absolute inset-0 w-full h-full text-brand transition-opacity duration-300 group-hover:opacity-0 group-focus:opacity-0" />
-                                    <Solid className="absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100" style={{ color: card.color }} />
+                                    <Outline className="icon-outline absolute inset-0 w-full h-full text-brand transition-opacity duration-300 group-hover:opacity-0 group-focus:opacity-0" />
+                                    <Solid className="icon-solid absolute inset-0 w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus:opacity-100" style={{ color: card.color }} />
                                 </div>
                                 <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center">
                                     {card.title}
