@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTheme } from '@/hooks/useTheme'; // 新增 import
 import Image from 'next/image';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
@@ -11,13 +12,13 @@ import LanguageSwitcher from './LanguageSwitcher';
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const { theme } = useTheme(); // 新增，取得目前主題
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            setIsScrolled(window.scrollY > 10); // 稍微降低觸發滾動的閾值
         };
         window.addEventListener('scroll', handleScroll);
-        // 設定初始狀態
         handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
@@ -33,36 +34,35 @@ export default function Navbar() {
             { label: '核心使命', id: 'vision' },
             { label: '活動回顧', id: 'events' },
             { label: '校園專案', id: 'projects' },
-            { label: '社群行程', id: 'calendar' }, // 新增社群行程
+            { label: '社群行程', id: 'calendar' },
             { label: '加入我們', id: 'join' },
         ]
         : [
             { label: 'Our Vision', id: 'vision' },
             { label: 'Events', id: 'events' },
             { label: 'Projects', id: 'projects' },
-            { label: 'Schedule', id: 'calendar' }, // 新增社群行程
+            { label: 'Schedule', id: 'calendar' },
             { label: 'Join Us', id: 'join' },
         ];
+    
+    // === 修改：顏色判斷邏輯加入 theme ===
+    const isAtTopInLightTheme = !isScrolled && !isMobileMenuOpen && theme === 'light';
 
-    // 讓導覽列維持毛玻璃效果，僅針對顏色變化做轉場以避免滾動時位置產生位移
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
-            : 'bg-surface/50'
+            : 'bg-transparent' // 在頂部時完全透明
         }`;
 
-    const logoColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white drop-shadow-lg';
-    const linkColor = isScrolled || isMobileMenuOpen ? 'text-muted hover:text-heading' : 'text-white hover:text-gray-200 drop-shadow-md';
-    // 根據滾動與漢堡選單狀態切換 icon 顏色
-    const mobileIconColor = isScrolled || isMobileMenuOpen ? 'text-heading' : 'text-white';
-    const themeSwitcherColor = isScrolled || isMobileMenuOpen ? 'text-heading hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const logoColor = isAtTopInLightTheme ? 'text-slate-800' : 'text-white drop-shadow-lg';
+    const linkColor = isAtTopInLightTheme ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileIconColor = isAtTopInLightTheme ? 'text-slate-800' : 'text-white';
+    const themeSwitcherColor = isAtTopInLightTheme ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
 
     return (
         <>
-            {/* 導覽列本體 */}
             <nav className={navClasses}>
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16 md:h-24">
-                        {/* 標誌區塊 */}
                         <div className="flex-shrink-0">
                             <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
                                 <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
@@ -81,7 +81,6 @@ export default function Navbar() {
                             </a>
                         </div>
 
-                        {/* 桌面版選單 */}
                         <div className="hidden md:flex items-center space-x-8">
                             {navLinks.map(({ label, id }) => (
                                 <button
@@ -97,7 +96,6 @@ export default function Navbar() {
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                         </div>
 
-                        {/* 手機版漢堡選單按鈕 */}
                         <div className="md:hidden flex items-center">
                             <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
@@ -107,19 +105,12 @@ export default function Navbar() {
                                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={isMobileMenuOpen}
                             >
-                                {isMobileMenuOpen ? (
-                                    // 開啟時顯示關閉 icon
-                                    <XMarkIcon className="w-6 h-6" />
-                                ) : (
-                                    // 關閉時顯示漢堡 icon
-                                    <Bars3Icon className="w-6 h-6" />
-                                )}
+                                {isMobileMenuOpen ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
                             </button>
                         </div>
                     </div>
                 </div>
 
-                {/* 手機版下拉選單，透過高度變化實現滑動效果 */}
                 <div
                     className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 shadow-lg' : 'max-h-0'}`}
                 >
@@ -137,7 +128,6 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* 背景遮罩，移到 nav 之外以確保固定定位相對於視窗 */}
             {isMobileMenuOpen && (
                 <div
                     className="md:hidden fixed inset-0 bg-background/60 z-40"

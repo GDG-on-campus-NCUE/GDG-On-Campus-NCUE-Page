@@ -15,6 +15,10 @@
   --accent: #ea4335;
   --warn: #fbbc04;
   --text-on-brand: #ffffff;
+  --matrix-bg: rgba(255, 255, 255, 0.1); /* 原為 0.45 */
+    --matrix-head: #000000;
+    --matrix-default: #334155;
+    --matrix-brackets: #0055A4;
 
   /* Font Variables */
   --font-source-sans: 'Source Sans 3', 'Source Sans Pro', Arial, Helvetica, sans-serif;
@@ -34,6 +38,10 @@
   --accent: #f28b82;
   --warn: #fdd663;
   --text-on-brand: #202124;
+  --matrix-bg: rgba(0, 0, 0, 0.05); /* 原為 0.3 */
+    --matrix-head: #C7FFD8;
+    --matrix-default: #39FF14;
+    --matrix-brackets: '#FFD700'; /* 確保引號正確 */
 }
 
 html,
