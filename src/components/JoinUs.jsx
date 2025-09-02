@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowRightIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
@@ -15,8 +15,12 @@ import lineIcon from '@/images/icon/line.png';
 // Gmail 圖示，使用 SVG 繪製
 function GmailIcon({ className = '' }) {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 48 48">
-            <path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"></path><path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"></path><polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"></polygon><path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"></path><path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0 C43.076,8,45,9.924,45,12.298z"></path>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className={className}>
+            <path fill="#4caf50" d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z" />
+            <path fill="#1e88e5" d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z" />
+            <polygon fill="#e53935" points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17" />
+            <path fill="#c62828" d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z" />
+            <path fill="#fbc02d" d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0 C43.076,8,45,9.924,45,12.298z" />
         </svg>
     );
 }
@@ -38,20 +42,20 @@ export default function JoinUs() {
             isImage: true,
         },
         {
-            name: 'Gmail',
-            icon: GmailIcon,
-            url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
-            labelZh: 'GDG mail 通知',
-            labelEn: 'GDG Mail Notifications',
-            isImage: false,
-        },
-        {
             name: 'Instagram',
             icon: instagramIcon,
             url: 'https://www.instagram.com/gdg_ncue',
             labelZh: 'Instagram',
             labelEn: 'Instagram',
             isImage: true,
+        },
+        {
+            name: 'Gmail',
+            icon: GmailIcon,
+            url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
+            labelZh: 'GDG mail 通知',
+            labelEn: 'GDG Mail Notifications',
+            isImage: false,
         },
         {
             name: 'GDG Community',
@@ -151,8 +155,8 @@ export default function JoinUs() {
                                 <Image
                                     src={theme === 'dark' ? gdgLogoDark : gdgLogoLight}
                                     alt="GDG on Campus NCUE Logo"
-                                    width={200}
-                                    height={40}
+                                    width={350}
+                                    height={70}
                                 />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
@@ -175,7 +179,7 @@ export default function JoinUs() {
                                             rel="noopener noreferrer"
                                             title={social.name}
                                             aria-label={social.name}
-                                            className="group flex flex-col items-center focus:outline-none"
+                                            className="group flex flex-col items-center focus:outline-none select-none"
                                         >
                                             {/* 圓形圖示容器 */}
                                             <div className="w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
@@ -200,8 +204,8 @@ export default function JoinUs() {
                                 </div>
                             </div>
                             <div className="flex items-center justify-center md:justify-end gap-x-2 text-sm text-muted">
-                                <GmailIcon className="w-5 h-5 text-brand" />
-                                <span>{language === 'zh' ? '聯絡我們' : 'Contact Us'}</span>
+                                <EnvelopeIcon className="w-5 h-5 text-brand" />
+                                <span>{language === 'zh' ? '聯絡我們:' : 'Contact Us:'}</span>
                                 <a href="mailto:gdg-core@ncuesa.org.tw" className="hover:text-brand transition-colors">
                                     gdg-core@ncuesa.org.tw
                                 </a>
