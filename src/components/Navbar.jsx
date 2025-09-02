@@ -45,18 +45,19 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    // 在淺色主題下，僅在捲動或展開選單時改用淺色樣式，否則維持深色樣式
-    const useLightStyle = theme === 'light' && (isScrolled || isMobileMenuOpen);
+    // 在頂端一律使用淺色元件，僅在淺色主題且頁面已滾動時切換為深色元件
+    const useDarkStyle = theme === 'light' && isScrolled;
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
             : 'bg-transparent' // 在頂部時完全透明
         }`;
 
-    const logoColor = useLightStyle ? 'text-slate-800' : 'text-white drop-shadow-lg';
-    const linkColor = useLightStyle ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const mobileIconColor = useLightStyle ? 'text-slate-800' : 'text-white';
-    const themeSwitcherColor = useLightStyle ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const logoColor = useDarkStyle ? 'text-slate-800' : 'text-white drop-shadow-lg';
+    const linkColor = useDarkStyle ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileIconColor = useDarkStyle ? 'text-slate-800' : 'text-white';
+    const themeSwitcherColor = useDarkStyle ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileMenuItemColor = useDarkStyle ? 'text-heading' : theme === 'dark' ? 'text-heading' : 'text-white';
 
     return (
         <>
@@ -119,7 +120,7 @@ export default function Navbar() {
                             <button
                                 key={id}
                                 onClick={() => scrollToSection(id)}
-                                className="block w-full text-left phone-liner-bold text-heading hover:text-brand transition-colors duration-200 py-2"
+                                className={`block w-full text-left phone-liner-bold ${mobileMenuItemColor} hover:text-brand transition-colors duration-200 py-2`}
                             >
                                 {label}
                             </button>
