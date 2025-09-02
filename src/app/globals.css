@@ -386,3 +386,17 @@ html {
     max-width: 100%;
   }
 }
+
+/* Vision Card Sheen Effect */
+.sheen {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(55deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%) rotate(45deg);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
