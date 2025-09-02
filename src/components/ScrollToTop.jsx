@@ -46,6 +46,58 @@ export default function ScrollToTop() {
                     viewBox="0 0 48 48"
                     xmlns="http://www.w3.org/2000/svg"
                 >
+                    {/* 定義圓周漸層，依照 Google 四原色排列 */}
+                    <defs>
+                        {/* 紅 ➜ 黃 */}
+                        <linearGradient
+                            id="grad1"
+                            x1="24"
+                            y1="4"
+                            x2="44"
+                            y2="24"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0%" stopColor="#ea4335" />
+                            <stop offset="100%" stopColor="#fbbc04" />
+                        </linearGradient>
+                        {/* 黃 ➜ 綠 */}
+                        <linearGradient
+                            id="grad2"
+                            x1="44"
+                            y1="24"
+                            x2="24"
+                            y2="44"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0%" stopColor="#fbbc04" />
+                            <stop offset="100%" stopColor="#34a853" />
+                        </linearGradient>
+                        {/* 綠 ➜ 藍 */}
+                        <linearGradient
+                            id="grad3"
+                            x1="24"
+                            y1="44"
+                            x2="4"
+                            y2="24"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0%" stopColor="#34a853" />
+                            <stop offset="100%" stopColor="#4285f4" />
+                        </linearGradient>
+                        {/* 藍 ➜ 紅 */}
+                        <linearGradient
+                            id="grad4"
+                            x1="4"
+                            y1="24"
+                            x2="24"
+                            y2="4"
+                            gradientUnits="userSpaceOnUse"
+                        >
+                            <stop offset="0%" stopColor="#4285f4" />
+                            <stop offset="100%" stopColor="#ea4335" />
+                        </linearGradient>
+                    </defs>
+
                     {/* 背景圓環，依主題切換深淺 */}
                     <circle
                         cx="24"
@@ -56,13 +108,13 @@ export default function ScrollToTop() {
                         className={isLightTheme ? 'stroke-slate-600' : 'stroke-slate-300'}
                     />
 
-                    {/* 依捲動進度繪製的彩色圓周 */}
+                    {/* 依捲動進度繪製的彩色圓周，漸層銜接四原色 */}
                     {[
-                        { color: '#ea4335', start: 0 }, // 紅
-                        { color: '#fbbc04', start: 0.25 }, // 黃
-                        { color: '#34a853', start: 0.5 }, // 綠
-                        { color: '#4285f4', start: 0.75 }, // 藍
-                    ].map(({ color, start }) => {
+                        { id: 'grad1', start: 0 }, // 紅 ➜ 黃
+                        { id: 'grad2', start: 0.25 }, // 黃 ➜ 綠
+                        { id: 'grad3', start: 0.5 }, // 綠 ➜ 藍
+                        { id: 'grad4', start: 0.75 }, // 藍 ➜ 紅
+                    ].map(({ id, start }) => {
                         const segment = 0.25; // 每一象限所占的比例
                         const progressInSegment = Math.min(
                             Math.max(progress - start, 0),
@@ -71,11 +123,11 @@ export default function ScrollToTop() {
 
                         return (
                             <circle
-                                key={color}
+                                key={id}
                                 cx="24"
                                 cy="24"
                                 r={radius}
-                                stroke={color}
+                                stroke={`url(#${id})`}
                                 strokeWidth="4"
                                 fill="none"
                                 strokeDasharray={`${progressInSegment * circumference} ${circumference}`}
@@ -85,7 +137,7 @@ export default function ScrollToTop() {
                         );
                     })}
                 </svg>
-                
+
                 {/* 置中按鈕 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -96,7 +148,6 @@ export default function ScrollToTop() {
                         flex items-center justify-center
                         shadow-lg transition-transform duration-300 hover:scale-110
                         focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2
-                        backdrop-blur-sm
                         ${isLightTheme ? 'bg-slate-800/70 text-white' : 'bg-slate-200/70 text-slate-900'}
                     `}
                 >
