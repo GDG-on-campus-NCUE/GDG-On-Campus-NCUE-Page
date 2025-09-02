@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
 import gdgLogo from '@/images/icon/brackets.gif';
-import githubIcon from '@/images/icon/github (1).png';
+import githubIcon from '@/images/icon/github.png';
 import instagramIcon from '@/images/icon/instagram.png';
 import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
 import lineIcon from '@/images/icon/line.png';
