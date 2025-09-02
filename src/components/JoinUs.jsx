@@ -4,7 +4,9 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
-import gdgLogo from '@/images/icon/brackets.gif';
+import { useTheme } from '@/hooks/useTheme';
+import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
+import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
 import githubIcon from '@/images/icon/github.png';
 import instagramIcon from '@/images/icon/instagram.png';
 import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
@@ -14,11 +16,42 @@ export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
     const ref = useRef(null);
     const { language } = useLanguage();
+    const { theme } = useTheme();
 
+    // 社群連結與圖示設定（新增 Gmail）
     const socialLinks = [
-        { name: 'GitHub', icon: githubIcon, url: 'https://github.com/GDG-on-campus-NCUE' },
-        { name: 'Instagram', icon: instagramIcon, url: 'https://www.instagram.com/gdg_ncue' },
-        { name: 'GDG Community', icon: gdgCommunityIcon, url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/' },
+        {
+            name: 'GitHub',
+            icon: githubIcon,
+            url: 'https://github.com/GDG-on-campus-NCUE',
+            labelZh: 'GITHUB',
+            labelEn: 'GITHUB',
+            isImage: true,
+        },
+        {
+            name: 'Gmail',
+            icon: EnvelopeIcon,
+            url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
+            labelZh: '接收 GDG 社群活動 mail 通知',
+            labelEn: 'GDG Mail Notifications',
+            isImage: false,
+        },
+        {
+            name: 'Instagram',
+            icon: instagramIcon,
+            url: 'https://www.instagram.com/gdg_ncue',
+            labelZh: 'IG',
+            labelEn: 'Instagram',
+            isImage: true,
+        },
+        {
+            name: 'GDG Community',
+            icon: gdgCommunityIcon,
+            url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/',
+            labelZh: 'GDG 官網',
+            labelEn: 'GDG Official',
+            isImage: true,
+        },
     ];
 
     // 色彩調色盤（取自圖中色標）
@@ -105,7 +138,13 @@ export default function JoinUs() {
                         {/* 左側：社群介紹 */}
                         <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.6s' }}>
                             <a href="#" className="inline-block mb-4 md:mb-6">
-                                <Image src={gdgLogo} alt="GDG on Campus NCUE Logo" width={200} height={40} />
+                                {/* 依照主題顯示不同 Logo */}
+                                <Image
+                                    src={theme === 'dark' ? gdgLogoDark : gdgLogoLight}
+                                    alt="GDG on Campus NCUE Logo"
+                                    width={200}
+                                    height={40}
+                                />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
                                 {language === 'zh'
@@ -118,7 +157,7 @@ export default function JoinUs() {
                         <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
                             <div>
                                 <h3 className="font-bold text-heading mb-4">{language === 'zh' ? '關注我們' : 'Follow Us'}</h3>
-                                <div className="flex items-center justify-center md:justify-end gap-x-4">
+                                <div className="flex items-center justify-center md:justify-end gap-x-6">
                                     {socialLinks.map((social) => (
                                         <a
                                             key={social.name}
@@ -127,15 +166,26 @@ export default function JoinUs() {
                                             rel="noopener noreferrer"
                                             title={social.name}
                                             aria-label={social.name}
-                                            className="group w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out hover:scale-110 hover:shadow-lg hover:shadow-brand/30 hover:bg-gradient-to-br hover:from-brand/10 hover:to-purple-600/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                                            className="group flex flex-col items-center focus:outline-none"
                                         >
-                                            <Image
-                                                src={social.icon}
-                                                alt={social.name}
-                                                width={24}
-                                                height={24}
-                                                className="w-6 h-6 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
-                                            />
+                                            {/* 圓形圖示容器 */}
+                                            <div className="w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
+                                                {social.isImage ? (
+                                                    <Image
+                                                        src={social.icon}
+                                                        alt={social.name}
+                                                        width={24}
+                                                        height={24}
+                                                        className="w-6 h-6 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
+                                                    />
+                                                ) : (
+                                                    <social.icon className="w-6 h-6 text-muted transition-transform duration-300 ease-out group-hover:scale-110 group-hover:text-brand" />
+                                                )}
+                                            </div>
+                                            {/* 圖示下方文字說明 */}
+                                            <span className="mt-2 text-xs text-muted group-hover:text-brand text-center">
+                                                {language === 'zh' ? social.labelZh : social.labelEn}
+                                            </span>
                                         </a>
                                     ))}
                                 </div>
