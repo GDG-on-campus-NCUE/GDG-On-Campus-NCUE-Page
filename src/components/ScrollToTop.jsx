@@ -10,7 +10,6 @@ export default function ScrollToTop() {
     const [isScrolled, setIsScrolled] = useState(false); // 追蹤是否離開頂部
     const { language } = useLanguage();
     const { theme } = useTheme();
-    const circumference = 2 * Math.PI * 45; // r = 45
 
     useEffect(() => {
         const updateProgress = () => {
@@ -39,57 +38,29 @@ export default function ScrollToTop() {
         <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex-shrink-0">
             {/* aspect-square 可強制維持 1:1 比例，避免在手機上變形 */}
             <div className="relative w-12 h-12 aspect-square">
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-                    <defs>
-                        {/*
-                          定義四色漸層。
-                          漸層本身是垂直的（藍 -> 紅 -> 黃 -> 綠 -> 藍），
-                          但整個圓環會被旋轉 -135 度，以達成以下效果：
-                          - 紅色在右上象限
-                          - 黃色在右下象限
-                          - 綠色在左下象限
-                          - 藍色在左上象限
-                        */}
-                        <linearGradient id="google-quadrant-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                            <stop offset="0%" stopColor="#4285f4" />   {/* Blue */}
-                            <stop offset="25%" stopColor="#ea4335" />  {/* Red */}
-                            <stop offset="50%" stopColor="#fbbc04" />  {/* Yellow */}
-                            <stop offset="75%" stopColor="#34a853" />  {/* Green */}
-                            <stop offset="100%" stopColor="#4285f4" /> {/* Blue */}
-                        </linearGradient>
-                    </defs>
+                {/* 彩色進度環 */}
+                <div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                        background: 'conic-gradient(from 45deg, #ea4335, #fbbc04, #34a853, #4285f4, #ea4335)',
+                        mask: 'radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px))',
+                        WebkitMask: 'radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px))',
+                    }}
+                />
 
-                    {/* 背景軌道 */}
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        strokeWidth="8"
-                        className={useLightStyle ? 'text-border' : 'text-slate-600'} // 根據狀態切換軌道顏色
-                        stroke="currentColor"
-                        fill="none"
-                    />
-                    
-                    {/* 動畫進度環 */}
-                    <circle
-                        cx="50"
-                        cy="50"
-                        r="45"
-                        strokeWidth="8"
-                        stroke="url(#google-quadrant-gradient)"
-                        fill="none"
-                        strokeLinecap="round"
-                        style={{
-                            strokeDasharray: circumference,
-                            // 順時針填充：offset 從 circumference (空) 變為 0 (滿)
-                            strokeDashoffset: circumference * (1 - progress),
-                            transition: 'stroke-dashoffset 0.1s linear',
-                            // 旋轉圓環以對齊各象限的顏色
-                            transform: 'rotate(-135deg)',
-                            transformOrigin: '50% 50%',
-                        }}
-                    />
-                </svg>
+                {/* 未完成區段遮罩 */}
+                <div
+                    className={`absolute inset-0 rounded-full ${useLightStyle ? 'bg-border' : 'bg-slate-600'}`}
+                    style={{
+                        '--progress': progress,
+                        mask:
+                            `radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px)), ` +
+                            `conic-gradient(#0000 calc(var(--progress) * 360deg), #000 0)`,
+                        WebkitMask:
+                            `radial-gradient(farthest-side, transparent calc(100% - 8px), #000 calc(100% - 8px)), ` +
+                            `conic-gradient(#0000 calc(var(--progress) * 360deg), #000 0)`,
+                    }}
+                />
 
                 {/* 置中按鈕 */}
                 <button
