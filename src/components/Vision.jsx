@@ -57,6 +57,9 @@ export default function Vision() {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         updateCardStyle(card, x, y, 1.05, -6);
+        // 邊框與光暈使用卡片自訂色
+        card.style.borderColor = card.dataset.color;
+        card.style.boxShadow = `0 0 20px ${card.dataset.color}66`;
         const sheen = card.querySelector('.sheen');
         if (sheen) sheen.style.opacity = '1';
     };
@@ -68,6 +71,8 @@ export default function Vision() {
         if (!card) return;
         card.style.transition = 'transform 0.4s ease-out';
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+        card.style.borderColor = 'var(--color-border)';
+        card.style.boxShadow = 'none';
         const sheen = card.querySelector('.sheen');
         if (sheen) sheen.style.opacity = '0';
     };
@@ -161,27 +166,35 @@ export default function Vision() {
 
         // 針對觸控的水平滾動轉換（整個 Vision 區域皆可觸發）
         let startY = 0;
+        let startScroll = 0;
         const handleTouchStart = (e) => {
             startY = e.touches[0].clientY;
+            startScroll = container.scrollLeft;
         };
-        const handleTouchEnd = (e) => {
-            const dy = startY - e.changedTouches[0].clientY;
+        const handleTouchMove = (e) => {
+            const dy = startY - e.touches[0].clientY;
             const atStart = container.scrollLeft === 0;
             const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
-            if ((!atEnd && dy > 30) || (!atStart && dy < -30)) {
+            if ((!atEnd && dy > 0) || (!atStart && dy < 0)) {
                 e.preventDefault();
-                const step = getStep();
-                container.scrollBy({ left: (dy > 0 ? 1 : -1) * step, behavior: 'smooth' });
+                container.scrollLeft = startScroll + dy;
             }
         };
+        const handleTouchEnd = () => {
+            const step = getStep();
+            const index = Math.round(container.scrollLeft / step);
+            container.scrollTo({ left: index * step, behavior: 'smooth' });
+        };
         section.addEventListener('touchstart', handleTouchStart, { passive: false });
-        section.addEventListener('touchend', handleTouchEnd, { passive: false });
+        section.addEventListener('touchmove', handleTouchMove, { passive: false });
+        section.addEventListener('touchend', handleTouchEnd);
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
             section.removeEventListener('wheel', handleWheel);
             section.removeEventListener('touchstart', handleTouchStart);
+            section.removeEventListener('touchmove', handleTouchMove);
             section.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
@@ -254,7 +267,7 @@ export default function Vision() {
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto overflow-y-visible no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
+                    className="flex overflow-x-auto overflow-y-visible no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0 py-8 md:py-0"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
@@ -267,7 +280,7 @@ export default function Vision() {
                                 onPointerEnter={(e) => handlePointerEnter(e, index)}
                                 onPointerLeave={() => handlePointerLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group flex-shrink-0 w-60 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl focus:scale-105 group flex-shrink-0 w-60 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                                 tabIndex={0}
                                 data-color={card.color}
