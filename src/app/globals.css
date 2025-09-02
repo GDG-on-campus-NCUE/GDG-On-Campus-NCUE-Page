@@ -312,6 +312,16 @@ html {
   animation: float-reverse 8s ease-in-out infinite;
 }
 
+/* 隱藏滾動條 */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 /* 響應式工具類 */
 .mobile-optimized {
   @media (max-width: 768px) {
