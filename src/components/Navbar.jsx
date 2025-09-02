@@ -98,7 +98,6 @@ export default function Navbar() {
                         </div>
 
                         <div className="md:hidden flex items-center">
-                            <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -125,6 +124,10 @@ export default function Navbar() {
                                 {label}
                             </button>
                         ))}
+                        {/* 手機版選單底部的語言切換 */}
+                        <div className="pt-2 border-t border-surface-muted flex justify-center">
+                            <LanguageSwitcher colorClass={mobileMenuItemColor} />
+                        </div>
                     </div>
                 </div>
             </nav>
