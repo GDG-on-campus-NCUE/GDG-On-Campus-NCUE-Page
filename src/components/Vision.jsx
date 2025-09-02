@@ -19,6 +19,7 @@ export default function Vision() {
     const ref = useRef(null);
     const { language } = useLanguage();
     const cardRefs = useRef([]);
+    const scrollRef = useRef(null);
 
     // 依據位置更新卡片的旋轉、縮放與光線位置
     const updateCardStyle = (card, x, y, scale = 1, translateY = 0) => {
@@ -93,7 +94,39 @@ export default function Vision() {
         };
     }, []);
 
-    // 手機版取消滾動監聽，避免不穩定
+    // 手機版滾動時動態展示卡片效果
+    useEffect(() => {
+        const container = scrollRef.current;
+        if (!container) return;
+
+        const handleScroll = () => {
+            if (window.innerWidth >= 768) return; // 僅在手機版運作
+            const center = window.innerWidth / 2;
+            cardRefs.current.forEach((card) => {
+                if (!card) return;
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.left + rect.width / 2;
+                const distance = Math.abs(center - cardCenter);
+                const scale = Math.max(0.9, 1.1 - distance / center);
+                const rotateY = ((center - cardCenter) / center) * 15;
+                const blur = Math.min(distance / 40, 4);
+                card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale})`;
+                card.style.filter = `blur(${blur}px)`;
+                card.style.opacity = scale > 1 ? '1' : '0.6';
+                card.style.zIndex = scale > 1 ? '1' : '0';
+                const sheen = card.querySelector('.sheen');
+                if (sheen) sheen.style.opacity = scale > 1.05 ? '1' : '0';
+            });
+        };
+
+        handleScroll();
+        container.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', handleScroll);
+        return () => {
+            container.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('resize', handleScroll);
+        };
+    }, []);
 
     // --- 使用重寫後的專業中文文案和 SVG 圖示 ---
     const visionCards = language === 'zh'
@@ -155,7 +188,10 @@ export default function Vision() {
                 </div>
 
                 {/* Cards Grid with SVG Icons and Chinese Content */}
-                <div className="grid md:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
+                <div
+                    ref={scrollRef}
+                    className="flex overflow-x-auto gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12"
+                >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
                         const Solid = card.solid;
@@ -167,7 +203,7 @@ export default function Vision() {
                                 onPointerEnter={(e) => handlePointerEnter(e, index)}
                                 onPointerLeave={() => handlePointerLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group flex-shrink-0 w-72 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                                 tabIndex={0}
                             >
