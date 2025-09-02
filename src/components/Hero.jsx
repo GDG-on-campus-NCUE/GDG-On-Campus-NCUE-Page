@@ -109,7 +109,8 @@ export default function Hero() {
 
             {/* 遮罩層：僅在深色主題下提供黑色半透明遮罩，淺色主題不套用模糊遮罩 */}
             {theme === 'dark' && (
-                <div className="absolute inset-0 z-8 bg-black/60"></div>
+                // 深色主題下的遮罩層，確保位於背景與內容之間
+                <div className="absolute inset-0 z-10 bg-black/60"></div>
             )}
 
             {/* 前景內容 */}
