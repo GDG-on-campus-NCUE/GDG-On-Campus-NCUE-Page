@@ -19,7 +19,6 @@ export default function Vision() {
     const ref = useRef(null);
     const { language } = useLanguage();
     const cardRefs = useRef([]);
-    const scrollRef = useRef(null);
 
     // 依據位置更新卡片的旋轉、縮放與光線位置
     const updateCardStyle = (card, x, y, scale = 1, translateY = 0) => {
@@ -59,7 +58,7 @@ export default function Vision() {
         updateCardStyle(card, x, y, 1.05, -6);
         // 邊框與光暈使用卡片自訂色
         card.style.borderColor = card.dataset.color;
-        card.style.boxShadow = `0 0 20px ${card.dataset.color}66`;
+        card.style.boxShadow = `0 0 40px ${card.dataset.color}66`;
         const sheen = card.querySelector('.sheen');
         if (sheen) sheen.style.opacity = '1';
     };
@@ -99,31 +98,19 @@ export default function Vision() {
         };
     }, []);
 
-    // 手機版滾動時動態展示卡片效果
+    // 手機版滾動時簡單縮放與光暈效果
     useEffect(() => {
-        const container = scrollRef.current;
-        const section = ref.current; // 取得整個 vision 區域
-        if (!container || !section) return;
-
         const handleScroll = () => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
-            const rectContainer = container.getBoundingClientRect();
-            const center = rectContainer.left + rectContainer.width / 2; // 以容器中心作為基準
+            const center = window.innerHeight / 2;
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const rect = card.getBoundingClientRect();
-                const cardCenter = rect.left + rect.width / 2;
+                const cardCenter = rect.top + rect.height / 2;
                 const distance = Math.abs(center - cardCenter);
-                // 中央卡片放大，兩側卡片縮小，並帶有輕微位移與旋轉
-                const scale = Math.max(0.85, 1 - distance / (center * 1.2));
-                const rotateY = ((center - cardCenter) / center) * 20;
-                const translateY = scale > 0.98 ? -10 : 0;
-                // 依據捲動位置調整卡片的縮放與位移
-                card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale}) translateY(${translateY}px)`;
-                card.style.filter = 'none'; // 移除模糊效果
-                card.style.opacity = scale > 0.95 ? '1' : '0.5';
-                card.style.zIndex = scale > 0.95 ? '1' : '0';
-                const isActive = scale > 0.95;
+                const scale = Math.max(0.9, 1 - distance / (center * 1.5));
+                card.style.transform = `scale(${scale})`;
+                const isActive = scale > 0.98;
                 // 邊框顏色與光暈效果
                 card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
                 card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
@@ -138,64 +125,11 @@ export default function Vision() {
         };
 
         handleScroll();
-        container.addEventListener('scroll', handleScroll);
+        window.addEventListener('scroll', handleScroll);
         window.addEventListener('resize', handleScroll);
-
-        // 取得卡片寬度與間距
-        const getStep = () => {
-            const first = cardRefs.current[0];
-            if (!first) return 0;
-            const style = window.getComputedStyle(container);
-            const gap = parseFloat(style.columnGap || style.gap || '0');
-            return first.offsetWidth + gap;
-        };
-
-        // 針對滑鼠滾輪的水平滾動轉換（整個 Vision 區域皆可觸發）
-        const handleWheel = (e) => {
-            if (window.innerWidth >= 768) return; // 僅在手機版運作
-            if (e.deltaY === 0) return;
-            const atStart = container.scrollLeft === 0;
-            const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
-            if ((!atEnd && e.deltaY > 0) || (!atStart && e.deltaY < 0)) {
-                e.preventDefault();
-                const step = getStep();
-                container.scrollBy({ left: (e.deltaY > 0 ? 1 : -1) * step, behavior: 'smooth' });
-            }
-        };
-        section.addEventListener('wheel', handleWheel, { passive: false });
-
-        // 針對觸控的水平滾動轉換（整個 Vision 區域皆可觸發）
-        let startY = 0;
-        let startScroll = 0;
-        const handleTouchStart = (e) => {
-            startY = e.touches[0].clientY;
-            startScroll = container.scrollLeft;
-        };
-        const handleTouchMove = (e) => {
-            const dy = startY - e.touches[0].clientY;
-            const atStart = container.scrollLeft === 0;
-            const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
-            if ((!atEnd && dy > 0) || (!atStart && dy < 0)) {
-                e.preventDefault();
-                container.scrollLeft = startScroll + dy;
-            }
-        };
-        const handleTouchEnd = () => {
-            const step = getStep();
-            const index = Math.round(container.scrollLeft / step);
-            container.scrollTo({ left: index * step, behavior: 'smooth' });
-        };
-        section.addEventListener('touchstart', handleTouchStart, { passive: false });
-        section.addEventListener('touchmove', handleTouchMove, { passive: false });
-        section.addEventListener('touchend', handleTouchEnd);
-
         return () => {
-            container.removeEventListener('scroll', handleScroll);
+            window.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
-            section.removeEventListener('wheel', handleWheel);
-            section.removeEventListener('touchstart', handleTouchStart);
-            section.removeEventListener('touchmove', handleTouchMove);
-            section.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
 
@@ -266,8 +200,7 @@ export default function Vision() {
 
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
-                    ref={scrollRef}
-                    className="flex overflow-x-auto overflow-y-visible no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0 py-8 md:py-0"
+                    className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-4 md:px-0 py-8 md:py-0"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
@@ -280,7 +213,7 @@ export default function Vision() {
                                 onPointerEnter={(e) => handlePointerEnter(e, index)}
                                 onPointerLeave={() => handlePointerLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl focus:scale-105 group flex-shrink-0 w-60 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl focus:scale-105 group w-full md:w-auto ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                                 tabIndex={0}
                                 data-color={card.color}
