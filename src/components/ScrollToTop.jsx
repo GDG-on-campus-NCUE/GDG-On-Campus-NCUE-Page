@@ -7,7 +7,6 @@ import { useTheme } from '@/hooks/useTheme';
 
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
-    const [isScrolled, setIsScrolled] = useState(false); // 追蹤是否離開頂部
     const { language } = useLanguage();
     const { theme } = useTheme();
 
@@ -17,7 +16,6 @@ export default function ScrollToTop() {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
             const newProgress = docHeight > 0 ? scrollTop / docHeight : 0;
             setProgress(newProgress);
-            setIsScrolled(scrollTop > 10); // 檢查是否已經捲動離開頂部
         };
 
         updateProgress();
@@ -30,8 +28,8 @@ export default function ScrollToTop() {
         };
     }, []);
 
-    // 在淺色主題下，未捲動前保持深色樣式，捲動後改用淺色樣式
-    const useLightStyle = theme === 'light' && isScrolled;
+    // 根據主題切換背景與前景顏色
+    const isLightTheme = theme === 'light';
 
     // SVG 圓環的半徑與周長，用於計算進度
     const radius = 20;
@@ -48,22 +46,22 @@ export default function ScrollToTop() {
                     viewBox="0 0 48 48"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    {/* 背景圓環 */}
+                    {/* 背景圓環，依主題切換深淺 */}
                     <circle
                         cx="24"
                         cy="24"
                         r={radius}
                         strokeWidth="4"
                         fill="none"
-                        className={useLightStyle ? 'stroke-border' : 'stroke-slate-600'}
+                        className={isLightTheme ? 'stroke-slate-600' : 'stroke-slate-300'}
                     />
 
                     {/* 依捲動進度繪製的彩色圓周 */}
                     {[
-                        { color: '#ea4335', start: 0 }, // 紅：第一象限
-                        { color: '#fbbc04', start: 0.25 }, // 黃：第四象限
-                        { color: '#34a853', start: 0.5 }, // 綠：第三象限
-                        { color: '#4285f4', start: 0.75 }, // 藍：第二象限
+                        { color: '#ea4335', start: 0 }, // 紅
+                        { color: '#fbbc04', start: 0.25 }, // 黃
+                        { color: '#34a853', start: 0.5 }, // 綠
+                        { color: '#4285f4', start: 0.75 }, // 藍
                     ].map(({ color, start }) => {
                         const segment = 0.25; // 每一象限所占的比例
                         const progressInSegment = Math.min(
@@ -81,9 +79,7 @@ export default function ScrollToTop() {
                                 strokeWidth="4"
                                 fill="none"
                                 strokeDasharray={`${progressInSegment * circumference} ${circumference}`}
-                                strokeDashoffset={
-                                    circumference * (1 - start - progressInSegment)
-                                }
+                                strokeDashoffset={circumference * (1 - start)}
                                 strokeLinecap="round"
                             />
                         );
@@ -101,7 +97,7 @@ export default function ScrollToTop() {
                         shadow-lg transition-transform duration-300 hover:scale-110
                         focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2
                         backdrop-blur-sm
-                        ${useLightStyle ? 'bg-surface/70 text-foreground' : 'bg-slate-800/70 text-white'}
+                        ${isLightTheme ? 'bg-slate-800/70 text-white' : 'bg-slate-200/70 text-slate-900'}
                     `}
                 >
                     <ArrowUpIcon className="w-5 h-5" />
