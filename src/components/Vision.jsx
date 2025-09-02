@@ -14,48 +14,55 @@ export default function Vision() {
     const ref = useRef(null);
     const { language } = useLanguage();
     const cardRefs = useRef([]);
+    const scales = useRef([]);
 
-    // 3D 傾斜與掃掠光效的滑鼠事件處理函式
-    const handleMouseMove = (e, index) => {
-        const card = cardRefs.current[index];
-        if (!card) return;
+    // 依據位置更新卡片的旋轉、縮放與光線位置
+    const updateCardStyle = (card, x, y, scale = 1, translateY = 0) => {
         const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
         const rotateX = ((y - rect.height / 2) / rect.height) * -15;
         const rotateY = ((x - rect.width / 2) / rect.width) * 15;
-        card.style.transition = 'transform 0.1s ease-out';
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    };
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale}) translateY(${translateY}px)`;
 
-    const handleMouseEnter = (e, index) => {
-        const card = cardRefs.current[index];
-        if (!card) return;
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const fromLeft = x < rect.width / 2;
         const sheen = card.querySelector('.sheen');
         if (sheen) {
-            sheen.style.transition = 'none';
-            sheen.style.opacity = '1';
-            sheen.style.transform = fromLeft
-                ? 'translateX(-100%) rotate(45deg)'
-                : 'translateX(100%) rotate(45deg)';
-            requestAnimationFrame(() => {
-                sheen.style.transition = 'transform 0.4s ease-out, opacity 0.4s ease-out';
-                sheen.style.transform = fromLeft
-                    ? 'translateX(100%) rotate(45deg)'
-                    : 'translateX(-100%) rotate(45deg)';
-                sheen.style.opacity = '0';
-            });
+            sheen.style.setProperty('--x', `${(x / rect.width) * 100}%`);
+            sheen.style.setProperty('--y', `${(y / rect.height) * 100}%`);
         }
     };
 
-    const handleMouseLeave = (index) => {
+    // 指標移動時計算旋轉與光線
+    const handlePointerMove = (e, index) => {
+        const card = cardRefs.current[index];
+        if (!card) return;
+        card.style.transition = 'transform 0.1s ease-out';
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        updateCardStyle(card, x, y, scales.current[index] || 1, window.innerWidth >= 768 ? -6 : 0);
+    };
+
+    // 指標進入時的過渡動畫與光線顯示
+    const handlePointerEnter = (e, index) => {
+        const card = cardRefs.current[index];
+        if (!card) return;
+        card.style.transition = 'transform 0.3s ease';
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        updateCardStyle(card, x, y, scales.current[index] || 1, window.innerWidth >= 768 ? -6 : 0);
+        const sheen = card.querySelector('.sheen');
+        if (sheen) sheen.style.opacity = '1';
+    };
+
+    // 指標離開時恢復初始狀態
+    const handlePointerLeave = (index) => {
         const card = cardRefs.current[index];
         if (!card) return;
         card.style.transition = 'transform 0.4s ease-out';
-        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg)';
+        const scale = scales.current[index] || 1;
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(${scale})`;
+        const sheen = card.querySelector('.sheen');
+        if (sheen) sheen.style.opacity = '0';
     };
 
     // 動畫觸發的 useEffect hook，監控區塊進出視窗
@@ -78,6 +85,28 @@ export default function Vision() {
                 observer.unobserve(ref.current);
             }
         };
+    }, []);
+
+    // 手機版滾動時的縮放與光線計算
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.innerWidth >= 768) return; // 僅在手機版啟用
+            const viewportCenter = window.innerHeight / 2;
+            cardRefs.current.forEach((card, i) => {
+                if (!card) return;
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(viewportCenter - cardCenter);
+                const scale = 1.05 - Math.min(distance / viewportCenter, 1) * 0.15;
+                scales.current[i] = scale;
+                const x = rect.width / 2;
+                const y = viewportCenter - rect.top;
+                updateCardStyle(card, x, y, scale);
+            });
+        };
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // --- 使用重寫後的專業中文文案和 SVG 圖示 ---
@@ -141,11 +170,11 @@ export default function Vision() {
                             <div
                                 key={index}
                                 ref={(el) => (cardRefs.current[index] = el)}
-                                onMouseMove={(e) => handleMouseMove(e, index)}
-                                onMouseEnter={(e) => handleMouseEnter(e, index)}
-                                onMouseLeave={() => handleMouseLeave(index)}
+                                onPointerMove={(e) => handlePointerMove(e, index)}
+                                onPointerEnter={(e) => handlePointerEnter(e, index)}
+                                onPointerLeave={() => handlePointerLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand group ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                             >
                                 <span className="sheen pointer-events-none"></span>
