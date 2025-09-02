@@ -107,8 +107,10 @@ export default function Hero() {
             {/* 背景元件：不再需要傳遞 theme prop */}
             <MatrixBackground codeString={heroComponentCode} />
 
-            {/* 遮罩層：確保在不同主題下，前景文字都清晰可見 */}
-            <div className={`absolute inset-0 z-8 ${theme === 'dark' ? 'bg-black/60' : 'bg-white/30 backdrop-blur-sm'}`}></div>
+            {/* 遮罩層：僅在深色主題下提供黑色半透明遮罩，淺色主題不套用模糊遮罩 */}
+            {theme === 'dark' && (
+                <div className="absolute inset-0 z-8 bg-black/60"></div>
+            )}
 
             {/* 前景內容 */}
             <div className="relative z-20 text-center px-4 md:px-6">

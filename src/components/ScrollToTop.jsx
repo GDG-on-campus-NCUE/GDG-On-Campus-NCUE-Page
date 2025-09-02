@@ -31,7 +31,7 @@ export default function ScrollToTop() {
         };
     }, []);
 
-    // 在淺色主題下，離開 Hero 後改用淺色樣式
+    // 在淺色主題下，未捲動前保持深色樣式，捲動後改用淺色樣式
     const useLightStyle = theme === 'light' && isScrolled;
 
     return (
