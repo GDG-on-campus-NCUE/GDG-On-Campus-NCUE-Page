@@ -45,8 +45,8 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    // 在頂端一律使用淺色元件，僅在淺色主題且頁面已滾動時切換為深色元件
-    const useDarkStyle = theme === 'light' && isScrolled;
+    // 在淺色主題下無論是否位於頂端皆套用深色元件
+    const useDarkStyle = theme === 'light';
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
