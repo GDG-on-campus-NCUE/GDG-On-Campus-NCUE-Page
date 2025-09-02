@@ -8,14 +8,21 @@ const LanguageContext = createContext();
 
 // 語言提供者
 export function LanguageProvider({ children }) {
-    // 預設語言為中文
+    // 預設語言由使用者裝置語言決定，若無則為中文
     const [language, setLanguage] = useState('zh');
     const [isLoaded, setIsLoaded] = useState(false); // 是否已載入
 
     useEffect(() => {
-        // 讀取 localStorage 中的語言設定
+        // 讀取 localStorage 中的語言設定，若無則依裝置語言判斷
         const stored = localStorage.getItem('language');
-        setLanguage(stored || 'zh');
+        if (stored) {
+            setLanguage(stored);
+        } else {
+            const deviceLang = navigator.language || 'en';
+            const defaultLang = deviceLang.startsWith('zh') ? 'zh' : 'en';
+            setLanguage(defaultLang);
+            localStorage.setItem('language', defaultLang);
+        }
         setIsLoaded(true);
     }, []);
 

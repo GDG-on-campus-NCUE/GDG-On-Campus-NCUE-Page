@@ -22,6 +22,24 @@ export default function RootLayout({ children }) {
   return (
     <html lang="zh-TW" suppressHydrationWarning>
       <head>
+        {/* 在載入前設定語言 */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var lang = localStorage.getItem('language');
+                  if (!lang) {
+                    var userLang = navigator.language || 'en';
+                    lang = userLang.startsWith('zh') ? 'zh' : 'en';
+                    localStorage.setItem('language', lang);
+                  }
+                  document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh-TW' : 'en');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `
