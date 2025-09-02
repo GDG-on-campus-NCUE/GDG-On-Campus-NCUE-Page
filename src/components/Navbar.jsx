@@ -111,8 +111,9 @@ export default function Navbar() {
                     </div>
                 </div>
 
+                {/* 增加最大高度以確保手機版選單底部可以顯示語言切換按鈕 */}
                 <div
-                    className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-64 shadow-lg' : 'max-h-0'}`}
+                    className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 shadow-lg' : 'max-h-0'}`}
                 >
                     <div className="p-4 space-y-4">
                         {navLinks.map(({ label, id }) => (
