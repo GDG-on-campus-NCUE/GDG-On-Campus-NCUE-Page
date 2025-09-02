@@ -45,7 +45,7 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    // === 根據主題與捲動狀態判斷是否使用淺色樣式 ===
+    // 在淺色主題下，僅在捲動或展開選單時改用淺色樣式，否則維持深色樣式
     const useLightStyle = theme === 'light' && (isScrolled || isMobileMenuOpen);
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
