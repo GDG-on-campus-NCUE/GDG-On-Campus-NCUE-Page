@@ -97,7 +97,8 @@ export default function Vision() {
     // 手機版滾動時動態展示卡片效果
     useEffect(() => {
         const container = scrollRef.current;
-        if (!container) return;
+        const section = ref.current; // 取得整個 vision 區域
+        if (!container || !section) return;
 
         const handleScroll = () => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
@@ -135,7 +136,7 @@ export default function Vision() {
             return first.offsetWidth + gap;
         };
 
-        // 針對滑鼠滾輪的水平滾動轉換
+        // 針對滑鼠滾輪的水平滾動轉換（整個 Vision 區域皆可觸發）
         const handleWheel = (e) => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
             if (e.deltaY === 0) return;
@@ -147,9 +148,9 @@ export default function Vision() {
                 container.scrollBy({ left: (e.deltaY > 0 ? 1 : -1) * step, behavior: 'smooth' });
             }
         };
-        container.addEventListener('wheel', handleWheel, { passive: false });
+        section.addEventListener('wheel', handleWheel, { passive: false });
 
-        // 針對觸控的水平滾動轉換
+        // 針對觸控的水平滾動轉換（整個 Vision 區域皆可觸發）
         let startY = 0;
         const handleTouchStart = (e) => {
             startY = e.touches[0].clientY;
@@ -164,15 +165,15 @@ export default function Vision() {
                 container.scrollBy({ left: (dy > 0 ? 1 : -1) * step, behavior: 'smooth' });
             }
         };
-        container.addEventListener('touchstart', handleTouchStart, { passive: false });
-        container.addEventListener('touchend', handleTouchEnd, { passive: false });
+        section.addEventListener('touchstart', handleTouchStart, { passive: false });
+        section.addEventListener('touchend', handleTouchEnd, { passive: false });
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
-            container.removeEventListener('wheel', handleWheel);
-            container.removeEventListener('touchstart', handleTouchStart);
-            container.removeEventListener('touchend', handleTouchEnd);
+            section.removeEventListener('wheel', handleWheel);
+            section.removeEventListener('touchstart', handleTouchStart);
+            section.removeEventListener('touchend', handleTouchEnd);
         };
     }, []);
 
@@ -244,7 +245,7 @@ export default function Vision() {
                 {/* Cards Grid with SVG Icons and Chinese Content */}
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto overflow-y-hidden no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
+                    className="flex overflow-x-auto no-scrollbar gap-8 snap-x snap-mandatory md:grid md:grid-cols-3 md:gap-10 md:overflow-visible md:snap-none lg:gap-12 px-[calc(50%-7.5rem)] md:px-0"
                 >
                     {visionCards.map((card, index) => {
                         const Outline = card.outline;
