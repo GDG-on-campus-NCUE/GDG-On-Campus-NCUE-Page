@@ -98,43 +98,49 @@ export default function Vision() {
         };
     }, []);
 
-    // 手機版使用 IntersectionObserver 偵測卡片位置
+    // 手機版僅讓靠近頁面中間的卡片套用效果
     useEffect(() => {
         if (window.innerWidth >= 768) return; // 僅在手機版運作
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    const card = entry.target;
-                    const isActive = entry.isIntersecting;
-                    // 進入視窗中間時放大並顯示光暈
-                    card.style.transform = `scale(${isActive ? 1 : 0.9})`;
-                    card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
-                    card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
-                    // ICON 依據狀態切換顏色
-                    const outlineIcon = card.querySelector('.icon-outline');
-                    const solidIcon = card.querySelector('.icon-solid');
-                    if (outlineIcon && solidIcon) {
-                        outlineIcon.style.opacity = isActive ? '0' : '1';
-                        solidIcon.style.opacity = isActive ? '1' : '0';
-                    }
-                });
-            },
-            {
-                // 觀察元素進入視窗中間附近時觸發
-                root: null,
-                threshold: 0.5,
-            }
-        );
+        const handleScroll = () => {
+            const viewportCenter = window.innerHeight / 2;
+            let closestCard = null;
+            let minDistance = Infinity;
 
-        cardRefs.current.forEach((card) => {
-            if (card) observer.observe(card);
-        });
+            // 找出距離頁面中間最近的卡片
+            cardRefs.current.forEach((card) => {
+                if (!card) return;
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(cardCenter - viewportCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestCard = card;
+                }
+            });
+
+            // 套用效果到最近的卡片，其餘恢復為預設狀態
+            cardRefs.current.forEach((card) => {
+                if (!card) return;
+                const isActive = card === closestCard;
+                card.style.transform = `scale(${isActive ? 1 : 0.9})`;
+                card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
+                card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
+                const outlineIcon = card.querySelector('.icon-outline');
+                const solidIcon = card.querySelector('.icon-solid');
+                if (outlineIcon && solidIcon) {
+                    outlineIcon.style.opacity = isActive ? '0' : '1';
+                    solidIcon.style.opacity = isActive ? '1' : '0';
+                }
+            });
+        };
+
+        // 初始化與監聽捲動事件
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
 
         return () => {
-            cardRefs.current.forEach((card) => {
-                if (card) observer.unobserve(card);
-            });
+            window.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
