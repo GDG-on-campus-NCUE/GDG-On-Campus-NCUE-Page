@@ -7,7 +7,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import gdgLogo from '@/images/icon/brackets.gif';
 import githubIcon from '@/images/icon/github (1).png';
 import instagramIcon from '@/images/icon/instagram.png';
-import gdgCommunityIcon from '@/images/icon/google_sticker_3.gif';
+import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
 import lineIcon from '@/images/icon/line.png';
 
 export default function JoinUs() {
