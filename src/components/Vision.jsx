@@ -108,15 +108,17 @@ export default function Vision() {
                 const rect = card.getBoundingClientRect();
                 const cardCenter = rect.left + rect.width / 2;
                 const distance = Math.abs(center - cardCenter);
-                const scale = Math.max(0.9, 1.1 - distance / center);
-                const rotateY = ((center - cardCenter) / center) * 15;
-                const blur = distance < 30 ? 0 : Math.min(distance / 40, 4); // 中央卡片保持清晰
-                card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale})`;
-                card.style.filter = `blur(${blur}px)`;
-                card.style.opacity = scale > 1 ? '1' : '0.6';
-                card.style.zIndex = scale > 1 ? '1' : '0';
+                // 中央卡片放大，兩側卡片縮小，並帶有輕微位移與旋轉
+                const scale = Math.max(0.85, 1 - distance / (center * 1.2));
+                const rotateY = ((center - cardCenter) / center) * 20;
+                const translateY = scale > 0.98 ? -10 : 0;
+                card.style.transform = `perspective(1000px) rotateY(${rotateY}deg) scale(${scale}) translateY(${translateY}px)`;
+                card.style.filter = 'none'; // 移除模糊效果
+                card.style.opacity = scale > 0.95 ? '1' : '0.5';
+                card.style.zIndex = scale > 0.95 ? '1' : '0';
+                card.style.borderColor = scale > 0.95 ? 'var(--color-brand)' : 'var(--color-border)';
                 const sheen = card.querySelector('.sheen');
-                if (sheen) sheen.style.opacity = scale > 1.05 ? '1' : '0';
+                if (sheen) sheen.style.opacity = scale > 0.98 ? '1' : '0';
             });
         };
 
@@ -124,6 +126,7 @@ export default function Vision() {
         container.addEventListener('scroll', handleScroll);
         window.addEventListener('resize', handleScroll);
 
+        // 針對滑鼠滾輪的水平滾動轉換
         const handleWheel = (e) => {
             if (window.innerWidth >= 768) return; // 僅在手機版運作
             if (e.deltaY === 0) return;
@@ -134,13 +137,32 @@ export default function Vision() {
                 container.scrollLeft += e.deltaY;
             }
         };
-
         container.addEventListener('wheel', handleWheel, { passive: false });
+
+        // 針對觸控的水平滾動轉換
+        let startY = 0;
+        const handleTouchStart = (e) => {
+            startY = e.touches[0].clientY;
+        };
+        const handleTouchMove = (e) => {
+            const dy = startY - e.touches[0].clientY;
+            const atStart = container.scrollLeft === 0;
+            const atEnd = Math.ceil(container.scrollLeft + container.clientWidth) >= container.scrollWidth;
+            if ((!atEnd && dy > 0) || (!atStart && dy < 0)) {
+                e.preventDefault();
+                container.scrollLeft += dy;
+            }
+            startY = e.touches[0].clientY;
+        };
+        container.addEventListener('touchstart', handleTouchStart, { passive: false });
+        container.addEventListener('touchmove', handleTouchMove, { passive: false });
 
         return () => {
             container.removeEventListener('scroll', handleScroll);
             window.removeEventListener('resize', handleScroll);
             container.removeEventListener('wheel', handleWheel);
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchmove', handleTouchMove);
         };
     }, []);
 
@@ -219,7 +241,7 @@ export default function Vision() {
                                 onPointerEnter={(e) => handlePointerEnter(e, index)}
                                 onPointerLeave={() => handlePointerLeave(index)}
                                 // 入場動畫：由下往上淡入，並依序延遲 0.15 秒
-                                className={`relative overflow-hidden bg-surface/50 backdrop-blur-lg border border-border rounded-2xl p-8 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group flex-shrink-0 w-72 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
+                                className={`relative overflow-hidden bg-surface/50 md:backdrop-blur-lg border border-border rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 ease-out hover:duration-300 hover:shadow-2xl hover:shadow-brand/20 hover:border-brand focus:scale-105 group flex-shrink-0 w-60 md:w-auto snap-center ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                                 style={{ transitionDelay: `${index * 0.15}s` }}
                                 tabIndex={0}
                             >
