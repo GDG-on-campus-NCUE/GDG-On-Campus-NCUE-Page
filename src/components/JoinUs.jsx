@@ -109,7 +109,14 @@ export default function JoinUs() {
                         className={`w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
-                        <Image src={lineIcon} alt="Line Icon" width={28} height={28} className="w-6 h-6 md:w-7 md:h-7" />
+                        <Image
+                            src={lineIcon}
+                            alt="Line Icon"
+                            width={28}
+                            height={28}
+                            className="w-6 h-6 md:w-7 md:h-7"
+                            draggable={false}
+                        />
                         <span>{language === 'zh' ? '立即加入 LINE 社群' : 'Join our LINE group now'}</span>
                         <ArrowRightIcon className="w-5 h-5 md:w-6 md:h-6" />
                     </button>
@@ -133,6 +140,7 @@ export default function JoinUs() {
                                     alt="GDG on Campus NCUE Logo"
                                     width={350}
                                     height={70}
+                                    draggable={false}
                                 />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
@@ -166,6 +174,7 @@ export default function JoinUs() {
                                                         width={24}
                                                         height={24}
                                                         className="w-6 h-6 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
+                                                        draggable={false}
                                                     />
                                                 ) : (
                                                     <social.icon className="w-6 h-6 text-muted transition-transform duration-300 ease-out group-hover:scale-110 group-hover:text-brand" />
