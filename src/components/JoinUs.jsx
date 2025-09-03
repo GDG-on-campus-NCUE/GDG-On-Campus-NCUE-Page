@@ -27,6 +27,7 @@ function GmailIcon({ className = '' }) {
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
+    const [spotlight, setSpotlight] = useState(false); // 控制滑鼠聚光燈顯示
     const ref = useRef(null);
     const { language } = useLanguage();
     const { theme } = useTheme();
@@ -82,10 +83,50 @@ export default function JoinUs() {
         window.open(url, '_blank', 'noopener,noreferrer');
     }
 
+    // 滑鼠移動時更新聚光燈位置
+    const handleAreaMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        e.currentTarget.style.setProperty('--mx', `${x}px`);
+        e.currentTarget.style.setProperty('--my', `${y}px`);
+    }
+
+    // CTA 按鈕虹彩光澤跟隨滑鼠
+    const handleButtonMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        e.currentTarget.style.setProperty('--bx', `${x}px`);
+        e.currentTarget.style.setProperty('--by', `${y}px`);
+    }
+
+    // 社群圖示磁吸效果
+    const handleMagnetic = (e) => {
+        const magnet = e.currentTarget.querySelector('.magnet');
+        const rect = magnet.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    }
+    const resetMagnetic = (e) => {
+        const magnet = e.currentTarget.querySelector('.magnet');
+        magnet.style.transform = 'translate(0,0)';
+    }
+
     return (
-        <section id="join" className="relative bg-surface-muted overflow-hidden" ref={ref}>
-            {/* 呼吸流動背景 */}
-            <div className="breathing-light"></div>
+        <section
+            id="join"
+            className="relative bg-surface-muted overflow-hidden"
+            ref={ref}
+            onMouseMove={handleAreaMouseMove}
+            onMouseEnter={() => setSpotlight(true)}
+            onMouseLeave={() => setSpotlight(false)}
+        >
+            {/* 極光背景 */}
+            <div className="aurora-bg"></div>
+            {/* 滑鼠聚光燈 */}
+            <div className="cursor-spotlight" style={{ opacity: spotlight ? 1 : 0 }}></div>
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             {/* 將高度縮小以提升 RWD 觀感 */}
             <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden bg-surface">
@@ -107,7 +148,8 @@ export default function JoinUs() {
                     {/* 手機版寬度全滿，桌機保持原樣 */}
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
-                        className={`w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                        onMouseMove={handleButtonMove}
+                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
                         <Image
@@ -171,9 +213,11 @@ export default function JoinUs() {
                                             title={social.name}
                                             aria-label={social.name}
                                             className="group flex flex-col items-center focus:outline-none select-none"
+                                            onMouseMove={handleMagnetic}
+                                            onMouseLeave={resetMagnetic}
                                         >
                                             {/* 圓形圖示容器 */}
-                                            <div className="w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
+                                            <div className="magnet w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
                                                 {social.isImage ? (
                                                     <Image
                                                         src={social.icon}
