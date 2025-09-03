@@ -527,34 +527,26 @@ svg {
 }
 
 /* 螢光筆掃過效果 */
+/* 多行螢光筆效果，支援文字換行 */
 .highlight-line {
   position: relative;
   display: inline;
   z-index: 0;
-}
-.highlight-line::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 0%;
-  height: 0.8em;
-  background: var(--brand-accent); /* 螢光筆使用 Google 藍 */
-  opacity: 0.4; /* 保留適度透明度 */
+  background-image: linear-gradient(transparent 60%, var(--brand-accent) 60%);
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  transition: background-size 0.4s ease;
+  box-decoration-break: clone;
   border-radius: 0.25em;
-  z-index: -1;
-  transition: width 0.4s ease;
 }
-[data-theme="dark"] .highlight-line::before {
-  background: #8ab4f8; /* 深色模式使用較亮的藍色 */
-  opacity: 0.6; /* 提高透明度以增加對比 */
+[data-theme="dark"] .highlight-line {
+  background-image: linear-gradient(transparent 60%, #8ab4f8 60%);
 }
-.group:hover .highlight-line::before,
-.card-active .highlight-line::before {
-  width: 100%;
+.group:hover .highlight-line,
+.card-active .highlight-line {
+  background-size: 100% 100%;
 }
-.group:hover p .highlight-line::before,
-.card-active p .highlight-line::before {
+.group:hover p .highlight-line,
+.card-active p .highlight-line {
   transition-delay: 0.15s;
 }
