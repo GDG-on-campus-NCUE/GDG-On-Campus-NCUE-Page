@@ -168,7 +168,8 @@ export default function Projects() {
                                     {language === 'zh' ? '技術棧' : 'Tech Stack'}
                                 </h4>
                                 {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
-                                <div className="relative w-full overflow-hidden rounded-lg bg-surface/50">
+                                {/* 禁止選取技術棧區塊內的文字與圖示 */}
+                                <div className="relative w-full overflow-hidden rounded-lg bg-surface/50 select-none">
                                     <div className="marquee-container flex text-foreground whitespace-nowrap">
                                         {Array.from({ length: 12 }, (_, setIndex) =>
                                             techStack.map((tech, techIndex) => (
@@ -178,7 +179,8 @@ export default function Projects() {
                                                     style={{ animationDelay: `${(setIndex * techStack.length + techIndex) * 0.2}s` }}
                                                 >
                                                     <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
-                                                        <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" />
+                                                        {/* 圖示禁止拖曳 */}
+                                                        <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" draggable={false} />
                                                     </div>
                                                     <span className="text-sm md:text-base font-semibold">{tech.name}</span>
                                                 </div>
