@@ -289,12 +289,14 @@ export default function Projects() {
                 {/* --- 區段一：介紹 (RWD 已優化) --- */}
                 <div className="text-center mb-16 md:mb-24">
                     <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-                        {language === 'zh' ? '你的 Code，運行在校園日常' : 'Your code powers daily campus life'}
+                        {language === 'zh'
+                            ? (<>{'你的程式碼，'}<span className="block md:inline">在校園日常迴響</span></>)
+                            : (<>{'Your code, '}<span className="block md:inline">echoes through campus life</span></>)}
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
-                            ? '我們不只打造酷炫的專案，更要解決校園的真實問題。從生輔組獎學金資訊平台到宿舍管理系統，我們的技術真正服務於每一位同學。'
-                            : 'We build not just cool projects but real solutions for campus problems. From the Student Affairs Scholarship Info Platform to dorm systems, our tech serves every student.'}
+                            ? '我們不僅是打造酷炫的專案，更是構築支撐校園運作的數位基石。從賦能學生的獎學金資訊平台，到優化校園網站的使用體驗，我們的技術無聲地運行在背景之中，成為每一位同學都能依賴的、穩定而強大的隱形力量。'
+                            : 'We are not just building flashy projects; we also lay the digital foundation that supports campus operations. From empowering students with a scholarship information platform to enhancing user experiences on campus websites, our technology runs silently in the background, becoming a stable and powerful invisible force every student can rely on.'}
                     </p>
                 </div>
 
@@ -396,17 +398,17 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className={`relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-100 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'shadow-[0_0_25px_rgba(59,130,246,0.5)]' : '') : 'hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className={`relative bg-surface rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-100 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'border-gray-300 dark:border-gray-700') : 'border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-muted' : 'text-heading'}`}>{feature.title}</h3>
+                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600' : 'text-heading'}`}>{feature.title}</h3>
                                         {(() => {
                                             const statusClass =
                                                 isMobile && activeCard !== index
-                                                    ? 'bg-surface text-muted border border-muted'
+                                                    ? 'bg-surface text-gray-400 dark:text-gray-600 border border-gray-300 dark:border-gray-700'
                                                     : feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
                                                         ? 'bg-green-500 text-white dark:bg-green-600'
                                                         : feature.status === '進行中' || feature.status === 'In Progress'
@@ -419,12 +421,12 @@ export default function Projects() {
                                             );
                                         })()}
                                     </div>
-                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-muted opacity-70' : 'text-muted'}`}>{feature.description}</p>
+                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600 opacity-70' : 'text-muted'}`}>{feature.description}</p>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-muted/10 text-muted' : 'bg-brand/10 text-brand'}`}
+                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-600' : 'bg-brand/10 text-brand'}`}
                                             >
                                                 {tag}
                                             </span>
@@ -435,7 +437,7 @@ export default function Projects() {
                                             href={feature.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-muted hover:text-muted' : 'text-brand hover:text-brand-accent'}`}
+                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-600' : 'text-brand hover:text-brand-accent'}`}
                                         >
                                             {language === 'zh' ? '查看專案' : 'View Project'}
                                             <svg
