@@ -97,7 +97,7 @@ export default function Events() {
         }
     }, [eventImages.length]);
 
-    // 手機版偵測靠近螢幕中間的卡片並套用強調樣式
+    // 手機版偵測靠近螢幕中間的卡片並套用高科技感強調樣式
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (window.innerWidth >= 768) return; // 只在手機版運作
@@ -121,14 +121,11 @@ export default function Events() {
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const isActive = card === closestCard;
-                // 套用更明顯的縮放與標註效果
-                card.style.transform = `scale(${isActive ? 1.1 : 0.96})`;
+                // 以平移與光暈呈現專業的過渡效果，避免因放大造成爆版
+                card.style.transform = `translateY(${isActive ? '-4px' : '0'})`;
                 card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
-                card.classList.toggle('bg-brand/20', isActive);
+                card.classList.toggle('bg-brand/10', isActive);
                 card.classList.toggle('border-brand', isActive);
-                card.classList.toggle('ring-4', isActive);
-                card.classList.toggle('ring-brand', isActive);
-                card.classList.toggle('animate-pulse', isActive);
             });
         };
 
@@ -257,7 +254,7 @@ export default function Events() {
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-200 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/20 md:hover:border-brand md:hover:ring-4 md:hover:ring-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-110 md:cursor-pointer`}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:cursor-pointer`}
                                     style={{ transitionDelay: isVisible ? '0s' : `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
