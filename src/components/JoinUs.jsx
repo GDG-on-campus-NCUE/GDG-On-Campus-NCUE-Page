@@ -112,7 +112,8 @@ export default function JoinUs() {
         <section id="join" className="bg-surface-muted" ref={ref}>
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             <div className="relative py-20 md:py-32 px-4 md:px-8 text-center overflow-hidden bg-surface">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-gradient-to-tr from-brand/20 via-blue-500/20 to-purple-600/20 rounded-full blur-3xl animate-pulse"></div>
+                {/* 底部光暈，與下方 joinus 區塊光效相連 */}
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(66,133,244,0.15),transparent)]"></div>
 
                 <div className="relative z-10">
                     <h2
