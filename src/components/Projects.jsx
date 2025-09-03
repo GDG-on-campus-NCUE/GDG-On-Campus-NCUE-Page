@@ -402,14 +402,16 @@ export default function Projects() {
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
+                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-muted' : 'text-heading'}`}>{feature.title}</h3>
                                         {(() => {
                                             const statusClass =
-                                                feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
-                                                    ? 'bg-green-500 text-white dark:bg-green-600'
-                                                    : feature.status === '進行中' || feature.status === 'In Progress'
-                                                        ? 'bg-yellow-500 text-white dark:bg-yellow-600'
-                                                        : 'bg-gray-500 text-white dark:bg-gray-600';
+                                                isMobile && activeCard !== index
+                                                    ? 'bg-surface text-muted border border-muted'
+                                                    : feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
+                                                        ? 'bg-green-500 text-white dark:bg-green-600'
+                                                        : feature.status === '進行中' || feature.status === 'In Progress'
+                                                            ? 'bg-yellow-500 text-white dark:bg-yellow-600'
+                                                            : 'bg-gray-500 text-white dark:bg-gray-600';
                                             return (
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
                                                     {feature.status}
@@ -417,16 +419,33 @@ export default function Projects() {
                                             );
                                         })()}
                                     </div>
-                                    <p className="phone-liner md:pc-liner text-muted mb-4 leading-relaxed flex-grow">{feature.description}</p>
+                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-muted opacity-70' : 'text-muted'}`}>{feature.description}</p>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {feature.tags.map(tag => (
-                                            <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
+                                            <span
+                                                key={tag}
+                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-muted/10 text-muted' : 'bg-brand/10 text-brand'}`}
+                                            >
+                                                {tag}
+                                            </span>
                                         ))}
                                     </div>
                                     {feature.link && (
-                                        <a href={feature.link} target="_blank" rel="noopener noreferrer" className="phone-liner-bold text-brand hover:text-brand-accent font-medium transition-colors group flex items-center mt-auto">
+                                        <a
+                                            href={feature.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-muted hover:text-muted' : 'text-brand hover:text-brand-accent'}`}
+                                        >
                                             {language === 'zh' ? '查看專案' : 'View Project'}
-                                            <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                            <svg
+                                                className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                            </svg>
                                         </a>
                                     )}
                                 </div>
