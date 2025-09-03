@@ -55,8 +55,9 @@ export default function JoinUs() {
             name: 'Gmail',
             icon: GmailIcon,
             url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
-            labelZh: 'GDG mail 通知',
-            labelEn: 'GDG Mail Notifications',
+            // 調整名稱，移除 GDG 前綴
+            labelZh: 'Mail 通知',
+            labelEn: 'Mail Notifications',
             isImage: false,
         },
         {
@@ -155,7 +156,8 @@ export default function JoinUs() {
                     <h2
                         className={`rainbow-text phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                     >
-                        {language === 'zh' ? '你的程式碼，是校園的下一個未來。' : 'Your code is the next future of campus.'}
+                        {/* 更新標題內容，刪除「下一個」一詞 */}
+                        {language === 'zh' ? '你的程式碼，是校園的未來。' : 'Your code is the future of campus.'}
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
