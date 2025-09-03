@@ -22,6 +22,8 @@ export default function Projects() {
     const cardWrapperRefs = useRef([]);
     // 控制 3D 互動的卡片本體參考
     const cardInnerRefs = useRef([]);
+    // 儲存 requestAnimationFrame 的識別碼以便控制動畫
+    const animationFrame = useRef([]);
     // 是否為手機螢幕
     const [isMobile, setIsMobile] = useState(false);
     // 手機螢幕中間目前的卡片索引
@@ -39,7 +41,8 @@ export default function Projects() {
         zh: [
             {
                 status: '已上線',
-                title: '生輔組獎助學金平台',
+                // 生輔組獎學金資訊平台
+                title: '生輔組獎學金資訊平台',
                 description: '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 2.5 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['資訊整合', '使用者體驗', '校園服務']
@@ -86,7 +89,8 @@ export default function Projects() {
         en: [
             {
                 status: 'Released',
-                title: 'Scholarship Platform',
+                // Student Affairs Scholarship Info Platform
+                title: 'Student Affairs Scholarship Info Platform',
                 description: 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 2.5 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['Information Integration', 'User Experience', 'Campus Service']
@@ -205,7 +209,6 @@ export default function Projects() {
     }, [isMobile]);
 
     useEffect(() => {
-        const timeouts = [];
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // 依據可見狀態切換動畫
@@ -222,6 +225,8 @@ export default function Projects() {
 
     // 監聽每張卡片進場的觀察器
     useEffect(() => {
+        // 儲存計時器以清除延遲動畫
+        const timeouts = [];
         const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach(entry => {
@@ -255,8 +260,13 @@ export default function Projects() {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        // 依滑鼠位置給予較大的位移
-        card.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+        // 計算較小的位移並透過 requestAnimationFrame 平滑更新
+        const moveX = x * 0.05;
+        const moveY = y * 0.05;
+        cancelAnimationFrame(animationFrame.current[index]);
+        animationFrame.current[index] = requestAnimationFrame(() => {
+            card.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
     };
 
     // 滑鼠離開卡片時重置位移
@@ -264,6 +274,7 @@ export default function Projects() {
         if (isMobile) return;
         const card = cardInnerRefs.current[index];
         if (!card) return;
+        cancelAnimationFrame(animationFrame.current[index]);
         card.style.transform = 'translate(0,0)';
     };
 
@@ -282,8 +293,8 @@ export default function Projects() {
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
-                            ? '我們不只打造酷炫的專案，更要解決校園的真實問題。從獎學金平台到宿舍管理系統，我們的技術真正服務於每一位同學。'
-                            : 'We build not just cool projects but real solutions for campus problems. From scholarship platforms to dorm systems, our tech serves every student.'}
+                            ? '我們不只打造酷炫的專案，更要解決校園的真實問題。從生輔組獎學金資訊平台到宿舍管理系統，我們的技術真正服務於每一位同學。'
+                            : 'We build not just cool projects but real solutions for campus problems. From the Student Affairs Scholarship Info Platform to dorm systems, our tech serves every student.'}
                     </p>
                 </div>
 
@@ -298,7 +309,7 @@ export default function Projects() {
                                     {language === 'zh' ? '精選專案' : 'Featured Project'}
                                 </h3>
                                 <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">
-                                    {language === 'zh' ? '獎學金資訊平台' : 'Scholarship Info Platform'}
+                                    {language === 'zh' ? '生輔組獎學金資訊平台' : 'Student Affairs Scholarship Info Platform'}
                                 </h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
                                     {language === 'zh'
@@ -362,7 +373,7 @@ export default function Projects() {
                                         <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 transition-transform">
                                             <span className="text-white text-xl md:text-2xl lg:text-3xl">🎓</span>
                                         </div>
-                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">{language === 'zh' ? '獎學金平台' : 'Scholarship Platform'}</p>
+                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">{language === 'zh' ? '生輔組獎學金資訊平台' : 'Student Affairs Scholarship Info Platform'}</p>
                                         <p className="text-xs md:text-sm text-white/90 px-2">{language === 'zh' ? '點擊訪問' : 'Visit site'}</p>
                                     </div>
                                 </button>
@@ -385,7 +396,7 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className={`relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-200 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'shadow-[0_0_25px_rgba(59,130,246,0.5)]' : '') : 'hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className={`relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-100 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'shadow-[0_0_25px_rgba(59,130,246,0.5)]' : '') : 'hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
