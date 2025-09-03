@@ -22,6 +22,10 @@ export default function Projects() {
     const cardWrapperRefs = useRef([]);
     // 控制 3D 互動的卡片本體參考
     const cardInnerRefs = useRef([]);
+    // 是否為手機螢幕
+    const [isMobile, setIsMobile] = useState(false);
+    // 手機螢幕中間目前的卡片索引
+    const [activeCard, setActiveCard] = useState(null);
 
     const techStack = [
         { name: 'Next.js', icon: next_js_img },
@@ -117,6 +121,39 @@ export default function Projects() {
         4: 'lg:grid-cols-4',
         5: 'lg:grid-cols-5',
     }[columnCount] || 'lg:grid-cols-3';
+
+    // 判斷目前是否為手機版
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // 手機版監聽滾動，偵測卡片是否位於畫面中央
+    useEffect(() => {
+        if (!isMobile) {
+            setActiveCard(null);
+            return;
+        }
+
+        const handleScroll = () => {
+            const centerY = window.innerHeight / 2;
+            let current = null;
+            cardWrapperRefs.current.forEach((el, idx) => {
+                if (!el) return;
+                const rect = el.getBoundingClientRect();
+                if (rect.top <= centerY && rect.bottom >= centerY) {
+                    current = idx;
+                }
+            });
+            setActiveCard(current);
+        };
+
+        handleScroll();
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [isMobile]);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -280,7 +317,7 @@ export default function Projects() {
                             key={index}
                             data-index={index}
                             ref={el => cardWrapperRefs.current[index] = el}
-                            className={`group relative rounded-2xl transition-all duration-500 hover:-translate-y-1 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                            className={`group relative rounded-2xl transition-all duration-500 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1' : '') : 'hover:-translate-y-1'}`}
                             style={{ transitionDelay: `${0.6 + index * 0.1}s` }}
                         >
                             {/* 背景發光層 */}
@@ -288,9 +325,9 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className="relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-200 will-change-transform overflow-hidden hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+                                className={`relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-200 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'shadow-[0_0_25px_rgba(59,130,246,0.5)]' : '') : 'hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
-                                <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 opacity-0 group-hover:opacity-50 blur-md transition-opacity duration-300"></span>
+                                <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
