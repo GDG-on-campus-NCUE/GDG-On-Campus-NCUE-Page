@@ -208,6 +208,26 @@ export default function Projects() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [isMobile]);
 
+    // 手機版：透過裝置陀螺儀提供 3D 旋轉效果
+    useEffect(() => {
+        if (!isMobile || typeof window === 'undefined' || !window.DeviceOrientationEvent) return;
+
+        // 透過陀螺儀數值旋轉所有卡片
+        const handleOrientation = (event) => {
+            const { beta = 0, gamma = 0 } = event;
+            const rotateX = beta / 15; // 前後傾斜
+            const rotateY = -gamma / 15; // 左右傾斜反向
+
+            cardInnerRefs.current.forEach(card => {
+                if (!card) return;
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+        };
+
+        window.addEventListener('deviceorientation', handleOrientation);
+        return () => window.removeEventListener('deviceorientation', handleOrientation);
+    }, [isMobile]);
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             ([entry]) => {
@@ -260,12 +280,12 @@ export default function Projects() {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        // 計算較小的位移並透過 requestAnimationFrame 平滑更新
-        const moveX = x * 0.05;
-        const moveY = y * 0.05;
+        // 直接依滑鼠位置位移，讓跟隨更即時
+        const moveX = x * 0.1;
+        const moveY = y * 0.1;
         cancelAnimationFrame(animationFrame.current[index]);
         animationFrame.current[index] = requestAnimationFrame(() => {
-            card.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            card.style.transform = `translate3d(${moveX}px, ${moveY}px, 0)`;
         });
     };
 
@@ -275,7 +295,7 @@ export default function Projects() {
         const card = cardInnerRefs.current[index];
         if (!card) return;
         cancelAnimationFrame(animationFrame.current[index]);
-        card.style.transform = 'translate(0,0)';
+        card.style.transform = 'translate3d(0,0,0)';
     };
 
     const openLink = (url) => {
@@ -398,7 +418,7 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className={`relative bg-surface rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-100 will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'border-gray-300 dark:border-gray-700') : 'border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className={`relative bg-surface rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'border-gray-300 dark:border-gray-700') : 'border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
