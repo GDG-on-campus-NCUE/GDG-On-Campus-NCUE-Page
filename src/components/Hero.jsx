@@ -146,6 +146,7 @@ export default function Hero() {
                         width={48}
                         height={48}
                         className="w-12 h-12 md:w-20 md:h-20 object-contain"
+                        draggable={false}
                     />
                     <span className={`text-lg md:text-2xl font-bold ${theme === 'light' ? 'text-slate-800' : 'text-white'}`}>
                         {language === 'zh' ? '探索我們的故事' : 'Explore Our Story'}

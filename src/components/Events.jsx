@@ -91,6 +91,7 @@ export default function Events() {
                                                 fill
                                                 sizes="100vw"
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                                                draggable={false}
                                                 onError={(e) => {
                                                     // 如果圖片加載失敗，隱藏 img 並顯示同父容器內的佔位符
                                                     try {
@@ -140,6 +141,7 @@ export default function Events() {
                                     width={40}
                                     height={40}
                                     className="w-8 h-8 md:w-10 md:h-10 object-contain"
+                                    draggable={false}
                                 />
                                 <p className="phone-liner-bold md:pc-liner-bold text-brand">
                                     {language === 'zh' ? '回顧我們的「Build with AI 2025」' : 'Review of "Build with AI 2025"'}

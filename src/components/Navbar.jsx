@@ -73,6 +73,7 @@ export default function Navbar() {
                                         width={64}
                                         height={64}
                                         className="w-full h-full object-contain"
+                                        draggable={false}
                                     />
                                 </div>
                                 <div className={`transition-colors duration-300 ${logoColor}`}>

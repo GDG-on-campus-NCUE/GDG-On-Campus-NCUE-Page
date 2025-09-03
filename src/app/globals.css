@@ -472,3 +472,10 @@ html {
   background-clip: text;
   color: transparent;
 }
+
+/* 禁止拖曳與選取所有圖片與圖示 */
+img,
+svg {
+  -webkit-user-drag: none;
+  user-select: none;
+}
