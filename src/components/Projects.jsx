@@ -16,6 +16,13 @@ export default function Projects() {
     const ref = useRef(null);
     const { language } = useLanguage();
 
+    // 卡片進場顯示狀態
+    const [visibleCards, setVisibleCards] = useState({});
+    // 觀察卡片進場用的容器參考
+    const cardWrapperRefs = useRef([]);
+    // 控制 3D 互動的卡片本體參考
+    const cardInnerRefs = useRef([]);
+
     const techStack = [
         { name: 'Next.js', icon: next_js_img },
         { name: 'TypeScript', icon: ts_img },
@@ -126,6 +133,42 @@ export default function Projects() {
         };
     }, []);
 
+    // 監聽每張卡片進場的觀察器
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setVisibleCards(prev => ({ ...prev, [entry.target.dataset.index]: true }));
+                    }
+                });
+            },
+            { threshold: 0.2 }
+        );
+
+        cardWrapperRefs.current.forEach(el => el && observer.observe(el));
+        return () => observer.disconnect();
+    }, []);
+
+    // 卡片滑鼠移動時的 3D 互動效果
+    const handleMouseMove = (e, index) => {
+        const card = cardInnerRefs.current[index];
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const rotateX = (-y / rect.height) * 8;
+        const rotateY = (x / rect.width) * 8;
+        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    };
+
+    // 滑鼠離開卡片時重置 3D 角度
+    const handleMouseLeave = (index) => {
+        const card = cardInnerRefs.current[index];
+        if (!card) return;
+        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    };
+
     const openLink = (url) => {
         window.open(url, '_blank', 'noopener,noreferrer');
     }
@@ -230,43 +273,56 @@ export default function Projects() {
                     </div>
                 </div>
 
-                {/* --- 區段三：更多專案 (RWD 已優化) --- */}
+                {/* --- 區段三：更多專案 (含 3D 滑鼠與入場效果) --- */}
                 <div className={`grid grid-cols-1 md:grid-cols-2 ${columnClass} gap-6 md:gap-8 mb-16 md:mb-24`}>
                     {otherFeatures.map((feature, index) => (
                         <div
                             key={index}
-                            className={`bg-surface rounded-2xl border border-border p-6 flex flex-col transition-all duration-500 transform hover:-translate-y-1 hover:shadow-xl ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                            data-index={index}
+                            ref={el => cardWrapperRefs.current[index] = el}
+                            className={`group relative rounded-2xl transition-all duration-500 hover:-translate-y-1 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                             style={{ transitionDelay: `${0.6 + index * 0.1}s` }}
                         >
-                            {/* 卡片內容保持不變，它的 RWD 已經做得很好 */}
-                            <div className="flex justify-between items-start mb-4">
-                                <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
-                                {(() => {
-                                    const statusClass =
-                                        feature.status === '已上線' || feature.status === 'Released'
-                                            ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
-                                            : feature.status === '進行中' || feature.status === 'In Progress'
-                                                ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
-                                                : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
-                                    return (
-                                        <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
-                                            {feature.status}
-                                        </span>
-                                    );
-                                })()}
+                            {/* 背景發光層 */}
+                            <div
+                                ref={el => cardInnerRefs.current[index] = el}
+                                onMouseMove={e => handleMouseMove(e, index)}
+                                onMouseLeave={() => handleMouseLeave(index)}
+                                className="relative bg-surface rounded-2xl border border-border p-6 flex flex-col h-full shadow-lg transition-transform duration-200 will-change-transform overflow-hidden hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]"
+                            >
+                                <span className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 opacity-0 group-hover:opacity-50 blur-md transition-opacity duration-300"></span>
+                                {/* 實際內容 */}
+                                <div className="relative z-10 flex flex-col h-full">
+                                    <div className="flex justify-between items-start mb-4">
+                                        <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
+                                        {(() => {
+                                            const statusClass =
+                                                feature.status === '已上線' || feature.status === 'Released'
+                                                    ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
+                                                    : feature.status === '進行中' || feature.status === 'In Progress'
+                                                        ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
+                                                        : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
+                                            return (
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
+                                                    {feature.status}
+                                                </span>
+                                            );
+                                        })()}
+                                    </div>
+                                    <p className="phone-liner md:pc-liner text-muted mb-4 leading-relaxed flex-grow">{feature.description}</p>
+                                    <div className="flex flex-wrap gap-2 mb-4">
+                                        {feature.tags.map(tag => (
+                                            <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
+                                        ))}
+                                    </div>
+                                    {feature.link && (
+                                        <a href={feature.link} target="_blank" rel="noopener noreferrer" className="phone-liner-bold text-brand hover:text-brand-accent font-medium transition-colors group flex items-center mt-auto">
+                                            {language === 'zh' ? '查看專案' : 'View Project'}
+                                            <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                                        </a>
+                                    )}
+                                </div>
                             </div>
-                            <p className="phone-liner md:pc-liner text-muted mb-4 leading-relaxed flex-grow">{feature.description}</p>
-                            <div className="flex flex-wrap gap-2 mb-4">
-                                {feature.tags.map(tag => (
-                                    <span key={tag} className="px-2 py-1 bg-brand/10 text-brand text-xs rounded">{tag}</span>
-                                ))}
-                            </div>
-                            {feature.link && (
-                                <a href={feature.link} target="_blank" rel="noopener noreferrer" className="phone-liner-bold text-brand hover:text-brand-accent font-medium transition-colors group flex items-center mt-auto">
-                                    {language === 'zh' ? '查看專案' : 'View Project'}
-                                    <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
-                                </a>
-                            )}
                         </div>
                     ))}
                 </div>
