@@ -67,24 +67,6 @@ export default function JoinUs() {
         },
     ];
 
-    // 色彩調色盤（取自圖中色標）
-    const colorPalette = [
-        '#4285F4', // Blue 500
-        '#34A853', // Green 500
-        '#F9AB00', // Yellow 600
-        '#EA4335', // Red 500
-        '#57CAFF', // Halftone Blue
-        '#5CDB6F', // Halftone Green
-        '#FFD427', // Halftone Yellow
-        '#FF7DAF', // Halftone Red
-        '#C3ECF6', // Pastel Blue
-        '#C6FFC6', // Pastel Green
-        '#FFE7A5', // Pastel Yellow
-        '#F8D8D8', // Pastel Red
-    ];
-    // 目前使用的色彩索引
-    const [colorIndex, setColorIndex] = useState(0);
-
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
             // 依據可見狀態切換動畫
@@ -95,21 +77,15 @@ export default function JoinUs() {
         return () => { if (ref.current) observer.unobserve(ref.current) };
     }, []);
 
-    // 當區塊可見時開始切換文字色彩
-    useEffect(() => {
-        if (!isVisible) return;
-        const timer = setInterval(() => {
-            setColorIndex((prev) => (prev + 1) % colorPalette.length);
-        }, 2000);
-        return () => clearInterval(timer);
-    }, [isVisible]);
 
     const openLink = (url) => {
         window.open(url, '_blank', 'noopener,noreferrer');
     }
 
     return (
-        <section id="join" className="bg-surface-muted" ref={ref}>
+        <section id="join" className="relative bg-surface-muted overflow-hidden" ref={ref}>
+            {/* 呼吸流動背景 */}
+            <div className="breathing-light"></div>
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             <div className="relative py-20 md:py-32 px-4 md:px-8 text-center overflow-hidden bg-surface">
                 {/* 底部光暈，與下方 joinus 區塊光效相連 */}
@@ -117,8 +93,7 @@ export default function JoinUs() {
 
                 <div className="relative z-10">
                     <h2
-                        className={`phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ color: colorPalette[colorIndex] }}
+                        className={`rainbow-text phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                     >
                         {language === 'zh' ? '你的程式碼，是校園的下一個未來。' : 'Your code is the next future of campus.'}
                     </h2>

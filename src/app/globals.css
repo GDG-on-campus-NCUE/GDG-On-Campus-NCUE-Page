@@ -410,3 +410,65 @@ html {
   transition: opacity 0.3s ease;
   mix-blend-mode: screen;
 }
+
+/* JoinUs 背景與彩虹文字動畫 */
+
+/* 背景漸層流動 */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 呼吸放大效果 */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* 彩虹文字漸層移動 */
+@keyframes rainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 呼吸流動的光效背景 */
+.breathing-light {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(66, 133, 244, 0.4), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(123, 97, 255, 0.3), transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(0, 234, 255, 0.3), transparent 60%);
+  background-size: 200% 200%;
+  animation: gradientShift 20s linear infinite, breathe 8s ease-in-out infinite;
+  z-index: -1;
+}
+
+/* 彩虹流動文字 */
+.rainbow-text {
+  background-image: linear-gradient(90deg, #00eaff, #7b61ff, #ff7bfb, #00eaff);
+  background-size: 200% 200%;
+  animation: rainbow 8s linear infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
