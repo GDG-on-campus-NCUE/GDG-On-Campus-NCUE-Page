@@ -31,7 +31,7 @@ export default function Navbar() {
     const { language } = useLanguage();
     const navLinks = language === 'zh'
         ? [
-            { label: '核心使命', id: 'vision' },
+            { label: '社群願景', id: 'vision' },
             { label: '活動回顧', id: 'events' },
             { label: '校園專案', id: 'projects' },
             { label: '社群行程', id: 'calendar' },
