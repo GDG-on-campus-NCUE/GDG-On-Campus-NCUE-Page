@@ -121,11 +121,13 @@ export default function Events() {
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const isActive = card === closestCard;
-                // 套用光暈與縮放效果
-                card.style.transform = `scale(${isActive ? 1.05 : 0.95})`;
-                card.style.boxShadow = isActive ? '0 0 15px var(--brand)' : '';
+                // 套用更明顯的縮放與標註效果
+                card.style.transform = `scale(${isActive ? 1.1 : 0.96})`;
+                card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
                 card.classList.toggle('bg-brand/20', isActive);
                 card.classList.toggle('border-brand', isActive);
+                card.classList.toggle('ring-4', isActive);
+                card.classList.toggle('ring-brand', isActive);
                 card.classList.toggle('animate-pulse', isActive);
             });
         };
@@ -255,8 +257,8 @@ export default function Events() {
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_15px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-105 md:cursor-pointer`}
-                                    style={{ transitionDelay: `${0.5 + index * 0.15}s` }}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-200 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/20 md:hover:border-brand md:hover:ring-4 md:hover:ring-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-110 md:cursor-pointer`}
+                                    style={{ transitionDelay: isVisible ? '0s' : `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
                                         {highlight.title}
