@@ -40,7 +40,7 @@ export default function Projects() {
             {
                 status: '已上線',
                 title: '生輔組獎助學金平台',
-                description: '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，有效提升資訊透明度與申請效率。',
+                description: '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 2.5 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['資訊整合', '使用者體驗', '校園服務']
             },
@@ -87,7 +87,7 @@ export default function Projects() {
             {
                 status: 'Released',
                 title: 'Scholarship Platform',
-                description: 'Integrates campus and external scholarship information with an easy-to-use interface. Smart filtering and personalized recommendations improve transparency and application efficiency.',
+                description: 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 2.5 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['Information Integration', 'User Experience', 'Campus Service']
             },
@@ -304,8 +304,8 @@ export default function Projects() {
                                 </h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
                                     {language === 'zh'
-                                        ? '整合校內外獎助學金資訊，提供學生一個清晰、易於操作的申請入口。透過智慧篩選與個人化推薦，讓每位同學都能找到適合的獎助學金機會。'
-                                        : 'Integrates scholarship information inside and outside campus, giving students a clear and easy application entry. Smart filtering and personalized recommendations help every student find the right opportunities.'}
+                                        ? '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 2.5 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。'
+                                        : 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 2.5 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.'}
                                 </p>
                                 <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">
                                     {language === 'zh' ? '技術棧' : 'Tech Stack'}
