@@ -28,6 +28,10 @@ export default function Projects() {
     const [isMobile, setIsMobile] = useState(false);
     // 手機螢幕中間目前的卡片索引
     const [activeCard, setActiveCard] = useState(null);
+    // 追蹤目前捲動方向
+    const [scrollDirection, setScrollDirection] = useState('down');
+    // 儲存目前卡片索引以供捲動計算使用
+    const activeCardRef = useRef(null);
 
     const techStack = [
         { name: 'Next.js', icon: next_js_img },
@@ -178,6 +182,7 @@ export default function Projects() {
     useEffect(() => {
         if (!isMobile) {
             setActiveCard(null);
+            activeCardRef.current = null;
             return;
         }
 
@@ -200,7 +205,13 @@ export default function Projects() {
                 }
             });
 
-            setActiveCard(closest);
+            if (closest !== activeCardRef.current) {
+                setScrollDirection(
+                    activeCardRef.current !== null && closest < activeCardRef.current ? 'up' : 'down'
+                );
+                setActiveCard(closest);
+                activeCardRef.current = closest;
+            }
         };
 
         handleScroll();
@@ -423,37 +434,60 @@ export default function Projects() {
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
                                 // 手機非焦點卡片於淺色模式下以淺灰底淡化
-                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-gray-200 border-gray-300 dark:bg-gray-800 dark:border-gray-700') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-surface-muted border-border') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600' : 'text-heading'}`}>{feature.title}</h3>
+                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-muted' : 'text-heading'}`}>{feature.title}</h3>
                                         {(() => {
-                                            const statusClass =
-                                                isMobile && activeCard !== index
-                                                    // 非焦點卡片的狀態標籤在淺色模式下改為淺灰背景
-                                                    ? 'bg-gray-200 text-gray-400 border border-gray-300 dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700'
-                                                    : feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
-                                                        ? 'bg-green-500 text-white dark:bg-green-600'
-                                                        : feature.status === '進行中' || feature.status === 'In Progress'
-                                                            ? 'bg-yellow-500 text-white dark:bg-yellow-600'
-                                                            : 'bg-gray-500 text-white dark:bg-gray-600';
+                                            // 依狀態取得對應色碼
+                                            const getColor = (status) => {
+                                                if (['已上線', '已完成', 'Released', 'Completed'].includes(status)) return '#22c55e';
+                                                if (['進行中', 'In Progress'].includes(status)) return '#eab308';
+                                                return '#6b7280';
+                                            };
+                                            const color = getColor(feature.status);
+                                            const isActive = activeCard === index;
+                                            if (isMobile) {
+                                                const animClass = isActive
+                                                    ? (scrollDirection === 'down' ? 'tag-fill-down' : 'tag-fill-up')
+                                                    : '';
+                                                const baseClass = 'px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap border';
+                                                return isActive ? (
+                                                    <span
+                                                        className={`${baseClass} status-pill text-white ${animClass}`}
+                                                        style={{ backgroundColor: color }}
+                                                    >
+                                                        <span className="relative z-10">{feature.status}</span>
+                                                    </span>
+                                                ) : (
+                                                    <span className={`${baseClass} bg-surface-muted text-muted border-border`}>
+                                                        {feature.status}
+                                                    </span>
+                                                );
+                                            }
+                                            const desktopClass =
+                                                feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
+                                                    ? 'bg-green-500 text-white dark:bg-green-600'
+                                                    : feature.status === '進行中' || feature.status === 'In Progress'
+                                                        ? 'bg-yellow-500 text-white dark:bg-yellow-600'
+                                                        : 'bg-gray-500 text-white dark:bg-gray-600';
                                             return (
-                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
+                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${desktopClass}`}>
                                                     {feature.status}
                                                 </span>
                                             );
                                         })()}
                                     </div>
-                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600 opacity-70' : 'text-muted'}`}>{feature.description}</p>
+                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-muted opacity-70' : 'text-muted'}`}>{feature.description}</p>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                // 淺色模式淡化用淺灰色標籤底色
-                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-600' : 'bg-brand/10 text-brand'}`}
+                                                // 手機非焦點卡片使用主題變數的淺色標籤
+                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-surface-muted text-muted' : 'bg-brand/10 text-brand'}`}
                                             >
                                                 {tag}
                                             </span>
@@ -464,7 +498,7 @@ export default function Projects() {
                                             href={feature.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-600' : 'text-brand hover:text-brand-accent'}`}
+                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-muted hover:text-muted' : 'text-brand hover:text-brand-accent'}`}
                                         >
                                             {language === 'zh' ? '查看專案' : 'View Project'}
                                             <svg
