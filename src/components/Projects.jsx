@@ -156,7 +156,7 @@ export default function Projects() {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
-    // 手機版監聽滾動，偵測卡片是否位於畫面中央
+    // 手機版監聽滾動，偵測畫面中最靠近中央的卡片
     useEffect(() => {
         if (!isMobile) {
             setActiveCard(null);
@@ -164,16 +164,25 @@ export default function Projects() {
         }
 
         const handleScroll = () => {
-            const centerY = window.innerHeight / 2;
-            let current = null;
+            const viewportCenter = window.innerHeight / 2;
+            let closest = null;
+            let minDistance = Infinity;
+
             cardWrapperRefs.current.forEach((el, idx) => {
                 if (!el) return;
                 const rect = el.getBoundingClientRect();
-                if (rect.top <= centerY && rect.bottom >= centerY) {
-                    current = idx;
+                // 確認卡片是否進入可視範圍
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                    const cardCenter = rect.top + rect.height / 2;
+                    const distance = Math.abs(cardCenter - viewportCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closest = idx;
+                    }
                 }
             });
-            setActiveCard(current);
+
+            setActiveCard(closest);
         };
 
         handleScroll();
@@ -213,60 +222,26 @@ export default function Projects() {
         return () => observer.disconnect();
     }, []);
 
-    // 手機版：捲動偵測最靠近螢幕中央的卡片並套用強調樣式
-    useEffect(() => {
-        if (typeof window === 'undefined') return;
-        if (window.innerWidth >= 768) return; // 只在手機版運作
+    // （原手機版捲動強調效果已整合至 activeCard 狀態）
 
-        const handleScroll = () => {
-            const viewportCenter = window.innerHeight / 2;
-            let closestIndex = -1;
-            let minDistance = Infinity;
-
-            cardWrapperRefs.current.forEach((card, index) => {
-                if (!card) return;
-                const rect = card.getBoundingClientRect();
-                const cardCenter = rect.top + rect.height / 2;
-                const distance = Math.abs(cardCenter - viewportCenter);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestIndex = index;
-                }
-            });
-
-            cardWrapperRefs.current.forEach((card, index) => {
-                if (!card) return;
-                const isActive = index === closestIndex;
-                card.classList.toggle('bg-brand/20', isActive);
-                card.classList.toggle('border-brand', isActive);
-                card.classList.toggle('shadow-lg', isActive);
-                card.classList.toggle('scale-100', isActive);
-                card.classList.toggle('scale-95', !isActive);
-            });
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
-
-    // 卡片滑鼠移動時的 3D 互動效果
+    // 桌機版：滑鼠移動時的磁吸位移效果
     const handleMouseMove = (e, index) => {
+        if (isMobile) return;
         const card = cardInnerRefs.current[index];
         if (!card) return;
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        const rotateX = (-y / rect.height) * 8;
-        const rotateY = (x / rect.width) * 8;
-        card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        // 依滑鼠位置給予微幅位移
+        card.style.transform = `translate(${x * 0.05}px, ${y * 0.05}px)`;
     };
 
-    // 滑鼠離開卡片時重置 3D 角度
+    // 滑鼠離開卡片時重置位移
     const handleMouseLeave = (index) => {
+        if (isMobile) return;
         const card = cardInnerRefs.current[index];
         if (!card) return;
-        card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        card.style.transform = 'translate(0,0)';
     };
 
     const openLink = (url) => {
@@ -380,7 +355,7 @@ export default function Projects() {
                             key={index}
                             data-index={index}
                             ref={el => cardWrapperRefs.current[index] = el}
-                            className={`group relative rounded-2xl transition-all duration-500 ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1' : '') : 'hover:-translate-y-1'}`}
+                            className={`group relative rounded-2xl transition-all duration-500 transform ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1 scale-105' : 'scale-95') : 'scale-100 hover:scale-105'}`}
                             style={{ transitionDelay: `${0.6 + index * 0.1}s` }}
                         >
                             {/* 背景發光層 */}
