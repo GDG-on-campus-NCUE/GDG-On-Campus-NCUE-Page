@@ -414,30 +414,6 @@ html {
 /* JoinUs 背景與彩虹文字動畫 */
 
 /* 背景極光移動 */
-@keyframes auroraMove {
-  0% {
-    background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%;
-  }
-  50% {
-    background-position: 100% 0%, 0% 0%, 100% 100%, 0% 100%;
-  }
-  100% {
-    background-position: 0% 100%, 100% 100%, 0% 0%, 100% 0%;
-  }
-}
-
-/* 呼吸放大效果 */
-@keyframes breathe {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.7;
-  }
-  50% {
-    transform: scale(1.15);
-    opacity: 1;
-  }
-}
-
 /* 彩虹文字漸層移動 */
 @keyframes rainbow {
   0% {
@@ -452,17 +428,16 @@ html {
 }
 
 /* 極光流動背景 */
-.aurora-bg {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(66, 133, 244, 0.35), transparent 60%),
-    radial-gradient(circle at 80% 30%, rgba(15, 157, 88, 0.35), transparent 60%),
-    radial-gradient(circle at 30% 80%, rgba(244, 180, 0, 0.25), transparent 60%),
-    radial-gradient(circle at 70% 70%, rgba(219, 68, 55, 0.35), transparent 60%);
-  background-size: 200% 200%;
-  filter: blur(80px);
-  animation: auroraMove 40s ease-in-out infinite, breathe 8s ease-in-out infinite;
-  z-index: -2;
+/* JOINUS 區塊藍色光暈背景 */
+.joinus-glow {
+  width: 120%;
+  height: 120%;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(66, 133, 244, 0.35), transparent 60%);
+  z-index: -1;
+}
+.dark .joinus-glow {
+  background: radial-gradient(circle, rgba(66, 133, 244, 0.25), transparent 60%);
 }
 
 /* 滑鼠跟隨聚光燈 */
