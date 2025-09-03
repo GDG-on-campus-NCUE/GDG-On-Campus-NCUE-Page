@@ -490,6 +490,35 @@ html {
   color: transparent;
 }
 
+/* 手機版專案標籤填色動畫 */
+.status-pill {
+  position: relative;
+  overflow: hidden;
+}
+.status-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--surface-muted);
+  z-index: 0;
+}
+.tag-fill-down::before {
+  transform-origin: top;
+  animation: tag-uncover 0.4s forwards;
+}
+.tag-fill-up::before {
+  transform-origin: bottom;
+  animation: tag-uncover 0.4s forwards;
+}
+@keyframes tag-uncover {
+  from {
+    transform: scaleY(1);
+  }
+  to {
+    transform: scaleY(0);
+  }
+}
+
 /* 禁止拖曳與選取所有圖片與圖示 */
 img,
 svg {
