@@ -546,6 +546,10 @@ svg {
   z-index: -1;
   transition: width 0.4s ease;
 }
+[data-theme="dark"] .highlight-line::before {
+  background: #8ab4f8; /* 深色模式使用較亮的藍色 */
+  opacity: 0.6; /* 提高透明度以增加對比 */
+}
 .group:hover .highlight-line::before,
 .card-active .highlight-line::before {
   width: 100%;

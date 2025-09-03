@@ -132,14 +132,15 @@ export default function Events() {
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const isActive = card === closestCard;
-                const borderBase = getComputedStyle(document.documentElement).getPropertyValue('--border');
+                const brandBase = getComputedStyle(document.documentElement).getPropertyValue('--brand');
                 // 以平移與光暈呈現專業的過渡效果，避免因放大造成爆版
                 card.style.transform = `translateY(${isActive ? '-4px' : '0'}) scale(${isActive ? '1.02' : '1'})`;
                 card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
                 card.classList.toggle('bg-brand/10', isActive);
                 card.classList.toggle('border-brand', isActive);
                 card.classList.toggle('card-active', isActive);
-                card.style.borderColor = isActive ? '' : hexToRGBA(borderBase, 0.4);
+                // 非活躍卡片使用透明藍色邊框
+                card.style.borderColor = isActive ? '' : hexToRGBA(brandBase, 0.4);
 
                 // 非活躍卡片文字淡化為灰色，根據主題使用對應灰色
                 const title = card.querySelector('h3');
@@ -170,7 +171,7 @@ export default function Events() {
                     {/* Left: 圖片與簡報 */}
                     <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
                         {/* 圖片輪播 */}
-                        <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-surface/30 backdrop-blur-lg border border-border h-64 md:h-80 lg:h-96 group">
+                        <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-surface/30 backdrop-blur-lg border border-brand h-64 md:h-80 lg:h-96 group">
                             {/* 添加內陰影效果 */}
                             <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none z-10"></div>
                             <div
@@ -226,7 +227,7 @@ export default function Events() {
                         </div>
 
                         {/* 簡報內嵌 */}
-                        <div className="relative w-full h-64 md:h-96 border border-border rounded-xl overflow-hidden shadow-md">
+                        <div className="relative w-full h-64 md:h-96 border border-brand rounded-xl overflow-hidden shadow-md">
                             <iframe
                                 src="https://www.slideshare.net/slideshow/embed_code/key/1QT8eizVmSnyWg?startSlide=1"
                                 className="w-full h-full"
