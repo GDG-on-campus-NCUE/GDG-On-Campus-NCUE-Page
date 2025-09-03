@@ -433,14 +433,14 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                // 手機非焦點卡片於淺色模式下以淺灰底淡化
-                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-surface-muted border-border') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                // 手機非焦點卡片淡化：淺色主題用淺灰，深色主題用深灰
+                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-surface-muted border-gray-200 dark:border-gray-700') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
                                     <div className="flex justify-between items-start mb-4">
-                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-muted' : 'text-heading'}`}>{feature.title}</h3>
+                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500' : 'text-heading'}`}>{feature.title}</h3>
                                         {(() => {
                                             // 依狀態取得對應色碼
                                             const getColor = (status) => {
@@ -463,7 +463,8 @@ export default function Projects() {
                                                         <span className="relative z-10">{feature.status}</span>
                                                     </span>
                                                 ) : (
-                                                    <span className={`${baseClass} bg-surface-muted text-muted border-border`}>
+                                                    // 非焦點狀態標籤改為灰色邊框與文字
+                                                    <span className={`${baseClass} bg-surface-muted text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-700`}>
                                                         {feature.status}
                                                     </span>
                                                 );
@@ -481,13 +482,13 @@ export default function Projects() {
                                             );
                                         })()}
                                     </div>
-                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-muted opacity-70' : 'text-muted'}`}>{feature.description}</p>
+                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500 opacity-70' : 'text-muted'}`}>{feature.description}</p>
                                     <div className="flex flex-wrap gap-2 mb-4">
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                // 手機非焦點卡片使用主題變數的淺色標籤
-                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-surface-muted text-muted' : 'bg-brand/10 text-brand'}`}
+                                                // 手機非焦點卡片標籤改為灰色文字
+                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-surface-muted text-gray-400 dark:text-gray-500' : 'bg-brand/10 text-brand'}`}
                                             >
                                                 {tag}
                                             </span>
@@ -498,7 +499,7 @@ export default function Projects() {
                                             href={feature.link}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-muted hover:text-muted' : 'text-brand hover:text-brand-accent'}`}
+                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500 hover:text-gray-400 dark:hover:text-gray-500' : 'text-brand hover:text-brand-accent'}`}
                                         >
                                             {language === 'zh' ? '查看專案' : 'View Project'}
                                             <svg
