@@ -17,7 +17,8 @@ export default function ThemeSwitcher({ colorClass }) {
     return (
         <button
             onClick={toggleTheme}
-            className={`p-2 rounded-full transition-all duration-300 hover:scale-110 hover:bg-surface-muted/30 hover:shadow-md ${buttonColorClass}`}
+            // 移除點擊後的按鈕選取框
+            className={`p-2 rounded-full transition-all duration-300 hover:scale-110 hover:bg-surface-muted/30 hover:shadow-md focus:outline-none focus:ring-0 ${buttonColorClass}`}
             aria-label="Toggle theme"
         >
             {theme === 'light' ? (
