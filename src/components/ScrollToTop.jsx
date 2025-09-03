@@ -28,111 +28,101 @@ export default function ScrollToTop() {
         };
     }, []);
 
-    // 根據主題切換背景與前景顏色
     const isLightTheme = theme === 'light';
 
-    // SVG 圓環的半徑與周長，用於計算進度
     const radius = 20;
     const circumference = 2 * Math.PI * radius;
+    const segmentLength = circumference / 4;
+
+    // 校正 SVG 路徑與顏色順序，以符合視覺上的 12 點鐘起點
+    // 整個 SVG 畫布被 -rotate-90 旋轉，所以：
+    // - 視覺上的 12點 -> 3點 是原始 SVG 的 9點 -> 12點
+    // - 視覺上的 3點 -> 6點 是原始 SVG 的 12點 -> 3點
+    // - 視覺上的 6點 -> 9點 是原始 SVG 的 3點 -> 6點
+    // - 視覺上的 9點 -> 12點 是原始 SVG 的 6點 -> 9點
+    const segments = [
+        {
+            // 視覺 12點 -> 3點 (紅 -> 黃)
+            id: 'grad-red-yellow',
+            d: `M 4 24 A ${radius} ${radius} 0 0 1 24 4`, // 原始 9點 -> 12點 路徑
+            startProgress: 0.0,
+        },
+        {
+            // 視覺 3點 -> 6點 (黃 -> 綠)
+            id: 'grad-yellow-green',
+            d: `M 24 4 A ${radius} ${radius} 0 0 1 44 24`, // 原始 12點 -> 3點 路徑
+            startProgress: 0.25,
+        },
+        {
+            // 視覺 6點 -> 9點 (綠 -> 藍)
+            id: 'grad-green-blue',
+            d: `M 44 24 A ${radius} ${radius} 0 0 1 24 44`, // 原始 3點 -> 6點 路徑
+            startProgress: 0.5,
+        },
+        {
+            // 視覺 9點 -> 12點 (藍 -> 紅)
+            id: 'grad-blue-red',
+            d: `M 24 44 A ${radius} ${radius} 0 0 1 4 24`, // 原始 6點 -> 9點 路徑
+            startProgress: 0.75,
+        },
+    ];
 
     return (
-        // flex-shrink-0 可防止按鈕在 flex 容器中被壓縮
-        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex-shrink-0">
-            {/* aspect-square 可強制維持 1:1 比例，避免在手機上變形 */}
-            <div className="relative w-12 h-12 aspect-square">
-                {/* 使用 SVG 建立圓形進度環，避免手機瀏覽器變形問題 */}
+        //【關鍵修正】使用內聯 style 強制設定寬高為 3rem (48px)，確保 1:1 正方形
+        <div
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex-shrink-0"
+            style={{ width: '3rem', height: '3rem' }}
+        >
+            <div className="relative w-full h-full">
                 <svg
-                    className="absolute inset-0 -rotate-90 w-full h-full"
+                    className="absolute inset-0 w-full h-full -rotate-90"
                     viewBox="0 0 48 48"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    {/* 定義圓周漸層，依照 Google 四原色排列 */}
                     <defs>
-                        {/* 紅 ➜ 黃 */}
-                        <linearGradient
-                            id="grad1"
-                            x1="24"
-                            y1="4"
-                            x2="44"
-                            y2="24"
-                            gradientUnits="userSpaceOnUse"
-                        >
+                        {/* 依照 紅->黃->綠->藍 的順序重新定義漸層 */}
+                        <linearGradient id="grad-red-yellow" x1="4" y1="24" x2="24" y2="4">
                             <stop offset="0%" stopColor="#ea4335" />
-                            <stop offset="100%" stopColor="#fbbc04" />
+                            <stop offset="100%" stopColor="#f9ab00" /> {/* 更新為正確的黃色 */}
                         </linearGradient>
-                        {/* 黃 ➜ 綠 */}
-                        <linearGradient
-                            id="grad2"
-                            x1="44"
-                            y1="24"
-                            x2="24"
-                            y2="44"
-                            gradientUnits="userSpaceOnUse"
-                        >
-                            <stop offset="0%" stopColor="#fbbc04" />
+                        <linearGradient id="grad-yellow-green" x1="24" y1="4" x2="44" y2="24">
+                            <stop offset="0%" stopColor="#f9ab00" /> {/* 更新為正確的黃色 */}
                             <stop offset="100%" stopColor="#34a853" />
                         </linearGradient>
-                        {/* 綠 ➜ 藍 */}
-                        <linearGradient
-                            id="grad3"
-                            x1="24"
-                            y1="44"
-                            x2="4"
-                            y2="24"
-                            gradientUnits="userSpaceOnUse"
-                        >
+                        <linearGradient id="grad-green-blue" x1="44" y1="24" x2="24" y2="44">
                             <stop offset="0%" stopColor="#34a853" />
                             <stop offset="100%" stopColor="#4285f4" />
                         </linearGradient>
-                        {/* 藍 ➜ 紅 */}
-                        <linearGradient
-                            id="grad4"
-                            x1="4"
-                            y1="24"
-                            x2="24"
-                            y2="4"
-                            gradientUnits="userSpaceOnUse"
-                        >
+                        <linearGradient id="grad-blue-red" x1="24" y1="44" x2="4" y2="24">
                             <stop offset="0%" stopColor="#4285f4" />
                             <stop offset="100%" stopColor="#ea4335" />
                         </linearGradient>
                     </defs>
 
-                    {/* 背景圓環，依主題切換深淺 */}
+                    {/* 背景圓環 */}
                     <circle
                         cx="24"
                         cy="24"
                         r={radius}
                         strokeWidth="4"
                         fill="none"
-                        className={isLightTheme ? 'stroke-slate-600' : 'stroke-slate-300'}
+                        className={isLightTheme ? 'stroke-slate-300' : 'stroke-slate-600'}
                     />
 
-                    {/* 依捲動進度繪製的彩色圓周，漸層銜接四原色 */}
-                    {[
-                        { id: 'grad1', start: 0 }, // 紅 ➜ 黃
-                        { id: 'grad2', start: 0.25 }, // 黃 ➜ 綠
-                        { id: 'grad3', start: 0.5 }, // 綠 ➜ 藍
-                        { id: 'grad4', start: 0.75 }, // 藍 ➜ 紅
-                    ].map(({ id, start }) => {
-                        const segment = 0.25; // 每一象限所占的比例
-                        const progressInSegment = Math.min(
-                            Math.max(progress - start, 0),
-                            segment,
-                        );
-
+                    {/* 依捲動進度繪製的四段彩色圓弧 */}
+                    {segments.map(({ id, d, startProgress }) => {
+                        const progressInSegment = Math.max(0, (progress - startProgress) * 4);
+                        const clampedProgress = Math.min(progressInSegment, 1);
                         return (
-                            <circle
+                            <path
                                 key={id}
-                                cx="24"
-                                cy="24"
-                                r={radius}
+                                d={d}
                                 stroke={`url(#${id})`}
                                 strokeWidth="4"
                                 fill="none"
-                                strokeDasharray={`${progressInSegment * circumference} ${circumference}`}
-                                strokeDashoffset={circumference * (1 - start)}
                                 strokeLinecap="round"
+                                strokeDasharray={segmentLength}
+                                strokeDashoffset={segmentLength * (1 - clampedProgress)}
                             />
                         );
                     })}
