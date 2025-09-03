@@ -1,6 +1,6 @@
 'use client';
 
-// 行事曆區塊，嵌入 Google Calendar，支援亮暗色主題與 RWD
+// 社群行事曆區塊，嵌入 Google Calendar，支援亮暗色主題與 RWD
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
@@ -29,7 +29,7 @@ export default function Calendar() {
         <section id="calendar" className="bg-surface-muted py-20 md:py-32 px-4 md:px-6" ref={ref}>
             <div className={`max-w-5xl mx-auto transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
                 <h2 className="phone-h1 md:pc-h2 text-heading text-center mb-8">
-                    {language === 'zh' ? '行事曆' : 'Calendar'}
+                    {language === 'zh' ? '社群行事曆' : 'Calendar'}
                 </h2>
                 <div className="rounded-xl overflow-hidden shadow-lg relative">
                     <iframe
