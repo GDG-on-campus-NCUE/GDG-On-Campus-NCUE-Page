@@ -13,15 +13,14 @@ export default function ScrollToTop() {
     useEffect(() => {
         const updateProgress = () => {
             const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const newProgress = docHeight > 0 ? scrollTop / docHeight : 0;
-            setProgress(newProgress);
+            const docHeight =
+                document.documentElement.scrollHeight - window.innerHeight;
+            const p = docHeight > 0 ? scrollTop / docHeight : 0;
+            setProgress(Math.max(0, Math.min(p, 1)));
         };
-
-        updateProgress();
         window.addEventListener('scroll', updateProgress, { passive: true });
         window.addEventListener('resize', updateProgress);
-
+        updateProgress();
         return () => {
             window.removeEventListener('scroll', updateProgress);
             window.removeEventListener('resize', updateProgress);
@@ -34,66 +33,60 @@ export default function ScrollToTop() {
     const circumference = 2 * Math.PI * radius;
     const segmentLength = circumference / 4;
 
-    // 校正 SVG 路徑與顏色順序，以符合視覺上的 12 點鐘起點
-    // 整個 SVG 畫布被 -rotate-90 旋轉，所以：
-    // - 視覺上的 12點 -> 3點 是原始 SVG 的 9點 -> 12點
-    // - 視覺上的 3點 -> 6點 是原始 SVG 的 12點 -> 3點
-    // - 視覺上的 6點 -> 9點 是原始 SVG 的 3點 -> 6點
-    // - 視覺上的 9點 -> 12點 是原始 SVG 的 6點 -> 9點
+    // 四段 1/4 圓弧：從 12 點開始，順時鐘
     const segments = [
-        {
-            // 視覺 12點 -> 3點 (紅 -> 黃)
-            id: 'grad-red-yellow',
-            d: `M 4 24 A ${radius} ${radius} 0 0 1 24 4`, // 原始 9點 -> 12點 路徑
-            startProgress: 0.0,
-        },
-        {
-            // 視覺 3點 -> 6點 (黃 -> 綠)
-            id: 'grad-yellow-green',
-            d: `M 24 4 A ${radius} ${radius} 0 0 1 44 24`, // 原始 12點 -> 3點 路徑
-            startProgress: 0.25,
-        },
-        {
-            // 視覺 6點 -> 9點 (綠 -> 藍)
-            id: 'grad-green-blue',
-            d: `M 44 24 A ${radius} ${radius} 0 0 1 24 44`, // 原始 3點 -> 6點 路徑
-            startProgress: 0.5,
-        },
-        {
-            // 視覺 9點 -> 12點 (藍 -> 紅)
-            id: 'grad-blue-red',
-            d: `M 24 44 A ${radius} ${radius} 0 0 1 4 24`, // 原始 6點 -> 9點 路徑
-            startProgress: 0.75,
-        },
+        { id: 'grad-red-yellow', d: `M 24 4  A ${radius} ${radius} 0 0 1 44 24`, start: 0.00 }, // 12→3
+        { id: 'grad-yellow-green', d: `M 44 24 A ${radius} ${radius} 0 0 1 24 44`, start: 0.25 }, // 3→6
+        { id: 'grad-green-blue', d: `M 24 44 A ${radius} ${radius} 0 0 1 4  24`, start: 0.50 }, // 6→9
+        { id: 'grad-blue-red', d: `M 4  24 A ${radius} ${radius} 0 0 1 24 4`, start: 0.75 }, // 9→12
     ];
 
     return (
-        //【關鍵修正】使用內聯 style 強制設定寬高為 3rem (48px)，確保 1:1 正方形
         <div
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50 flex-shrink-0"
-            style={{ width: '3rem', height: '3rem' }}
+            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50"
+            style={{ width: '3.25rem', height: '3.25rem' }}
         >
-            <div className="relative w-full h-full">
+            {/* 保持外框正方形，內部元素全鋪滿、正圓 */}
+            <div className="relative w-full h-full aspect-square">
+                {/* 中央按鈕：正圓、鋪滿容器；放在外環「下方」 */}
+                <button
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                    aria-label={language === 'zh' ? '回到頂端' : 'Back to top'}
+                    className={[
+                        'absolute inset-0 rounded-full flex items-center justify-center',
+                        'shadow-lg transition-transform duration-300 hover:scale-110',
+                        'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
+                        isLightTheme
+                            ? 'bg-slate-200/90 text-slate-900 focus-visible:ring-slate-800'
+                            : 'bg-slate-800/85 text-white focus-visible:ring-slate-200',
+                    ].join(' ')}
+                    style={{ lineHeight: 0, zIndex: 0 }} // 置於外環下面
+                >
+                    <ArrowUpIcon className="w-5 h-5 md:w-6 md:h-6" />
+                </button>
+
+                {/* 外環（彩色進度），放在上層，但不攔截點擊 */}
                 <svg
-                    className="absolute inset-0 w-full h-full -rotate-90"
+                    className="absolute inset-0 w-full h-full"
                     viewBox="0 0 48 48"
                     xmlns="http://www.w3.org/2000/svg"
+                    style={{ pointerEvents: 'none', zIndex: 10 }}
+                    aria-hidden="true"
                 >
                     <defs>
-                        {/* 依照 紅->黃->綠->藍 的順序重新定義漸層 */}
-                        <linearGradient id="grad-red-yellow" x1="4" y1="24" x2="24" y2="4">
+                        <linearGradient id="grad-red-yellow" x1="24" y1="4" x2="44" y2="24" gradientUnits="userSpaceOnUse">
                             <stop offset="0%" stopColor="#ea4335" />
-                            <stop offset="100%" stopColor="#f9ab00" /> {/* 更新為正確的黃色 */}
+                            <stop offset="100%" stopColor="#f9ab00" />
                         </linearGradient>
-                        <linearGradient id="grad-yellow-green" x1="24" y1="4" x2="44" y2="24">
-                            <stop offset="0%" stopColor="#f9ab00" /> {/* 更新為正確的黃色 */}
+                        <linearGradient id="grad-yellow-green" x1="44" y1="24" x2="24" y2="44" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stopColor="#f9ab00" />
                             <stop offset="100%" stopColor="#34a853" />
                         </linearGradient>
-                        <linearGradient id="grad-green-blue" x1="44" y1="24" x2="24" y2="44">
+                        <linearGradient id="grad-green-blue" x1="24" y1="44" x2="4" y2="24" gradientUnits="userSpaceOnUse">
                             <stop offset="0%" stopColor="#34a853" />
                             <stop offset="100%" stopColor="#4285f4" />
                         </linearGradient>
-                        <linearGradient id="grad-blue-red" x1="24" y1="44" x2="4" y2="24">
+                        <linearGradient id="grad-blue-red" x1="4" y1="24" x2="24" y2="4" gradientUnits="userSpaceOnUse">
                             <stop offset="0%" stopColor="#4285f4" />
                             <stop offset="100%" stopColor="#ea4335" />
                         </linearGradient>
@@ -106,13 +99,14 @@ export default function ScrollToTop() {
                         r={radius}
                         strokeWidth="4"
                         fill="none"
-                        className={isLightTheme ? 'stroke-slate-300' : 'stroke-slate-600'}
+                        className={isLightTheme ? 'stroke-slate-300' : 'stroke-slate-700'}
                     />
 
-                    {/* 依捲動進度繪製的四段彩色圓弧 */}
-                    {segments.map(({ id, d, startProgress }) => {
-                        const progressInSegment = Math.max(0, (progress - startProgress) * 4);
-                        const clampedProgress = Math.min(progressInSegment, 1);
+                    {/* 彩色進度：只有「有進度」的段才渲染，避免頂部四個點 */}
+                    {segments.map(({ id, d, start }) => {
+                        const segProgress = (progress - start) * 4; // 0~1 區間
+                        if (segProgress <= 0) return null;          // 沒到該段，不渲染避免彩色點
+                        const clamped = Math.min(segProgress, 1);
                         return (
                             <path
                                 key={id}
@@ -121,28 +115,14 @@ export default function ScrollToTop() {
                                 strokeWidth="4"
                                 fill="none"
                                 strokeLinecap="round"
+                                strokeLinejoin="round"
+                                pathLength={segmentLength}
                                 strokeDasharray={segmentLength}
-                                strokeDashoffset={segmentLength * (1 - clampedProgress)}
+                                strokeDashoffset={segmentLength * (1 - clamped)}
                             />
                         );
                     })}
                 </svg>
-
-                {/* 置中按鈕 */}
-                <button
-                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                    aria-label={language === 'zh' ? '回到頂端' : 'Back to top'}
-                    className={`
-                        absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-                        w-9 h-9 aspect-square rounded-full
-                        flex items-center justify-center
-                        shadow-lg transition-transform duration-300 hover:scale-110
-                        focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2
-                        ${isLightTheme ? 'bg-slate-800/70 text-white' : 'bg-slate-200/70 text-slate-900'}
-                    `}
-                >
-                    <ArrowUpIcon className="w-5 h-5" />
-                </button>
             </div>
         </div>
     );
