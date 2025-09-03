@@ -156,8 +156,8 @@ export default function JoinUs() {
                     <h2
                         className={`rainbow-text phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                     >
-                        {/* 更新標題內容，刪除「下一個」一詞 */}
-                        {language === 'zh' ? '你的程式碼，是校園的未來。' : 'Your code is the future of campus.'}
+                        {/* 更新標題內容，改為「用程式碼定義彰師未來」 */}
+                        {language === 'zh' ? '用程式碼定義彰師未來' : 'Define NCUE\'s future with code'}
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
