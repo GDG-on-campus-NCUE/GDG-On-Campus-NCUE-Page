@@ -121,10 +121,12 @@ export default function Events() {
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const isActive = card === closestCard;
-                card.style.transform = `scale(${isActive ? 1 : 0.95})`;
+                // 套用光暈與縮放效果
+                card.style.transform = `scale(${isActive ? 1.05 : 0.95})`;
+                card.style.boxShadow = isActive ? '0 0 15px var(--brand)' : '';
                 card.classList.toggle('bg-brand/20', isActive);
                 card.classList.toggle('border-brand', isActive);
-                card.classList.toggle('shadow-lg', isActive);
+                card.classList.toggle('animate-pulse', isActive);
             });
         };
 
@@ -253,7 +255,7 @@ export default function Events() {
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} hover:bg-brand/20 hover:border-brand hover:shadow-lg hover:scale-[1.03]`}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_15px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-105 md:cursor-pointer`}
                                     style={{ transitionDelay: `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
