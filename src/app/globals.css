@@ -496,3 +496,32 @@ svg {
   -webkit-user-drag: none;
   user-select: none;
 }
+
+/* 螢光筆掃過效果 */
+.highlight-line {
+  position: relative;
+  display: inline;
+  z-index: 0;
+}
+.highlight-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0%;
+  height: 0.8em;
+  background: var(--brand-accent);
+  opacity: 0.4;
+  border-radius: 0.25em;
+  z-index: -1;
+  transition: width 0.4s ease;
+}
+.group:hover .highlight-line::before,
+.card-active .highlight-line::before {
+  width: 100%;
+}
+.group:hover p .highlight-line::before,
+.card-active p .highlight-line::before {
+  transition-delay: 0.15s;
+}
