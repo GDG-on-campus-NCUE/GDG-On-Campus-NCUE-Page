@@ -117,7 +117,7 @@ export default function JoinUs() {
     return (
         <section
             id="join"
-            className="relative bg-surface-muted overflow-hidden"
+            className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted"
             ref={ref}
             onMouseMove={handleAreaMouseMove}
             onMouseEnter={() => setSpotlight(true)}
@@ -129,7 +129,7 @@ export default function JoinUs() {
             <div className="cursor-spotlight" style={{ opacity: spotlight ? 1 : 0 }}></div>
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             {/* 將高度縮小以提升 RWD 觀感 */}
-            <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden bg-surface">
+            <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden">
                 {/* 底部光暈，與下方 joinus 區塊光效相連 */}
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(66,133,244,0.15),transparent)]"></div>
 
@@ -149,30 +149,30 @@ export default function JoinUs() {
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
                         onMouseMove={handleButtonMove}
-                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-brand text-text-on-brand font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-xl shadow-lg shadow-brand/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-brand/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-gradient-to-r from-[#06C755] to-[#00A752] text-white font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-lg shadow-green-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
                         <Image
                             src={lineIcon}
                             alt="Line Icon"
-                            width={28}
-                            height={28}
-                            className="w-6 h-6 md:w-7 md:h-7"
+                            width={32}
+                            height={32}
+                            className="w-7 h-7 md:w-8 md:h-8"
                             draggable={false}
                         />
                         <span>{language === 'zh' ? '立即加入 LINE 社群' : 'Join our LINE group now'}</span>
-                        <ArrowRightIcon className="w-5 h-5 md:w-6 md:h-6" />
+                        <ArrowRightIcon className="w-6 h-6 md:w-7 md:h-7" />
                     </button>
                 </div>
             </div>
 
             {/* === 區塊二：頁尾 (Footer) - 重新設計與互動 === */}
             {/* 將頁尾改為科技感漸層與網格背景 */}
-            <footer className="relative overflow-hidden bg-gradient-to-br from-surface via-surface-muted to-surface py-8 md:py-10 px-6 md:px-8">
+            <footer className="relative overflow-hidden bg-transparent py-8 md:py-10 px-6 md:px-8">
                 {/* 漸層光暈 + 網格背景 */}
                 <div className="pointer-events-none absolute inset-0">
-                    {/* 漸層光暈不再固定為藍色 */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.08),rgba(123,31,162,0.08),transparent)]"></div>
+                    {/* 漸層光暈 */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.15),transparent)]"></div>
                     {/* 細緻網格增添科技感 */}
                     <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
                 </div>
@@ -217,18 +217,18 @@ export default function JoinUs() {
                                             onMouseLeave={resetMagnetic}
                                         >
                                             {/* 圓形圖示容器 */}
-                                            <div className="magnet w-12 h-12 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
+                                            <div className="magnet w-14 h-14 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
                                                 {social.isImage ? (
                                                     <Image
                                                         src={social.icon}
                                                         alt={social.name}
-                                                        width={24}
-                                                        height={24}
-                                                        className="w-6 h-6 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
+                                                        width={32}
+                                                        height={32}
+                                                        className="w-8 h-8 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
                                                         draggable={false}
                                                     />
                                                 ) : (
-                                                    <social.icon className="w-6 h-6 text-muted transition-transform duration-300 ease-out group-hover:scale-110 group-hover:text-brand" />
+                                                    <social.icon className="w-8 h-8 text-muted transition-transform duration-300 ease-out group-hover:scale-110 group-hover:text-brand" />
                                                 )}
                                             </div>
                                             {/* 圖示下方文字說明 */}
