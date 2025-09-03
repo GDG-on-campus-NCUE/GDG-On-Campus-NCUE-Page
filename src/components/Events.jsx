@@ -126,6 +126,20 @@ export default function Events() {
                 card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
                 card.classList.toggle('bg-brand/10', isActive);
                 card.classList.toggle('border-brand', isActive);
+
+                // 非活躍卡片文字淡化為灰色，根據主題使用對應灰色
+                const title = card.querySelector('h3');
+                const desc = card.querySelector('p');
+                if (title && desc) {
+                    if (isActive) {
+                        title.style.color = '';
+                        desc.style.color = '';
+                    } else {
+                        // 使用 --border 作為灰色值：深色主題為深灰，淺色主題為淡灰
+                        title.style.color = 'var(--border)';
+                        desc.style.color = 'var(--border)';
+                    }
+                }
             });
         };
 
