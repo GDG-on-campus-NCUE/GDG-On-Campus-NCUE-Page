@@ -102,6 +102,17 @@ export default function Events() {
         if (typeof window === 'undefined') return;
         if (window.innerWidth >= 768) return; // 只在手機版運作
 
+        // 將十六進位色碼轉為帶透明度的 RGBA 色碼
+        const hexToRGBA = (hex, alpha) => {
+            const h = hex.trim().replace('#', '');
+            const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+            const bigint = parseInt(full, 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        };
+
         const handleScroll = () => {
             const viewportCenter = window.innerHeight / 2;
             let closestCard = null;
@@ -121,11 +132,14 @@ export default function Events() {
             cardRefs.current.forEach((card) => {
                 if (!card) return;
                 const isActive = card === closestCard;
+                const borderBase = getComputedStyle(document.documentElement).getPropertyValue('--border');
                 // 以平移與光暈呈現專業的過渡效果，避免因放大造成爆版
-                card.style.transform = `translateY(${isActive ? '-4px' : '0'})`;
+                card.style.transform = `translateY(${isActive ? '-4px' : '0'}) scale(${isActive ? '1.02' : '1'})`;
                 card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
                 card.classList.toggle('bg-brand/10', isActive);
                 card.classList.toggle('border-brand', isActive);
+                card.classList.toggle('card-active', isActive);
+                card.style.borderColor = isActive ? '' : hexToRGBA(borderBase, 0.4);
 
                 // 非活躍卡片文字淡化為灰色，根據主題使用對應灰色
                 const title = card.querySelector('h3');
@@ -268,14 +282,14 @@ export default function Events() {
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-300 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:cursor-pointer`}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-300 group ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-[1.02] md:cursor-pointer`}
                                     style={{ transitionDelay: isVisible ? '0s' : `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
-                                        {highlight.title}
+                                        <span className="highlight-line">{highlight.title}</span>
                                     </h3>
                                     <p className="phone-liner md:pc-liner text-muted leading-relaxed">
-                                        {highlight.description}
+                                        <span className="highlight-line">{highlight.description}</span>
                                     </p>
                                 </div>
                             ))}
