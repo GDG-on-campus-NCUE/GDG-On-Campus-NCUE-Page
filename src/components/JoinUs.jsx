@@ -87,7 +87,8 @@ export default function JoinUs() {
             {/* 呼吸流動背景 */}
             <div className="breathing-light"></div>
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
-            <div className="relative py-20 md:py-32 px-4 md:px-8 text-center overflow-hidden bg-surface">
+            {/* 將高度縮小以提升 RWD 觀感 */}
+            <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden bg-surface">
                 {/* 底部光暈，與下方 joinus 區塊光效相連 */}
                 <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(66,133,244,0.15),transparent)]"></div>
 
@@ -117,13 +118,19 @@ export default function JoinUs() {
             </div>
 
             {/* === 區塊二：頁尾 (Footer) - 重新設計與互動 === */}
-            <footer className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted py-16 md:py-20 px-6 md:px-8">
-                {/* 裝飾用漸層光暈 */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.15),transparent)]"></div>
+            {/* 將頁尾改為科技感漸層與網格背景 */}
+            <footer className="relative overflow-hidden bg-gradient-to-br from-surface via-surface-muted to-surface py-8 md:py-10 px-6 md:px-8">
+                {/* 漸層光暈 + 網格背景 */}
+                <div className="pointer-events-none absolute inset-0">
+                    {/* 漸層光暈不再固定為藍色 */}
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.08),rgba(123,31,162,0.08),transparent)]"></div>
+                    {/* 細緻網格增添科技感 */}
+                    <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+                </div>
 
                 <div className="relative max-w-7xl mx-auto">
                     {/* RWD 兩欄版面 */}
-                    <div className="grid md:grid-cols-2 gap-12 mb-12">
+                    <div className="grid md:grid-cols-2 gap-8 mb-8">
                         {/* 左側：社群介紹 */}
                         <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.6s' }}>
                             <a href="#" className="inline-block mb-4 md:mb-6">
@@ -189,8 +196,8 @@ export default function JoinUs() {
                         </div>
                     </div>
 
-                    <div className={`mt-12 text-center text-xs text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
-                        <p>© {new Date().getFullYear()} GDG On Campus NCUE. All Rights Reserved.</p>
+                    <div className={`mt-8 text-center text-sm md:text-base text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
+                        <p>© 2025 GDG On Campus NCUE. All Rights Reserved.</p>
                     </div>
                 </div>
             </footer>
