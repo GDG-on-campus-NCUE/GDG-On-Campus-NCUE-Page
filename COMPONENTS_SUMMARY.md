@@ -49,7 +49,7 @@
   - Mockup 設計預覽
 
 ### 6. **Calendar** (`/src/components/Calendar.jsx`)
-- **功能**: 官方行事曆展示
+- **功能**: 官方社群行事曆展示
 - **特色**:
   - Google Calendar 嵌入式視圖
   - 依主題切換背景顏色
