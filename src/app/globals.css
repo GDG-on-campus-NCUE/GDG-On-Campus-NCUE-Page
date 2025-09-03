@@ -8,10 +8,6 @@
   --surface: #ffffff;
   --surface-muted: #f8f9fa;
   --border: #e8eaed;
-  /* 手機未顯示卡片邊框色 */
-  --border-faded: #d1d5db;
-  /* 螢光筆標註顏色 */
-  --highlight-color: #fef08a;
   --muted: #5f6368;
   --heading: #202124;
   --brand: #4285f4;
@@ -35,10 +31,6 @@
   --surface: #1e1e1e;
   --surface-muted: #121212;
   --border: #3c4043;
-  /* 手機未顯示卡片邊框色 */
-  --border-faded: #4b5563;
-  /* 螢光筆標註顏色 */
-  --highlight-color: #fef08a;
   --muted: #9aa0a6;
   --heading: #8ab4f8;
   --brand: #8ab4f8;
@@ -503,17 +495,4 @@ img,
 svg {
   -webkit-user-drag: none;
   user-select: none;
-}
-
-/* 螢光筆文字標註效果 */
-.highlight-text {
-  background: linear-gradient(90deg, var(--highlight-color), var(--highlight-color)) 0 0 / 0% 100% no-repeat;
-  transition: background-size 0.3s steps(12);
-}
-
-/* 滑鼠或手機標註時啟動螢光筆動畫 */
-.group:hover .highlight-text,
-.group:focus .highlight-text,
-.highlight-active .highlight-text {
-  background-size: 100% 100%;
 }

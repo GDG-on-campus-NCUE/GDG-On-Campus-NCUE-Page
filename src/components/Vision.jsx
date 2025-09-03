@@ -70,8 +70,7 @@ export default function Vision() {
         if (!card) return;
         card.style.transition = 'transform 0.4s ease-out';
         card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
-        // 邊框回復為預設顏色
-        card.style.borderColor = 'var(--border)';
+        card.style.borderColor = 'var(--color-border)';
         card.style.boxShadow = 'none';
         const sheen = card.querySelector('.sheen');
         if (sheen) sheen.style.opacity = '0';
@@ -125,11 +124,8 @@ export default function Vision() {
                 if (!card) return;
                 const isActive = card === closestCard;
                 card.style.transform = `scale(${isActive ? 1 : 0.9})`;
-                // 非焦點卡片邊框使用淡化色
-                card.style.borderColor = isActive ? card.dataset.color : 'var(--border-faded)';
+                card.style.borderColor = isActive ? card.dataset.color : 'var(--color-border)';
                 card.style.boxShadow = isActive ? `0 0 20px ${card.dataset.color}66` : 'none';
-                // 手機板高亮顯示目前卡片的文字
-                card.classList.toggle('highlight-active', isActive);
                 const outlineIcon = card.querySelector('.icon-outline');
                 const solidIcon = card.querySelector('.icon-solid');
                 if (outlineIcon && solidIcon) {
@@ -242,7 +238,7 @@ export default function Vision() {
                                 <h3 className="phone-h3 md:pc-h2 text-heading mb-4 md:mb-6 text-center">
                                     {card.title}
                                 </h3>
-                                <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center highlight-text">
+                                <p className="phone-liner md:pc-liner text-muted leading-relaxed text-center">
                                     {card.description}
                                 </p>
                             </div>
