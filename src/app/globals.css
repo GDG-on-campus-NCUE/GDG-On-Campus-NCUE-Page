@@ -11,7 +11,7 @@
   --muted: #5f6368;
   --heading: #202124;
   --brand: #4285f4;
-  --brand-accent: #1a73e8;
+  --brand-accent: #4285f4; /* Google 藍 */
   --accent: #ea4335;
   --warn: #fbbc04;
   --text-on-brand: #ffffff;
@@ -33,8 +33,8 @@
   --border: #3c4043;
   --muted: #9aa0a6;
   --heading: #8ab4f8;
-  --brand: #8ab4f8;
-  --brand-accent: #aecbfa;
+  --brand: #4285f4; /* Google 藍 */
+  --brand-accent: #4285f4; /* Google 藍 */
   --accent: #f28b82;
   --warn: #fdd663;
   --text-on-brand: #202124;
@@ -540,8 +540,8 @@ svg {
   transform: translateY(-50%);
   width: 0%;
   height: 0.8em;
-  background: var(--brand-accent);
-  opacity: 0.4;
+  background: var(--brand-accent); /* 螢光筆使用 Google 藍 */
+  opacity: 0.4; /* 保留適度透明度 */
   border-radius: 0.25em;
   z-index: -1;
   transition: width 0.4s ease;

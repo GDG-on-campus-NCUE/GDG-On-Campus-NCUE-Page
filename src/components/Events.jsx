@@ -282,14 +282,14 @@ export default function Events() {
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-300 group ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-[1.02] md:cursor-pointer`}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-brand rounded-xl shadow-sm transition-all duration-300 group ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} md:hover:bg-brand/10 md:hover:border-brand md:hover:shadow-[0_0_20px_var(--brand)] md:hover:-translate-y-1 md:hover:scale-[1.02] md:cursor-pointer`}
                                     style={{ transitionDelay: isVisible ? '0s' : `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
                                         <span className="highlight-line">{highlight.title}</span>
                                     </h3>
                                     <p className="phone-liner md:pc-liner text-muted leading-relaxed">
-                                        <span className="highlight-line">{highlight.description}</span>
+                                        {highlight.description}
                                     </p>
                                 </div>
                             ))}
