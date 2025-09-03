@@ -178,7 +178,8 @@ export default function JoinUs() {
                             className="w-7 h-7 md:w-8 md:h-8"
                             draggable={false}
                         />
-                        <span>{language === 'zh' ? '立即加入 LINE 社群' : 'Join our LINE group now'}</span>
+                        {/* 按鈕文字：加入 LINE 群組 */}
+                        <span>{language === 'zh' ? '立即加入 LINE 群組' : 'Join our LINE group now'}</span>
                         <ArrowRightIcon className="w-6 h-6 md:w-7 md:h-7" />
                     </button>
                 </div>
