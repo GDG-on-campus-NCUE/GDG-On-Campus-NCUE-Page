@@ -65,6 +65,19 @@ export default function Projects() {
                 description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
                 tags: ['電子投票', '資訊安全']
             },
+            {
+                status: '規劃中',
+                title: '資工系網站開發',
+                description: '打造資工系官方網站，提供清晰易讀的系所資訊與最新公告。',
+                tags: ['網站開發', '系所資訊']
+            },
+            {
+                status: '已完成',
+                title: '生輔組失物招領系統',
+                description: '線上登錄與搜尋遺失物的平台，協助學生快速找回物品。',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4292.php',
+                tags: ['校園服務', '資訊系統']
+            },
         ],
         en: [
             {
@@ -98,6 +111,19 @@ export default function Projects() {
                 title: 'Student Union Voting System',
                 description: 'Develops a secure, fair and transparent online voting platform for elections and major issues, encouraging student participation in public affairs.',
                 tags: ['E-Voting', 'Cybersecurity']
+            },
+            {
+                status: 'Planning',
+                title: 'CS Department Website',
+                description: 'Developing the official website for the CS department to improve information transparency and readability.',
+                tags: ['Website Development', 'Department Info']
+            },
+            {
+                status: 'Completed',
+                title: 'Student Affairs Lost-and-found System',
+                description: 'Provides an online platform for logging and searching lost items, helping students quickly retrieve their belongings.',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4292.php',
+                tags: ['Campus Service', 'Information System']
             },
         ]
     };
@@ -148,6 +174,43 @@ export default function Projects() {
 
         cardWrapperRefs.current.forEach(el => el && observer.observe(el));
         return () => observer.disconnect();
+    }, []);
+
+    // 手機版：捲動偵測最靠近螢幕中央的卡片並套用強調樣式
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (window.innerWidth >= 768) return; // 只在手機版運作
+
+        const handleScroll = () => {
+            const viewportCenter = window.innerHeight / 2;
+            let closestIndex = -1;
+            let minDistance = Infinity;
+
+            cardWrapperRefs.current.forEach((card, index) => {
+                if (!card) return;
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(cardCenter - viewportCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            cardWrapperRefs.current.forEach((card, index) => {
+                if (!card) return;
+                const isActive = index === closestIndex;
+                card.classList.toggle('bg-brand/20', isActive);
+                card.classList.toggle('border-brand', isActive);
+                card.classList.toggle('shadow-lg', isActive);
+                card.classList.toggle('scale-100', isActive);
+                card.classList.toggle('scale-95', !isActive);
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // 卡片滑鼠移動時的 3D 互動效果
@@ -297,11 +360,11 @@ export default function Projects() {
                                         <h3 className="phone-h3 md:pc-h3 text-heading font-bold leading-tight">{feature.title}</h3>
                                         {(() => {
                                             const statusClass =
-                                                feature.status === '已上線' || feature.status === 'Released'
-                                                    ? 'bg-green-500/20 text-green-700 dark:bg-green-500/10 dark:text-green-400'
+                                                feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
+                                                    ? 'bg-green-500 text-white dark:bg-green-600'
                                                     : feature.status === '進行中' || feature.status === 'In Progress'
-                                                        ? 'bg-yellow-500/20 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400'
-                                                        : 'bg-gray-500/20 text-gray-700 dark:bg-gray-500/10 dark:text-gray-400';
+                                                        ? 'bg-yellow-500 text-white dark:bg-yellow-600'
+                                                        : 'bg-gray-500 text-white dark:bg-gray-600';
                                             return (
                                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${statusClass}`}>
                                                     {feature.status}
