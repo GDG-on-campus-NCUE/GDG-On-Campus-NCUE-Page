@@ -8,19 +8,18 @@ import { useTheme } from '@/hooks/useTheme';
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
     const [showRing, setShowRing] = useState(false);
+
     const prevYRef = useRef(0);
-    const hideTimer = useRef < number | null > (null);
+    const hideTimer = useRef(null); // ✅ JS 環境不用泛型
 
     const { language } = useLanguage();
     const { theme } = useTheme();
     const isLightTheme = theme === 'light';
 
-    // 幾何
     const radius = 20;
     const circumference = 2 * Math.PI * radius;
     const segmentLength = circumference / 4;
 
-    // 四段（12 點開始、順時鐘）
     const segments = [
         { id: 'grad-red-yellow', d: `M 24 4  A ${radius} ${radius} 0 0 1 44 24`, start: 0.00 },
         { id: 'grad-yellow-green', d: `M 44 24 A ${radius} ${radius} 0 0 1 24 44`, start: 0.25 },
@@ -29,9 +28,9 @@ export default function ScrollToTop() {
     ];
 
     useEffect(() => {
-        const UP_THRESHOLD = 4;     // px，避免微小抖動
-        const DOWN_THRESHOLD = 4;   // px
-        const HIDE_AFTER_MS = 320;  // 往上滾停止後延遲淡出
+        const UP_THRESHOLD = 4;
+        const DOWN_THRESHOLD = 4;
+        const HIDE_AFTER_MS = 320;
 
         const onScroll = () => {
             const y = window.scrollY;
@@ -41,23 +40,19 @@ export default function ScrollToTop() {
 
             const dy = y - prevYRef.current;
 
-            // 只在「實際向上」且不在頂端時顯示
             if (dy < -UP_THRESHOLD && y > 0) {
                 if (!showRing) setShowRing(true);
                 if (hideTimer.current) window.clearTimeout(hideTimer.current);
                 hideTimer.current = window.setTimeout(() => setShowRing(false), HIDE_AFTER_MS);
             } else if (dy > DOWN_THRESHOLD) {
-                // 向下立即隱藏
                 if (showRing) setShowRing(false);
                 if (hideTimer.current) {
                     window.clearTimeout(hideTimer.current);
                     hideTimer.current = null;
                 }
             } else if (y <= 0 && showRing) {
-                // 到頂時確保隱藏
                 setShowRing(false);
             }
-
             prevYRef.current = y;
         };
 
@@ -73,10 +68,7 @@ export default function ScrollToTop() {
     }, [showRing]);
 
     return (
-        <div
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50"
-            style={{ width: '3.25rem', height: '3.25rem' }}
-        >
+        <div className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50" style={{ width: '3.25rem', height: '3.25rem' }}>
             <div className="relative w-full h-full aspect-square">
                 {/* 中央按鈕：正圓鋪滿，位於外環下方 */}
                 <button
@@ -95,7 +87,7 @@ export default function ScrollToTop() {
                     <ArrowUpIcon className="w-5 h-5 md:w-6 md:h-6" />
                 </button>
 
-                {/* 進度外環：只在「往上滾動」時顯示（淡入/淡出） */}
+                {/* 外環：只在往上滾時顯示 */}
                 <svg
                     className={`absolute inset-0 w-full h-full transition-opacity duration-200 ${showRing ? 'opacity-100' : 'opacity-0'}`}
                     viewBox="0 0 48 48"
@@ -123,18 +115,12 @@ export default function ScrollToTop() {
                     </defs>
 
                     {/* 背景圓環 */}
-                    <circle
-                        cx="24"
-                        cy="24"
-                        r={radius}
-                        strokeWidth="4"
-                        fill="none"
-                        className={isLightTheme ? 'stroke-slate-300' : 'stroke-slate-700'}
-                    />
+                    <circle cx="24" cy="24" r={radius} strokeWidth="4" fill="none"
+                        className={isLightTheme ? 'stroke-slate-300' : 'stroke-slate-700'} />
 
-                    {/* 彩色進度：未到該段不渲染，避免頂部四色點 */}
+                    {/* 彩色進度（頂部不顯示四色點） */}
                     {segments.map(({ id, d, start }) => {
-                        const segProgress = (progress - start) * 4; // 0~1
+                        const segProgress = (progress - start) * 4;
                         if (segProgress <= 0) return null;
                         const clamped = Math.min(segProgress, 1);
                         return (
