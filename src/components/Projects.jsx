@@ -439,7 +439,8 @@ export default function Projects() {
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
                                 <div className="relative z-10 flex flex-col h-full">
-                                    <div className="flex justify-between items-start mb-4">
+                                    {/* 允許狀態膠囊在手機版換行避免爆版 */}
+                                    <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
                                         <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500' : 'text-heading'}`}>{feature.title}</h3>
                                         {(() => {
                                             // 依狀態取得對應色碼
@@ -454,7 +455,8 @@ export default function Projects() {
                                                 const animClass = isActive
                                                     ? (scrollDirection === 'down' ? 'tag-fill-down' : 'tag-fill-up')
                                                     : '';
-                                                const baseClass = 'px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap border';
+                                                // 基礎樣式，禁止縮小避免文字被壓縮
+                                                const baseClass = 'px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap border shrink-0';
                                                 return isActive ? (
                                                     <span
                                                         className={`${baseClass} status-pill text-white ${animClass}`}
