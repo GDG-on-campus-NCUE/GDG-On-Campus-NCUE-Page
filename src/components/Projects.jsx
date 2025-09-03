@@ -133,8 +133,22 @@ export default function Projects() {
     };
     const features = featureData[language];
 
-    // 取出除精選專案外的其他專案
-    const otherFeatures = features.slice(1);
+    // 狀態排序：已完成(含已上線) → 進行中 → 規劃中
+    const statusOrder = {
+        '已上線': 0,
+        '已完成': 0,
+        'Released': 0,
+        'Completed': 0,
+        '進行中': 1,
+        'In Progress': 1,
+        '規劃中': 2,
+        'Planning': 2,
+    };
+
+    // 取出除精選專案外的其他專案並依狀態排序
+    const otherFeatures = features
+        .slice(1)
+        .sort((a, b) => (statusOrder[a.status] ?? 3) - (statusOrder[b.status] ?? 3));
 
     // 根據專案數量計算桌面版欄數（平方根上取整）
     const columnCount = Math.ceil(Math.sqrt(otherFeatures.length));
@@ -191,6 +205,7 @@ export default function Projects() {
     }, [isMobile]);
 
     useEffect(() => {
+        const timeouts = [];
         const observer = new IntersectionObserver(
             ([entry]) => {
                 // 依據可見狀態切換動畫
@@ -211,7 +226,12 @@ export default function Projects() {
             (entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        setVisibleCards(prev => ({ ...prev, [entry.target.dataset.index]: true }));
+                        const idx = Number(entry.target.dataset.index);
+                        // 進場動畫延遲後顯示，避免後續 hover 出現延遲
+                        const timeout = setTimeout(() => {
+                            setVisibleCards(prev => ({ ...prev, [idx]: true }));
+                        }, 600 + idx * 100);
+                        timeouts.push(timeout);
                     }
                 });
             },
@@ -219,7 +239,10 @@ export default function Projects() {
         );
 
         cardWrapperRefs.current.forEach(el => el && observer.observe(el));
-        return () => observer.disconnect();
+        return () => {
+            observer.disconnect();
+            timeouts.forEach(t => clearTimeout(t));
+        };
     }, []);
 
     // （原手機版捲動強調效果已整合至 activeCard 狀態）
@@ -232,8 +255,8 @@ export default function Projects() {
         const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
-        // 依滑鼠位置給予微幅位移
-        card.style.transform = `translate(${x * 0.05}px, ${y * 0.05}px)`;
+        // 依滑鼠位置給予較大的位移
+        card.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
     };
 
     // 滑鼠離開卡片時重置位移
@@ -355,8 +378,7 @@ export default function Projects() {
                             key={index}
                             data-index={index}
                             ref={el => cardWrapperRefs.current[index] = el}
-                            className={`group relative rounded-2xl transition-all duration-500 transform ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1 scale-105' : 'scale-95') : 'scale-100 hover:scale-105'}`}
-                            style={{ transitionDelay: `${0.6 + index * 0.1}s` }}
+                            className={`group relative rounded-2xl transition-all duration-300 transform ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1 scale-105' : 'scale-95') : 'scale-100 hover:scale-105'}`}
                         >
                             {/* 背景發光層 */}
                             <div
