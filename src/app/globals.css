@@ -16,9 +16,9 @@
   --warn: #fbbc04;
   --text-on-brand: #ffffff;
   --matrix-bg: rgba(255, 255, 255, 0.1); /* 原為 0.45 */
-    --matrix-head: #39FF14; /* 下落文字主色改為綠色 */
-    --matrix-default: #39FF14; /* 下落文字預設色改為綠色 */
-    --matrix-brackets: #39FF14; /* 下落括號顏色改為綠色 */
+  --matrix-head: #006400; /* 下落文字主色改為深綠色 */
+  --matrix-default: #006400; /* 下落文字預設色改為深綠色 */
+  --matrix-brackets: #006400; /* 下落括號顏色改為深綠色 */
 
   /* Font Variables */
   --font-source-sans: 'Source Sans 3', 'Source Sans Pro', Arial, Helvetica, sans-serif;
