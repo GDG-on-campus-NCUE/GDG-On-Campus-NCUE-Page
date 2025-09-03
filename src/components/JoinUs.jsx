@@ -28,6 +28,7 @@ function GmailIcon({ className = '' }) {
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
     const [spotlight, setSpotlight] = useState(false); // 控制滑鼠聚光燈顯示
+    const [isDesktop, setIsDesktop] = useState(false); // 判斷是否為桌機
     const ref = useRef(null);
     const { language } = useLanguage();
     const { theme } = useTheme();
@@ -78,6 +79,15 @@ export default function JoinUs() {
         return () => { if (ref.current) observer.unobserve(ref.current) };
     }, []);
 
+    // 偵測是否為桌機環境
+    useEffect(() => {
+        const mq = window.matchMedia('(hover:hover) and (pointer:fine)');
+        const handler = (e) => setIsDesktop(e.matches);
+        handler(mq);
+        mq.addEventListener('change', handler);
+        return () => mq.removeEventListener('change', handler);
+    }, []);
+
 
     const openLink = (url) => {
         window.open(url, '_blank', 'noopener,noreferrer');
@@ -119,14 +129,22 @@ export default function JoinUs() {
             id="join"
             className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted"
             ref={ref}
-            onMouseMove={handleAreaMouseMove}
-            onMouseEnter={() => setSpotlight(true)}
-            onMouseLeave={() => setSpotlight(false)}
+            {...(isDesktop ? {
+                onMouseMove: handleAreaMouseMove,
+                onMouseEnter: () => setSpotlight(true),
+                onMouseLeave: () => setSpotlight(false),
+            } : {})}
         >
-            {/* 極光背景 */}
-            <div className="aurora-bg"></div>
-            {/* 滑鼠聚光燈 */}
-            <div className="cursor-spotlight" style={{ opacity: spotlight ? 1 : 0 }}></div>
+            {/* 中央藍色光暈背景 */}
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                <div
+                    className={`joinus-glow transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
+                ></div>
+            </div>
+            {/* 滑鼠聚光燈僅在桌機顯示 */}
+            {isDesktop && (
+                <div className="cursor-spotlight" style={{ opacity: spotlight ? 1 : 0 }}></div>
+            )}
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             {/* 將高度縮小以提升 RWD 觀感 */}
             <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden">
@@ -148,7 +166,7 @@ export default function JoinUs() {
                     {/* 手機版寬度全滿，桌機保持原樣 */}
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
-                        onMouseMove={handleButtonMove}
+                        {...(isDesktop ? { onMouseMove: handleButtonMove } : {})}
                         className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-gradient-to-r from-[#06C755] to-[#00A752] text-white font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-lg shadow-green-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
@@ -213,8 +231,7 @@ export default function JoinUs() {
                                             title={social.name}
                                             aria-label={social.name}
                                             className="group flex flex-col items-center focus:outline-none select-none"
-                                            onMouseMove={handleMagnetic}
-                                            onMouseLeave={resetMagnetic}
+                                            {...(isDesktop ? { onMouseMove: handleMagnetic, onMouseLeave: resetMagnetic } : {})}
                                         >
                                             {/* 圓形圖示容器 */}
                                             <div className="magnet w-14 h-14 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
