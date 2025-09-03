@@ -260,7 +260,11 @@ export default function Projects() {
                     }
                 });
             },
-            { threshold: 0.2 }
+            {
+                threshold: 0.2,
+                // 手機版提早觸發交叉觀察以避免切換卡片時尚未載入
+                rootMargin: isMobile ? '0px 0px 40% 0px' : '0px'
+            }
         );
 
         cardWrapperRefs.current.forEach(el => el && observer.observe(el));
@@ -268,7 +272,7 @@ export default function Projects() {
             observer.disconnect();
             timeouts.forEach(t => clearTimeout(t));
         };
-    }, []);
+    }, [isMobile]);
 
     // （原手機版捲動強調效果已整合至 activeCard 狀態）
 
@@ -418,7 +422,7 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className={`relative bg-surface rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'border-gray-300 dark:border-gray-700') : 'border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-surface-muted border-gray-300 dark:bg-gray-800 dark:border-gray-700') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
                             >
                                 <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
                                 {/* 實際內容 */}
@@ -428,7 +432,7 @@ export default function Projects() {
                                         {(() => {
                                             const statusClass =
                                                 isMobile && activeCard !== index
-                                                    ? 'bg-surface text-gray-400 dark:text-gray-600 border border-gray-300 dark:border-gray-700'
+                                                    ? 'bg-surface-muted text-gray-400 border border-gray-300 dark:bg-gray-800 dark:text-gray-600 dark:border-gray-700'
                                                     : feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
                                                         ? 'bg-green-500 text-white dark:bg-green-600'
                                                         : feature.status === '進行中' || feature.status === 'In Progress'
@@ -446,7 +450,7 @@ export default function Projects() {
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-gray-200 text-gray-400 dark:bg-gray-800 dark:text-gray-600' : 'bg-brand/10 text-brand'}`}
+                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600' : 'bg-brand/10 text-brand'}`}
                                             >
                                                 {tag}
                                             </span>
