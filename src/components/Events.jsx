@@ -16,6 +16,8 @@ export default function Events() {
     const [currentImage, setCurrentImage] = useState(0);
     const ref = useRef(null);
     const { language } = useLanguage();
+    // 卡片參考，用於行動版捲動偵測
+    const cardRefs = useRef([]);
 
     // 活動圖片 - 使用 public 目錄中的圖片
     const eventImages = [
@@ -95,13 +97,50 @@ export default function Events() {
         }
     }, [eventImages.length]);
 
+    // 手機版偵測靠近螢幕中間的卡片並套用強調樣式
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (window.innerWidth >= 768) return; // 只在手機版運作
+
+        const handleScroll = () => {
+            const viewportCenter = window.innerHeight / 2;
+            let closestCard = null;
+            let minDistance = Infinity;
+
+            cardRefs.current.forEach((card) => {
+                if (!card) return;
+                const rect = card.getBoundingClientRect();
+                const cardCenter = rect.top + rect.height / 2;
+                const distance = Math.abs(cardCenter - viewportCenter);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestCard = card;
+                }
+            });
+
+            cardRefs.current.forEach((card) => {
+                if (!card) return;
+                const isActive = card === closestCard;
+                card.style.transform = `scale(${isActive ? 1 : 0.95})`;
+                card.classList.toggle('bg-brand/20', isActive);
+                card.classList.toggle('border-brand', isActive);
+                card.classList.toggle('shadow-lg', isActive);
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll();
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <section id="events" className="py-20 md:py-32 px-4 md:px-6 bg-transparent" ref={ref}>
             <div className="max-w-7xl mx-auto">
                 <div className="grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
 
-                    {/* Left: Images */}
-                    <div className={`relative transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                    {/* Left: 圖片與簡報 */}
+                    <div className={`space-y-8 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
+                        {/* 圖片輪播 */}
                         <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-surface/30 backdrop-blur-lg border border-border h-64 md:h-80 lg:h-96 group">
                             {/* 添加內陰影效果 */}
                             <div className="absolute inset-0 rounded-2xl shadow-inner pointer-events-none z-10"></div>
@@ -132,7 +171,7 @@ export default function Events() {
                                                     }
                                                 }}
                                             />
-                                            <div 
+                                            <div
                                                 className="placeholder absolute inset-0 w-full h-full bg-gradient-to-br from-brand/70 to-purple-600/70 flex items-center justify-center"
                                                 style={{ display: 'none' }}
                                             >
@@ -155,6 +194,26 @@ export default function Events() {
                                     />
                                 ))}
                             </div>
+                        </div>
+
+                        {/* 簡報內嵌 */}
+                        <div className="relative w-full h-64 md:h-96 border border-border rounded-xl overflow-hidden shadow-md">
+                            <iframe
+                                src="https://www.slideshare.net/slideshow/embed_code/key/1QT8eizVmSnyWg?startSlide=1"
+                                className="w-full h-full"
+                                frameBorder="0"
+                                allowFullScreen
+                            ></iframe>
+                        </div>
+                        <div className="text-center">
+                            <a
+                                href="https://www.slideshare.net/slideshow/demystifying-ai-from-core-concepts-to-practical-workflows-with-n8n-e67e/279081313"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="phone-liner-bold md:pc-liner-bold text-brand hover:underline"
+                            >
+                                Demystifying AI: From Core Concepts to Practical Workflows with n8n
+                            </a>
                         </div>
                     </div>
 
@@ -193,7 +252,8 @@ export default function Events() {
                             {highlights.map((highlight, index) => (
                                 <div
                                     key={index}
-                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} hover:bg-surface/80 hover:border-brand hover:shadow-lg hover:scale-[1.02]`}
+                                    ref={(el) => (cardRefs.current[index] = el)}
+                                    className={`p-6 md:p-8 bg-surface/50 backdrop-blur-lg border border-border rounded-xl shadow-sm transition-all duration-500 ${isVisible ? 'opacity-100 translate-y-0 md:translate-x-0' : 'opacity-0 translate-y-6 md:translate-x-6'} hover:bg-brand/20 hover:border-brand hover:shadow-lg hover:scale-[1.03]`}
                                     style={{ transitionDelay: `${0.5 + index * 0.15}s` }}
                                 >
                                     <h3 className="phone-liner-bold md:pc-liner-bold text-heading mb-2">
@@ -204,28 +264,6 @@ export default function Events() {
                                     </p>
                                 </div>
                             ))}
-                        </div>
-
-                        {/* Slides */}
-                        <div className="mt-12">
-                            <div className="relative w-full h-64 md:h-96 border border-border rounded-xl overflow-hidden shadow-md">
-                                <iframe
-                                    src="https://www.slideshare.net/slideshow/embed_code/key/1QT8eizVmSnyWg?startSlide=1"
-                                    className="w-full h-full"
-                                    frameBorder="0"
-                                    allowFullScreen
-                                ></iframe>
-                            </div>
-                            <div className="mt-3 text-center">
-                                <a
-                                    href="https://www.slideshare.net/slideshow/demystifying-ai-from-core-concepts-to-practical-workflows-with-n8n-e67e/279081313"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="phone-liner-bold md:pc-liner-bold text-brand hover:underline"
-                                >
-                                    Demystifying AI: From Core Concepts to Practical Workflows with n8n
-                                </a>
-                            </div>
                         </div>
                     </div>
                 </div>
