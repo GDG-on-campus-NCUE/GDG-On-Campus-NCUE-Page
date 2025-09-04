@@ -7,9 +7,8 @@ import { useTheme } from '@/hooks/useTheme';
 
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
-    const [showBtn, setShowBtn] = useState(false);   // ✅ 只有往上滾才顯示整顆按鈕
-    const prevYRef = useRef(0);
-    const hideTimer = useRef(null);                  // ✅ jsx 不用泛型
+    const [visible, setVisible] = useState(true);    // ✅ 是否顯示進度環（含淡入淡出）
+    const prevYRef = useRef(0);                      // ✅ 記錄前一次滾動位置
 
     const { language } = useLanguage();
     const { theme } = useTheme();
@@ -31,7 +30,8 @@ export default function ScrollToTop() {
     useEffect(() => {
         const UP_THRESHOLD = 4;          // px：過濾微小抖動
         const DOWN_THRESHOLD = 4;
-        const HIDE_AFTER_MS = 800;       // 停止往上後延遲隱藏，給使用者點擊時間
+        const HIDE_OFFSET = 80;          // px：向下超過此距離才隱藏
+        const MOBILE_BREAKPOINT = 768;   // 與 Tailwind md 相同
 
         const onScroll = () => {
             const y = window.scrollY;
@@ -40,24 +40,18 @@ export default function ScrollToTop() {
             setProgress(Math.max(0, Math.min(p, 1)));
 
             const dy = y - prevYRef.current;
+            const isMobile = window.innerWidth < MOBILE_BREAKPOINT;
 
-            // 向上且不在頂端：顯示整顆按鈕並啟動延遲隱藏
-            if (dy < -UP_THRESHOLD && y > 0) {
-                if (!showBtn) setShowBtn(true);
-                if (hideTimer.current) window.clearTimeout(hideTimer.current);
-                hideTimer.current = window.setTimeout(() => setShowBtn(false), HIDE_AFTER_MS);
-            }
-            // 向下：立即隱藏
-            else if (dy > DOWN_THRESHOLD) {
-                if (showBtn) setShowBtn(false);
-                if (hideTimer.current) {
-                    window.clearTimeout(hideTimer.current);
-                    hideTimer.current = null;
+            if (isMobile) {
+                // 手機版：向上顯示，向下（且已離開頂端）隱藏
+                if (dy < -UP_THRESHOLD) {
+                    setVisible(true);
+                } else if (dy > DOWN_THRESHOLD && y > HIDE_OFFSET) {
+                    setVisible(false);
                 }
-            }
-            // 回到頂端：保證隱藏
-            else if (y <= 0 && showBtn) {
-                setShowBtn(false);
+            } else {
+                // 桌機版：始終顯示
+                setVisible(true);
             }
 
             prevYRef.current = y;
@@ -70,16 +64,16 @@ export default function ScrollToTop() {
         return () => {
             window.removeEventListener('scroll', onScroll);
             window.removeEventListener('resize', onScroll);
-            if (hideTimer.current) window.clearTimeout(hideTimer.current);
         };
-    }, [showBtn]);
-
-    // ✅ 不是往上滾動時，整個按鈕完全不渲染
-    if (!showBtn) return null;
+    }, []);
 
     return (
         <div
-            className="fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50"
+            className={[
+                'fixed bottom-4 right-4 md:bottom-6 md:right-6 z-50',
+                'transition-opacity duration-300',
+                visible ? 'opacity-100' : 'opacity-0 pointer-events-none',
+            ].join(' ')}
             style={{ width: '3.25rem', height: '3.25rem' }}
         >
             <div className="relative w-full h-full aspect-square">
