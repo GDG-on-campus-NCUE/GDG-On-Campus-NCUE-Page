@@ -169,7 +169,7 @@ export default function JoinUs() {
                     </h2>
                     <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
-                            ? '我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要你對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。'
+                            ? '我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。'
                             : 'We believe every line of code carries the power to change. Wherever you start, if you love technology and want to turn ideas into reality, this is the community to connect and grow.'}
                     </p>
 

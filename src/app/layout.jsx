@@ -11,10 +11,28 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata = {
-  title: "GDG On Campus NCUE | Build with AI",
-  description: "不只是一場活動，而是一場技術革命的開端。回顧我們的「Build with AI 2025」：賦能每一位創造者。",
-  icons: {
-    icon: "/gdg_web/favicon.ico",
+  // 基礎設定
+  title: "GDG On Campus NCUE",
+  description: "我們相信程式碼是構築未來的原力，致力於透過前沿技術分享與專案實作，將一行行指令化為解決校園問題的真實影響力。我們連結所有懷抱熱情的開發者，在此一同激盪、成長與創新。",
+  keywords: ["GDG On Campus NCUE", "Build with AI", "GDG", "NCUE 社團", "彰師 社團", "彰化師範大學 社團", "彰師 Google", "GDG", "GDG NCUE", "彰師"],
+
+
+  // Open Graph (OG)
+  openGraph: {
+    title: "GDG On Campus NCUE",
+    description: "我們相信程式碼是構築未來的原力，致力於透過前沿技術分享與專案實作，將一行行指令化為解決校園問題的真實影響力。我們連結所有懷抱熱情的開發者，在此一同激盪、成長與創新。",
+    url: "https://gdg.ncuesa.org.tw",
+    siteName: "GDG On Campus NCUE",
+    images: [
+      {
+        url: "https://gdg.ncuesa.org.tw/GDG_On_Campus.png",
+        width: 1920,
+        height: 390,
+        alt: "GDG On Campus NCUE",
+      },
+    ],
+    locale: "zh_TW",
+    type: "website",
   },
 };
 
