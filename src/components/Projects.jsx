@@ -67,6 +67,7 @@ export default function Projects() {
                 status: '已上線',
                 title: '生輔組餐券管理系統',
                 description: '透過 Google Apps Script 連動 Google Forms、Google Docs、Google Sheets 建立一套電子餐券系統，除了簡化學生端申請流程之外，更提供後台餐券追蹤、數據分析等多項管理員友善功能！',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4345.php',
                 tags: ['流程數位化', '數據分析']
             },
             {
@@ -114,6 +115,7 @@ export default function Projects() {
                 status: 'Launched',
                 title: 'Meal Voucher Management System',
                 description: 'Uses Google Apps Script to integrate Google Forms, Docs, and Sheets into an electronic meal voucher system that streamlines student applications and provides administrators with voucher tracking and data analysis.',
+                link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4345.php',
                 tags: ['Workflow Digitalization', 'Data Analysis']
             },
             {
@@ -146,8 +148,11 @@ export default function Projects() {
         'Released': 0,
         'Completed': 0,
         '進行中': 1,
+        '開發中': 1,
         'In Progress': 1,
+        'In Development': 1,
         '規劃中': 2,
+        '籌畫中': 2,
         'Planning': 2,
     };
 
