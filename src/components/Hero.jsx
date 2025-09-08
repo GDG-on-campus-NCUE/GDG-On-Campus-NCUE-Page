@@ -142,10 +142,9 @@ export default function Hero() {
 
                 <button
                     onClick={scrollToNext}
-                    className={`px-6 py-4 md:px-12 md:py-6 rounded-xl phone-liner-bold md:pc-liner-bold transition-all duration-200 flex items-center space-x-3 md:space-x-5 mx-auto group ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                        } w-full max-w-xs md:max-w-sm lg:w-auto lg:max-w-none justify-center transform hover:scale-105 shadow-xl 
+                    className={`px-6 py-4 md:px-12 md:py-6 rounded-xl phone-liner-bold md:pc-liner-bold transition-all duration-200 flex items-center space-x-3 md:space-x-5 mx-auto group ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'} w-full max-w-xs md:max-w-sm lg:w-auto lg:max-w-none justify-center transform hover:scale-105 shadow-xl focus:outline-none focus-visible:outline-none border border-transparent
                         ${theme === 'light'
-                            ? 'bg-white/70 backdrop-blur-sm border border-slate-300/80 hover:shadow-lg'
+                            ? 'bg-white/70 backdrop-blur-sm border-slate-300/80 hover:shadow-lg'
                             : 'bg-brand hover:bg-brand-accent text-white hover:shadow-lg hover:shadow-brand/40'
                         }`}
                     style={{ transitionDelay: buttonDelay }}
