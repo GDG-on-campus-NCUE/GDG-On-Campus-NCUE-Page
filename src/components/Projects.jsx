@@ -91,50 +91,49 @@ export default function Projects() {
         ],
         en: [
             {
-                status: 'Released',
-                // Student Affairs Scholarship Info Platform
-                title: 'Student Affairs Scholarship Info Platform',
-                description: 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 2.5 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.',
+                status: 'Launched',
+                title: 'Student Affairs Scholarship Information Platform',
+                description: 'A smart scholarship information platform built around a multimodal LLM. It dynamically analyzes administrator-provided sources (such as PDF files or web links) and, powered by the Gemini 2.5 Flash model, performs fully automated parsing, key information extraction, and content summarization to streamline announcement workflows.',
                 link: 'https://scholarship.ncuesa.org.tw',
-                tags: ['Information Integration', 'User Experience', 'Campus Service']
+                tags: ['Information Integration', 'Process Optimization', 'AI Application']
             },
             {
-                status: 'Released',
+                status: 'Launched',
                 title: 'Student Affairs RPage Site',
-                description: 'We maintain and enhance the Student Affairs Division website, ensuring timely updates and accurate information for all students.',
+                description: 'We took over and optimized the Student Affairs Division website to ensure information is delivered accurately and to provide a better browsing experience for the campus community.',
                 link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4293.php',
-                tags: ['Site Maintenance', 'Information Release']
+                tags: ['Information Integration', 'UI Optimization']
             },
             {
-                status: 'In Progress',
-                title: 'Dorm Checkout System',
-                description: 'Digitizes and streamlines the dorm checkout process from application to approval, reducing paperwork and improving administrative efficiency.',
+                status: 'Planning',
+                title: 'Dorm Checkout Management System',
+                description: 'Plans to digitize and simplify the dormitory checkout process, bringing application, inspection, and approval fully online to reduce paperwork and enhance efficiency and convenience.',
                 tags: ['Workflow Digitalization', 'Administrative Efficiency']
             },
             {
-                status: 'In Progress',
+                status: 'Launched',
                 title: 'Meal Voucher Management System',
-                description: 'Creates an electronic meal voucher system with backend tracking to help the school monitor distribution and redemption.',
-                tags: ['E-ticket', 'Data Analysis']
+                description: 'Uses Google Apps Script to integrate Google Forms, Docs, and Sheets into an electronic meal voucher system that streamlines student applications and provides administrators with voucher tracking and data analysis.',
+                tags: ['Workflow Digitalization', 'Data Analysis']
             },
             {
-                status: 'Planning',
+                status: 'In Development',
                 title: 'Student Union Voting System',
-                description: 'Develops a secure, fair and transparent online voting platform for elections and major issues, encouraging student participation in public affairs.',
-                tags: ['E-Voting', 'Cybersecurity']
+                description: 'Developing a secure, fair, and transparent online voting platform for student union elections and major issues to boost student participation in public affairs.',
+                tags: ['E-Voting', 'Information Security']
             },
             {
-                status: 'Planning',
-                title: 'CS Department Website',
-                description: 'Developing the official website for the CS department to improve information transparency and readability.',
-                tags: ['Website Development', 'Department Info']
+                status: 'In Development',
+                title: 'Department of Computer Science Website',
+                description: 'Rebuilding the CS department website with a modern framework instead of raw PHP to improve maintainability.',
+                tags: ['Website Development', 'UI Optimization']
             },
             {
-                status: 'Completed',
-                title: 'Student Affairs Lost-and-found System',
-                description: 'Provides an online platform for logging and searching lost items, helping students quickly retrieve their belongings.',
+                status: 'Launched',
+                title: 'Student Affairs Lost and Found System',
+                description: 'Connects Google Forms and Sheets through APIs to provide an online platform for registering and searching lost items, helping students quickly recover their belongings.',
                 link: 'https://stuaffweb.ncue.edu.tw/p/412-1039-4292.php',
-                tags: ['Campus Service', 'Information System']
+                tags: ['Workflow Digitalization', 'Administrative Efficiency']
             },
         ]
     };
@@ -444,8 +443,9 @@ export default function Projects() {
                                         {(() => {
                                             // 依狀態取得對應色碼
                                             const getColor = (status) => {
-                                                if (['已上線', '已完成', 'Released', 'Completed'].includes(status)) return '#22c55e';
-                                                if (['進行中', 'In Progress'].includes(status)) return '#eab308';
+                                                // 依照狀態回傳對應顏色：已上線/Launched -> 綠色、開發中/In Development -> 黃色、籌畫中/Planning -> 灰色
+                                                if (['已上線', 'Launched'].includes(status)) return '#22c55e';
+                                                if (['開發中', 'In Development'].includes(status)) return '#eab308';
                                                 return '#6b7280';
                                             };
                                             const color = getColor(feature.status);
@@ -471,9 +471,9 @@ export default function Projects() {
                                                 );
                                             }
                                             const desktopClass =
-                                                feature.status === '已上線' || feature.status === '已完成' || feature.status === 'Released' || feature.status === 'Completed'
+                                                feature.status === '已上線' || feature.status === 'Launched'
                                                     ? 'bg-green-500 text-white dark:bg-green-600'
-                                                    : feature.status === '進行中' || feature.status === 'In Progress'
+                                                    : feature.status === '開發中' || feature.status === 'In Development'
                                                         ? 'bg-yellow-500 text-white dark:bg-yellow-600'
                                                         : 'bg-gray-500 text-white dark:bg-gray-600';
                                             return (
