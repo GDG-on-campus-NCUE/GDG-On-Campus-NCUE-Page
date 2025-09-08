@@ -144,14 +144,9 @@ export default function Projects() {
     // 狀態排序：已完成(含已上線) → 進行中 → 規劃中
     const statusOrder = {
         '已上線': 0,
-        '已完成': 0,
-        'Released': 0,
-        'Completed': 0,
-        '進行中': 1,
+        'Launched': 0,
         '開發中': 1,
-        'In Progress': 1,
         'In Development': 1,
-        '規劃中': 2,
         '籌畫中': 2,
         'Planning': 2,
     };
