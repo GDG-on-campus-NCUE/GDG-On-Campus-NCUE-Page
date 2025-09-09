@@ -120,8 +120,8 @@ export default function Projects() {
             },
             {
                 status: 'In Development',
-                title: 'Student Union Voting System',
-                description: 'Developing a secure, fair, and transparent online voting platform for student union elections and major issues to boost student participation in public affairs.',
+                title: 'Student Association Voting System',
+                description: 'Developing a secure, fair, and transparent online voting platform for student association elections and major issues to boost student participation in public affairs.',
                 tags: ['E-Voting', 'Information Security']
             },
             {
