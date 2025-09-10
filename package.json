@@ -1,7 +1,11 @@
 {
-  "name": "my-app",
+  "name": "gdg-ncue-website",
   "version": "0.1.0",
   "private": true,
+  "description": "GDG On Campus NCUE official website - 彰化師範大學 Google 開發者社群官方網站",
+  "homepage": "https://gdg.ncuesa.org.tw",
+  "keywords": ["gdg", "ncue", "website", "nextjs", "react", "google-developer-groups"],
+  "author": "GDG On Campus NCUE",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
