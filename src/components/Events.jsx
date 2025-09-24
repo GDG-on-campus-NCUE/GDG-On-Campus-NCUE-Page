@@ -280,7 +280,6 @@ export default function Events() {
                         {/* 行動版由下而上、桌面版由右至左進場 */}
                         <div className="space-y-6">
                             {highlights.map((highlight, index) => (
-                                // 卡片懸浮時使用 Google 藍色邊框
                                 <div
                                     key={index}
                                     ref={(el) => (cardRefs.current[index] = el)}

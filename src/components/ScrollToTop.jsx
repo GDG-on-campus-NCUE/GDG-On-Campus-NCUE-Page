@@ -7,8 +7,8 @@ import { useTheme } from '@/hooks/useTheme';
 
 export default function ScrollToTop() {
     const [progress, setProgress] = useState(0);
-    const [visible, setVisible] = useState(true);    // ✅ 是否顯示進度環（含淡入淡出）
-    const prevYRef = useRef(0);                      // ✅ 記錄前一次滾動位置
+    const [visible, setVisible] = useState(true);    // 是否顯示進度環（含淡入淡出）
+    const prevYRef = useRef(0);                      // 記錄前一次滾動位置
 
     const { language } = useLanguage();
     const { theme } = useTheme();

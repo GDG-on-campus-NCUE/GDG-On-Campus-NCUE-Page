@@ -77,7 +77,7 @@ export default function Navbar() {
                                     />
                                 </div>
                                 <div className={`transition-colors duration-300 ${logoColor}`}>
-                                    <div className="phone-liner-bold md:pc-liner-bold">Google Developer Groups</div>
+                                    <div className="phone-liner-bold md:pc-liner-bold">Google Developer Group</div>
                                     <div className="text-xs md:text-sm font-light opacity-80">On Campus NCUE</div>
                                 </div>
                             </a>

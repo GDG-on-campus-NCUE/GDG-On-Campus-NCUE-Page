@@ -277,6 +277,33 @@ export default function JoinUs() {
                         </div>
                     </div>
 
+                    {/* 合作夥伴區塊 */}
+                    <div className={`mt-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
+                        <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
+                        <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12">
+                            <a href="https.program.blendedlearn.org/learn-xpro-mit-edu" target="_blank" rel="noopener noreferrer" className="group">
+                                <Image
+                                    src={"/BlendED.png"}
+                                    alt="BlendED Logo"
+                                    width={150}
+                                    height={50}
+                                    className={`h-8 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 ${theme === 'dark' ? 'p-1 rounded-md bg-[radial-gradient(ellipse_at_center,rgba(173,216,230,0.4)_0%,transparent_80%)]' : ''}`}
+                                    draggable={false}
+                                />
+                            </a>
+                            <a href="https://ncuesa.ncue.edu.tw/" target="_blank" rel="noopener noreferrer" className="group">
+                                <Image
+                                    src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
+                                    alt="SA Logo"
+                                    width={150}
+                                    height={50}
+                                    className="h-10 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                                    draggable={false}
+                                />
+                            </a>
+                        </div>
+                    </div>
+
                     <div className={`mt-8 text-center text-sm md:text-base text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
                         <p>© 2025 GDG On Campus NCUE. All Rights Reserved.</p>
                     </div>
