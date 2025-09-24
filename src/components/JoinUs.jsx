@@ -25,6 +25,19 @@ function GmailIcon({ className = '' }) {
     );
 }
 
+// 合作夥伴卡片懸浮液態毛邊效果
+function PartnerCardGlow() {
+    return (
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+            <div className="absolute -top-12 -left-14 h-32 w-32 rounded-full bg-brand/45 opacity-0 blur-3xl transition-all duration-700 ease-out group-hover:translate-x-12 group-hover:translate-y-10 group-hover:opacity-100 group-focus-visible:translate-x-12 group-focus-visible:translate-y-10 group-focus-visible:opacity-100" />
+            <div className="absolute -bottom-16 -right-16 h-36 w-36 rounded-full bg-brand-accent/40 opacity-0 blur-[120px] transition-all duration-700 ease-out group-hover:-translate-x-10 group-hover:-translate-y-8 group-hover:opacity-100 group-focus-visible:-translate-x-10 group-focus-visible:-translate-y-8 group-focus-visible:opacity-100" />
+            <div className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_60%)] dark:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_65%)]" />
+            </div>
+        </div>
+    );
+}
+
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
     const [spotlight, setSpotlight] = useState(false); // 控制滑鼠聚光燈顯示
@@ -34,14 +47,14 @@ export default function JoinUs() {
     const { theme } = useTheme();
 
     const partnerCardBaseClasses =
-        'relative flex items-center justify-center rounded-2xl border px-5 py-3 md:px-8 md:py-6 transition-all duration-300';
+        'relative flex items-center justify-center overflow-hidden rounded-2xl border px-5 py-3 md:px-8 md:py-6 transition-all duration-300';
     const partnerCardThemeClasses =
         theme === 'dark'
             ? 'bg-white/10 border-white/15 shadow-[0_18px_45px_rgba(15,23,42,0.45)] backdrop-blur-md hover:border-white/25 hover:shadow-[0_28px_60px_rgba(15,23,42,0.55)]'
             : 'bg-white border-black/5 shadow-[0_16px_45px_rgba(15,23,42,0.12)] hover:border-black/10 hover:shadow-[0_24px_60px_rgba(15,23,42,0.18)]';
     const partnerCardClasses = `${partnerCardBaseClasses} ${partnerCardThemeClasses}`;
     const partnerLogoBaseClasses =
-        'h-6 sm:h-7 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105';
+        'w-auto object-contain transition-transform duration-300 group-hover:scale-105';
     const partnerLogoThemeClasses = theme === 'dark' ? 'brightness-110 contrast-105' : '';
     const partnerLogoClasses = `${partnerLogoBaseClasses} ${partnerLogoThemeClasses}`;
 
@@ -294,20 +307,23 @@ export default function JoinUs() {
                         <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
                         <div className="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:gap-12">
                             <a
-                                href="https.program.blendedlearn.org/learn-xpro-mit-edu"
+                                href="https://program.blendedlearn.org/learn-xpro-mit-edu"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="group w-full max-w-[220px] md:max-w-none"
                             >
                                 <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
-                                    <Image
-                                        src={"/BlendED.png"}
-                                        alt="BlendED Logo"
-                                        width={150}
-                                        height={50}
-                                        className={partnerLogoClasses}
-                                        draggable={false}
-                                    />
+                                    <PartnerCardGlow />
+                                    <div className="relative z-10">
+                                        <Image
+                                            src={"/BlendED.png"}
+                                            alt="BlendED Logo"
+                                            width={200}
+                                            height={80}
+                                            className={`${partnerLogoClasses} h-10 sm:h-12 md:h-16`}
+                                            draggable={false}
+                                        />
+                                    </div>
                                 </div>
                             </a>
                             <a
@@ -317,14 +333,17 @@ export default function JoinUs() {
                                 className="group w-full max-w-[220px] md:max-w-none"
                             >
                                 <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
-                                    <Image
-                                        src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
-                                        alt="SA Logo"
-                                        width={150}
-                                        height={50}
-                                        className={partnerLogoClasses}
-                                        draggable={false}
-                                    />
+                                    <PartnerCardGlow />
+                                    <div className="relative z-10">
+                                        <Image
+                                            src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
+                                            alt="SA Logo"
+                                            width={220}
+                                            height={90}
+                                            className={`${partnerLogoClasses} h-12 sm:h-16 md:h-20`}
+                                            draggable={false}
+                                        />
+                                    </div>
                                 </div>
                             </a>
                         </div>
