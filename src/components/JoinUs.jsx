@@ -33,6 +33,18 @@ export default function JoinUs() {
     const { language } = useLanguage();
     const { theme } = useTheme();
 
+    const partnerCardBaseClasses =
+        'relative flex items-center justify-center rounded-2xl border px-5 py-3 md:px-8 md:py-6 transition-all duration-300';
+    const partnerCardThemeClasses =
+        theme === 'dark'
+            ? 'bg-white/10 border-white/15 shadow-[0_18px_45px_rgba(15,23,42,0.45)] backdrop-blur-md hover:border-white/25 hover:shadow-[0_28px_60px_rgba(15,23,42,0.55)]'
+            : 'bg-white border-black/5 shadow-[0_16px_45px_rgba(15,23,42,0.12)] hover:border-black/10 hover:shadow-[0_24px_60px_rgba(15,23,42,0.18)]';
+    const partnerCardClasses = `${partnerCardBaseClasses} ${partnerCardThemeClasses}`;
+    const partnerLogoBaseClasses =
+        'h-6 sm:h-7 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105';
+    const partnerLogoThemeClasses = theme === 'dark' ? 'brightness-110 contrast-105' : '';
+    const partnerLogoClasses = `${partnerLogoBaseClasses} ${partnerLogoThemeClasses}`;
+
     // 社群連結與圖示設定（新增 Gmail）
     const socialLinks = [
         {
@@ -280,26 +292,40 @@ export default function JoinUs() {
                     {/* 合作夥伴區塊 */}
                     <div className={`mt-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
                         <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
-                        <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:gap-12">
-                            <a href="https.program.blendedlearn.org/learn-xpro-mit-edu" target="_blank" rel="noopener noreferrer" className="group">
-                                <Image
-                                    src={"/BlendED.png"}
-                                    alt="BlendED Logo"
-                                    width={150}
-                                    height={50}
-                                    className={`h-8 md:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105 ${theme === 'dark' ? 'p-1 rounded-md bg-[radial-gradient(ellipse_at_center,rgba(173,216,230,0.4)_0%,transparent_80%)]' : ''}`}
-                                    draggable={false}
-                                />
+                        <div className="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:gap-12">
+                            <a
+                                href="https.program.blendedlearn.org/learn-xpro-mit-edu"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group w-full max-w-[220px] md:max-w-none"
+                            >
+                                <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
+                                    <Image
+                                        src={"/BlendED.png"}
+                                        alt="BlendED Logo"
+                                        width={150}
+                                        height={50}
+                                        className={partnerLogoClasses}
+                                        draggable={false}
+                                    />
+                                </div>
                             </a>
-                            <a href="https://ncuesa.ncue.edu.tw/" target="_blank" rel="noopener noreferrer" className="group">
-                                <Image
-                                    src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
-                                    alt="SA Logo"
-                                    width={150}
-                                    height={50}
-                                    className="h-10 md:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-                                    draggable={false}
-                                />
+                            <a
+                                href="https://ncuesa.ncue.edu.tw/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group w-full max-w-[220px] md:max-w-none"
+                            >
+                                <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
+                                    <Image
+                                        src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
+                                        alt="SA Logo"
+                                        width={150}
+                                        height={50}
+                                        className={partnerLogoClasses}
+                                        draggable={false}
+                                    />
+                                </div>
                             </a>
                         </div>
                     </div>
