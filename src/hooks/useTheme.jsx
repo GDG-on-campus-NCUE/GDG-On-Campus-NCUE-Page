@@ -1,6 +1,5 @@
 'use client';
 
-// 主題切換 Hook 與 Context
 // 使用 React Context 讓所有元件共享主題狀態
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
@@ -9,7 +8,7 @@ const ThemeContext = createContext();
 
 // 主題提供者，負責管理主題狀態
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState('light'); // 預設為淺色主題
+    const [theme, setTheme] = useState('dark'); // 預設為深色主題
     const [isLoaded, setIsLoaded] = useState(false); // 是否已載入完成
 
     useEffect(() => {
@@ -40,7 +39,6 @@ export function ThemeProvider({ children }) {
     );
 }
 
-// 使用主題 Context 的自訂 Hook
 export function useTheme() {
     return useContext(ThemeContext);
 }

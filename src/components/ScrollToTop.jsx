@@ -77,7 +77,6 @@ export default function ScrollToTop() {
             style={{ width: '3.25rem', height: '3.25rem' }}
         >
             <div className="relative w-full h-full aspect-square">
-                {/* 中央按鈕：正圓鋪滿，位於外環下方 */}
                 <button
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                     aria-label={language === 'zh' ? '回到頂端' : 'Back to top'}

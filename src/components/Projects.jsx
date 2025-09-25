@@ -354,8 +354,7 @@ export default function Projects() {
                                 <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">
                                     {language === 'zh' ? '技術棧' : 'Tech Stack'}
                                 </h4>
-                                {/* [RWD 優化] 跑馬燈在手機上會有更小的間距和圖示 */}
-                                {/* 禁止選取技術棧區塊內的文字與圖示 */}
+
                                 <div className="relative w-full overflow-hidden rounded-lg bg-surface/50 select-none">
                                     <div className="marquee-container flex text-foreground whitespace-nowrap">
                                         {Array.from({ length: 12 }, (_, setIndex) =>
@@ -366,7 +365,6 @@ export default function Projects() {
                                                     style={{ animationDelay: `${(setIndex * techStack.length + techIndex) * 0.2}s` }}
                                                 >
                                                     <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
-                                                        {/* 圖示禁止拖曳 */}
                                                         <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" draggable={false} />
                                                     </div>
                                                     <span className="text-sm md:text-base font-semibold">{tech.name}</span>
@@ -382,7 +380,6 @@ export default function Projects() {
 
                         {/* 右側模型 (手機版會在下) */}
                         <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-6 md:p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 w-full max-w-full box-border overflow-hidden ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
-                            {/* [RWD 優化] 確保卡片在所有螢幕尺寸下都能正確顯示 */}
                             <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-2 text-center">
                                 {/* 桌面版加寬按鈕寬度 */}
                                 <button
@@ -417,7 +414,7 @@ export default function Projects() {
                     </div>
                 </div>
 
-                {/* --- 區段三：更多專案 (含 3D 滑鼠與入場效果) --- */}
+                {/* --- 區段三：更多專案 --- */}
                 <div className={`grid grid-cols-1 md:grid-cols-2 ${columnClass} gap-6 md:gap-8 mb-16 md:mb-24`}>
                     {otherFeatures.map((feature, index) => (
                         <div
@@ -519,7 +516,7 @@ export default function Projects() {
                     ))}
                 </div>
 
-                {/* --- 區段四：CTA 按鈕 (RWD 已優化) --- */}
+                {/* --- 區段四：CTA 按鈕 --- */}
                 <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '1s' }}>
                     <button
                         onClick={() => openLink('https://github.com/GDG-on-campus-NCUE/NCUE-Scholarship')}

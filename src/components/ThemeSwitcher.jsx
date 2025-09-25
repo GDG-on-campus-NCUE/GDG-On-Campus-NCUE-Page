@@ -8,7 +8,7 @@ export default function ThemeSwitcher({ colorClass }) {
     // 防止在未加載時顯示
     if (!isLoaded) {
         return (
-            <div className="p-2 w-9 h-9 rounded-full"></div> // 佔位符
+            <div className="p-2 w-9 h-9 rounded-full"></div>
         );
     }
 

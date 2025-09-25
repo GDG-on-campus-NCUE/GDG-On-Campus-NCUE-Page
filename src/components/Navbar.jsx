@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTheme } from '@/hooks/useTheme'; // 新增 import
+import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
@@ -12,7 +12,7 @@ import LanguageSwitcher from './LanguageSwitcher';
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { theme } = useTheme(); // 新增，取得目前主題
+    const { theme } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -112,7 +112,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* 增加最大高度以確保手機版選單底部可以顯示語言切換按鈕 */}
                 <div
                     className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 shadow-lg' : 'max-h-0'}`}
                 >
