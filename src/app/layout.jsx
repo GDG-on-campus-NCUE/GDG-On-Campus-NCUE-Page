@@ -16,6 +16,11 @@ export const metadata = {
   description: "我們相信程式碼是構築未來的原力，致力於透過前沿技術分享與專案實作，將一行行指令化為解決校園問題的真實影響力。我們連結所有懷抱熱情的開發者，在此一同激盪、成長與創新。",
   keywords: ["GDG On Campus NCUE", "Build with AI", "GDG", "NCUE 社團", "彰師 社團", "彰化師範大學 社團", "彰師 Google", "GDG", "GDG NCUE", "彰師", "Google Developer Group", "ncue", "中部 技術社群", "開發者社群", "NCUE GDG"],
 
+  // PWA & Web App
+  manifest: "/manifest.json",
+  
+  // 改善的 viewport 設定
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
 
   // Open Graph (OG)
   openGraph: {
@@ -33,6 +38,14 @@ export const metadata = {
     ],
     locale: "zh_TW",
     type: "website",
+  },
+  
+  // Twitter Card
+  twitter: {
+    card: "summary_large_image",
+    title: "GDG On Campus NCUE",
+    description: "我們相信程式碼是構築未來的原力，致力於透過前沿技術分享與專案實作，將一行行指令化為解決校園問題的真實影響力。",
+    images: ["https://gdg.ncuesa.org.tw/GDG_icon.png"],
   },
 };
 

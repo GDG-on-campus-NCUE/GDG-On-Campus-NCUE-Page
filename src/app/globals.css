@@ -523,6 +523,22 @@ img,
 svg {
   -webkit-user-select: none;
   user-select: none;
+  pointer-events: none;
+}
+
+/* 微效能提升與文字渲染優化 */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* GPU 加速給動畫元素 */
+.marquee-container,
+.fade-in-up,
+.scale-in,
+.float-animation,
+.float-animation-reverse {
+  will-change: transform;
 }
 
 /* 螢光筆掃過效果 */

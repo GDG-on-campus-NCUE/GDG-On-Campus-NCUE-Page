@@ -65,7 +65,3 @@ npx serve out -p 3000
 - `next export` 只能處理完全靜態的頁面。若你的專案使用 SSR、API routes、或其他需要 server 的功能，請改用 Vercel / Render / 或部署到有 Node.js 的伺服器。
 - next/image 的最佳化在靜態匯出時可能失效，必要時請改用普通 `<img>` 或其他圖像處理策略。
 - 若需要環境變數或私有套件，請在 workflow 或部署平台設定相對應的 Secrets。
-
-若你要我幫你：
-- 驗證一次 `npm ci && npx next build && npx next export` 是否在 CI 中成功運行，我可以在工作環境執行並回報錯誤。
-- 或是幫你改成使用 Vercel（若需要 SSR / 更完整的 Next 支援）。

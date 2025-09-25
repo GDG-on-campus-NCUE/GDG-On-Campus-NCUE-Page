@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# SEO optimization for GDG NCUE website
+Sitemap: https://gdg.ncuesa.org.tw/sitemap.xml
+
+# Block crawler access to admin/private areas (if any in future)
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/
