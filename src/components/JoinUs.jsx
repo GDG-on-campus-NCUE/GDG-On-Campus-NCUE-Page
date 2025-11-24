@@ -25,38 +25,45 @@ function GmailIcon({ className = '' }) {
     );
 }
 
-// 合作夥伴卡片懸浮液態毛邊效果
-function PartnerCardGlow() {
-    return (
-        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute -top-12 -left-14 h-32 w-32 rounded-full bg-brand/45 opacity-0 blur-3xl transition-all duration-700 ease-out group-hover:translate-x-12 group-hover:translate-y-10 group-hover:opacity-100 group-focus-visible:translate-x-12 group-focus-visible:translate-y-10 group-focus-visible:opacity-100" />
-            <div className="absolute -bottom-16 -right-16 h-36 w-36 rounded-full bg-brand-accent/40 opacity-0 blur-[120px] transition-all duration-700 ease-out group-hover:-translate-x-10 group-hover:-translate-y-8 group-hover:opacity-100 group-focus-visible:-translate-x-10 group-focus-visible:-translate-y-8 group-focus-visible:opacity-100" />
-            <div className="absolute inset-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100 group-focus-visible:opacity-100">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.35),_transparent_60%)] dark:bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.45),_transparent_65%)]" />
-            </div>
-        </div>
-    );
-}
+// (Removed per-card glow) — a single shared halo element is rendered inside the partners container.
 
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
     const [spotlight, setSpotlight] = useState(false); // 控制滑鼠聚光燈顯示
     const [isDesktop, setIsDesktop] = useState(false); // 判斷是否為桌機
+    const [hoveredPartner, setHoveredPartner] = useState(null); // 哪個 partner 被 hover（null 表示無）
     const ref = useRef(null);
+    const partnersRef = useRef(null);
+    const haloRef = useRef(null);
     const { language } = useLanguage();
     const { theme } = useTheme();
 
     const partnerCardBaseClasses =
         'relative flex items-center justify-center overflow-hidden rounded-2xl border px-5 py-3 md:px-8 md:py-6 transition-all duration-300';
+    // 固定卡片高度以統一大小（放大一點讓 partner 更顯眼）
+    const partnerCardFixedSize = 'h-20 md:h-24';
     const partnerCardThemeClasses =
         theme === 'dark'
             ? 'bg-white/10 border-white/15 shadow-[0_18px_45px_rgba(15,23,42,0.45)] backdrop-blur-md hover:border-white/25 hover:shadow-[0_28px_60px_rgba(15,23,42,0.55)]'
             : 'bg-white border-black/5 shadow-[0_16px_45px_rgba(15,23,42,0.12)] hover:border-black/10 hover:shadow-[0_24px_60px_rgba(15,23,42,0.18)]';
     const partnerCardClasses = `${partnerCardBaseClasses} ${partnerCardThemeClasses}`;
-    const partnerLogoBaseClasses =
-        'w-auto object-contain transition-transform duration-300 group-hover:scale-105';
+    const partnerLogoBaseClasses = 'w-auto object-contain transition-transform duration-300';
     const partnerLogoThemeClasses = theme === 'dark' ? 'brightness-110 contrast-105' : '';
     const partnerLogoClasses = `${partnerLogoBaseClasses} ${partnerLogoThemeClasses}`;
+
+    // 基礎比例（第二個 partner 預設較大）
+    // 在桌機保持較大比例，但手機上縮小一些避免滿版感
+    const baseScales = [1, isDesktop ? 1.45 : 1.12, 1];
+    // 每個項目被 hover 時的倍率（index 對應 partner）：
+    // 將第二個的 hover 倍率調小一點以符合需求
+    const hoveredMultipliers = [1.15, 1.08, 1.15];
+    const scaleFor = (index) => {
+        const base = baseScales[index] ?? 1;
+        if (hoveredPartner === null) return base;
+        // 只有被 hover 的那一項放大，其他回復基礎大小
+        if (hoveredPartner === index) return +(base * (hoveredMultipliers[index] ?? 1.12)).toFixed(3);
+        return base;
+    }
 
     // 社群連結與圖示設定（新增 Gmail）
     const socialLinks = [
@@ -133,8 +140,27 @@ export default function JoinUs() {
         const rect = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
+        // set pixel values (used by sheen) and percentage values (used by large halo background-position)
         e.currentTarget.style.setProperty('--bx', `${x}px`);
         e.currentTarget.style.setProperty('--by', `${y}px`);
+        const px = (x / rect.width) * 100;
+        const py = (y / rect.height) * 100;
+        e.currentTarget.style.setProperty('--bxp', `${px}%`);
+        e.currentTarget.style.setProperty('--byp', `${py}%`);
+        e.currentTarget.style.setProperty('--b-opacity', '1');
+    }
+
+    const handleButtonEnter = (e) => {
+        e.currentTarget.style.setProperty('--b-opacity', '1');
+    }
+
+    const handleButtonLeave = (e) => {
+        e.currentTarget.style.setProperty('--b-opacity', '0');
+        // reset sheen position for polish
+        e.currentTarget.style.setProperty('--bx', '50%');
+        e.currentTarget.style.setProperty('--by', '50%');
+        e.currentTarget.style.setProperty('--bxp', '50%');
+        e.currentTarget.style.setProperty('--byp', '50%');
     }
 
     // 社群圖示磁吸效果
@@ -150,16 +176,148 @@ export default function JoinUs() {
         magnet.style.transform = 'translate(0,0)';
     }
 
+    // (per-card mousemove removed) — container-level proximity handler updates the shared halo
+
+    // Proximity-based hover: single shared halo, use RAF for smooth updates
+    useEffect(() => {
+        if (!isDesktop || !partnersRef.current || !haloRef.current) return;
+        const container = partnersRef.current;
+        const halo = haloRef.current;
+        let raf = null;
+
+        const THRESH = 220; // proximity radius in px
+
+        // Track last pointer movement for directional exit
+        let lastMx = 0, lastMy = 0, lastDx = 0, lastDy = 0;
+
+        const updateHalo = (mx, my, size, visible, targetEl = null, exitVector = null) => {
+            if (!halo) return;
+            // determine parent element for halo: prefer targetEl (DOM element), else container
+            let parentEl = container;
+            let parentRect = container.getBoundingClientRect();
+
+            if (targetEl instanceof Element) {
+                // prefer the inner card element (the content div) so overflow:hidden + border-radius clip the halo
+                const inner = targetEl.querySelector('div') || targetEl;
+                if (inner) {
+                    parentEl = inner;
+                    parentRect = inner.getBoundingClientRect();
+                }
+            }
+
+            // append halo into parent element if not already
+            if (halo.parentElement !== parentEl) {
+                parentEl.appendChild(halo);
+                halo.style.position = 'absolute';
+                halo.style.left = '0px';
+                halo.style.top = '0px';
+            }
+
+            // size and basic visibility
+            halo.style.width = `${Math.max(8, size)}px`;
+            halo.style.height = `${Math.max(8, size)}px`;
+
+            // compute center relative to parent
+            const cx = mx - parentRect.left;
+            const cy = my - parentRect.top;
+            const tx = Math.round(cx - size / 2);
+            const ty = Math.round(cy - size / 2);
+
+            // if an exitVector is provided (mouse left direction), animate the halo outwards
+            if (exitVector && !visible) {
+                const [vx, vy] = exitVector;
+                const offset = Math.max(120, size * 0.9);
+                const ex = Math.round(tx + vx * offset);
+                const ey = Math.round(ty + vy * offset);
+                // trigger transition to moved + faded
+                halo.style.transform = `translate3d(${ex}px, ${ey}px, 0)`;
+                halo.style.opacity = '0';
+            } else {
+                halo.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+                halo.style.opacity = visible ? '1' : '0';
+            }
+
+            halo.style.clipPath = 'none';
+            halo.style.webkitClipPath = 'none';
+        };
+
+        const handler = (e) => {
+            if (raf) cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(() => {
+                const anchors = Array.from(container.querySelectorAll('.partner-card-wrap'));
+                if (!anchors.length) return;
+                const { clientX: mx, clientY: my } = e;
+
+                // track last movement vector
+                const dx = mx - lastMx;
+                const dy = my - lastMy;
+                lastDx = dx;
+                lastDy = dy;
+                lastMx = mx;
+                lastMy = my;
+
+                let nearest = { idx: null, dist: Infinity, rect: null };
+                anchors.forEach((a, i) => {
+                    const r = a.getBoundingClientRect();
+                    const cx = r.left + r.width / 2;
+                    const cy = r.top + r.height / 2;
+                    const ddx = mx - cx;
+                    const ddy = my - cy;
+                    const d = Math.hypot(ddx, ddy);
+                    if (d < nearest.dist) nearest = { idx: i, dist: d, rect: r };
+                });
+
+                if (nearest.idx !== null && nearest.dist <= THRESH) {
+                    const minSize = 140; // base size
+                    const maxSize = 300; // enlarged when a bit far
+                    const t = Math.max(0, Math.min(1, 1 - (nearest.dist / THRESH)));
+                    const size = Math.round(minSize + (maxSize - minSize) * (1 - t));
+                    setHoveredPartner(nearest.idx);
+                    const targetAnchor = anchors[nearest.idx];
+                    // pass the anchor element so updateHalo can append into its inner div and rely on overflow:hidden
+                    updateHalo(mx, my, size, true, targetAnchor);
+                } else {
+                    setHoveredPartner(null);
+                    // normalize last movement as exit vector
+                    let vx = lastDx;
+                    let vy = lastDy;
+                    const mag = Math.hypot(vx, vy);
+                    if (mag < 1) {
+                        // if there was almost no motion, default to fading downward
+                        vx = 0; vy = 1;
+                    } else {
+                        vx /= mag; vy /= mag;
+                    }
+                    updateHalo(lastMx, lastMy, 200, false, null, [vx, vy]);
+                }
+            });
+        };
+
+        const leaveHandler = () => {
+            setHoveredPartner(null);
+            if (raf) cancelAnimationFrame(raf);
+            // compute exit vector from last movement
+            let vx = lastDx;
+            let vy = lastDy;
+            const mag = Math.hypot(vx, vy);
+            if (mag < 1) { vx = 0; vy = 1; } else { vx /= mag; vy /= mag; }
+            updateHalo(lastMx, lastMy, 220, false, null, [vx, vy]);
+        };
+
+        container.addEventListener('mousemove', handler);
+        container.addEventListener('mouseleave', leaveHandler);
+        return () => {
+            container.removeEventListener('mousemove', handler);
+            container.removeEventListener('mouseleave', leaveHandler);
+            if (raf) cancelAnimationFrame(raf);
+        };
+    }, [isDesktop]);
+
     return (
         <section
             id="join"
             className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted"
             ref={ref}
-            {...(isDesktop ? {
-                onMouseMove: handleAreaMouseMove,
-                onMouseEnter: () => setSpotlight(true),
-                onMouseLeave: () => setSpotlight(false),
-            } : {})}
         >
             {/* 中央藍色光暈背景 */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -167,10 +325,7 @@ export default function JoinUs() {
                     className={`joinus-glow transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
                 ></div>
             </div>
-            {/* 滑鼠聚光燈僅在桌機顯示 */}
-            {isDesktop && (
-                <div className="cursor-spotlight" style={{ opacity: spotlight ? 1 : 0 }}></div>
-            )}
+            {/* 滑鼠聚光燈效果已移除 */}
             {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
             {/* 將高度縮小以提升 RWD 觀感 */}
             <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden">
@@ -201,10 +356,16 @@ export default function JoinUs() {
                     {/* 手機版寬度全滿，桌機保持原樣 */}
                     <button
                         onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
-                        {...(isDesktop ? { onMouseMove: handleButtonMove } : {})}
-                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-gradient-to-r from-[#06C755] to-[#00A752] text-white font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-lg shadow-green-500/30 transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+                        onMouseMove={handleButtonMove}
+                        onMouseEnter={handleButtonEnter}
+                        onMouseLeave={handleButtonLeave}
+                        onFocus={handleButtonEnter}
+                        onBlur={handleButtonLeave}
+                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-gradient-to-r from-[#06C755] to-[#00A752] text-white font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-lg shadow-green-500/30 transition-all duration-150 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
                         style={{ transitionDelay: '0.4s' }}
                     >
+                        {/* halo element follows mouse on desktop via CSS vars --bxp/--byp */}
+                        <span aria-hidden="true" className="holo-halo pointer-events-none absolute inset-0 rounded-full -z-10" />
                         <Image
                             src={lineIcon}
                             alt="Line Icon"
@@ -244,6 +405,7 @@ export default function JoinUs() {
                                     width={350}
                                     height={70}
                                     draggable={false}
+                                    priority={true}
                                 />
                             </a>
                             <p className="text-muted text-sm max-w-sm">
@@ -278,6 +440,7 @@ export default function JoinUs() {
                                                         width={32}
                                                         height={32}
                                                         className="w-8 h-8 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
+                                                        {...(social.name === 'GDG Community' ? { priority: true } : {})}
                                                         draggable={false}
                                                     />
                                                 ) : (
@@ -305,44 +468,77 @@ export default function JoinUs() {
                     {/* 合作夥伴區塊 */}
                     <div className={`mt-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
                         <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
-                        <div className="flex w-full flex-col items-center justify-center gap-6 md:flex-row md:gap-12">
-                            <a
+                        <div ref={partnersRef} className="relative flex w-full flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-12">
+                            {/* shared halo element (single DOM node) */}
+                            <div ref={haloRef} className="partner-halo" style={{ opacity: 0, width: 0, height: 0, transform: 'translate3d(0,0,0)' }} aria-hidden />
+                                    <a
                                 href="https://program.blendedlearn.org/learn-xpro-mit-edu"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group w-full max-w-[220px] md:max-w-none"
+                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
+                                
                             >
-                                <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
-                                    <PartnerCardGlow />
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} group-hover:-translate-y-1`}>
+                                    {/* shared halo handles hover visuals */}
                                     <div className="relative z-10">
-                                        <Image
-                                            src={"/BlendED.png"}
-                                            alt="BlendED Logo"
-                                            width={200}
-                                            height={80}
-                                            className={`${partnerLogoClasses} h-10 sm:h-12 md:h-16`}
-                                            draggable={false}
-                                        />
+                                            <Image
+                                                src={'/BlendED.png'}
+                                                alt="BlendED Logo"
+                                                width={240}
+                                                height={96}
+                                                className={`${partnerLogoClasses} h-14 md:h-20 transition-transform duration-300 ease-out`}
+                                                priority={true}
+                                                style={{ transform: `scale(${scaleFor(0)})` }}
+                                                draggable={false}
+                                            />
                                     </div>
                                 </div>
                             </a>
-                            <a
+                                    <a
                                 href="https://ncuesa.ncue.edu.tw/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group w-full max-w-[220px] md:max-w-none"
+                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
+                                
                             >
-                                <div className={`${partnerCardClasses} group-hover:-translate-y-1`}>
-                                    <PartnerCardGlow />
+                                {/* 減少此卡片的 padding，讓 logo 可視區域變大，但外部容器高度不變 */}
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} px-2 py-1 md:px-3 md:py-2 group-hover:-translate-y-1`}>
+                                    {/* shared halo handles hover visuals */}
                                     <div className="relative z-10">
-                                        <Image
-                                            src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
-                                            alt="SA Logo"
-                                            width={220}
-                                            height={90}
-                                            className={`${partnerLogoClasses} h-12 sm:h-16 md:h-20`}
-                                            draggable={false}
-                                        />
+                                        <div className="flex items-center justify-center p-0">
+                                            <Image
+                                                src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
+                                                alt="SA Logo"
+                                                width={200}
+                                                height={72}
+                                                className={`${partnerLogoClasses} w-3/5 md:w-auto h-auto md:h-24 transition-transform duration-300 ease-out`}
+                                                style={{ transform: `scale(${scaleFor(1)})` }}
+                                                draggable={false}
+                                                priority={true}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            {/* OpenTPI partner - styled per provided image */}
+                                    <a
+                                href="https://tpi.dev/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
+                                
+                                aria-label="OpenTPI"
+                            >
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} group-hover:-translate-y-1`}> 
+                                    {/* shared halo handles hover visuals */}
+                                    <div className="relative z-10 flex items-center justify-center w-full h-full">
+                                        {/* OpenTPI: text-only logo (no outer bg). Dark-blue in light theme, white in dark theme */}
+                                        <span
+                                            className={`${theme === 'dark' ? 'text-white' : 'text-[#071235]'} font-extrabold tracking-tight text-[2rem] md:text-[2.4rem] transition-transform duration-300 ease-out`}
+                                            style={{ transform: `scale(${scaleFor(2)})` }}
+                                        >
+                                            OpenTPI
+                                        </span>
                                     </div>
                                 </div>
                             </a>

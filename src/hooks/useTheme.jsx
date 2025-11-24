@@ -22,15 +22,20 @@ export function ThemeProvider({ children }) {
         setIsLoaded(true);
     }, []);
 
-    // 切換主題
+    // 切換主題 - 先更新 DOM attribute 與 localStorage，再更新 state
+    // 使用 functional setState 避免閉包造成的 stale value
     const toggleTheme = useCallback(() => {
         if (!isLoaded) return; // 尚未載入時不進行切換
 
-        const newTheme = theme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-        document.documentElement.setAttribute('data-theme', newTheme);
-    }, [theme, isLoaded]);
+        setTheme((prev) => {
+            const newTheme = prev === 'light' ? 'dark' : 'light';
+            try {
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            } catch (e) {}
+            return newTheme;
+        });
+    }, [isLoaded]);
 
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme, isLoaded }}>

@@ -3,6 +3,9 @@ import "./globals.css";
 import ScrollToTop from '@/components/ScrollToTop';
 import { LanguageProvider } from '@/hooks/useLanguage';
 import { ThemeProvider } from '@/hooks/useTheme';
+import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
+import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
+import gdgIcon from '@/images/icon/GDG_icon.png';
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -84,6 +87,14 @@ export default function RootLayout({ children }) {
             `,
           }}
         />
+        {/* Preload important theme-dependent images to reduce jank on theme switch */}
+        <link rel="preload" as="image" href="/sa_logo_white.png" />
+        <link rel="preload" as="image" href="/sa_logo_black.png" />
+        <link rel="preload" as="image" href="/BlendED.png" />
+        {/* Use imported image src so preload points to the served URL for next/image static imports */}
+        <link rel="preload" as="image" href={gdgLogoDark.src} />
+        <link rel="preload" as="image" href={gdgLogoLight.src} />
+        <link rel="preload" as="image" href={gdgIcon.src} />
       </head>
       <body className={`${sourceSans.variable} antialiased`}>
         <ThemeProvider>
