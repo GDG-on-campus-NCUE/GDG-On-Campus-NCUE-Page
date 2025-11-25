@@ -33,8 +33,6 @@ export default function JoinUs() {
     const [isDesktop, setIsDesktop] = useState(false); // 判斷是否為桌機
     const [hoveredPartner, setHoveredPartner] = useState(null); // 哪個 partner 被 hover（null 表示無）
     const ref = useRef(null);
-    const partnersRef = useRef(null);
-    const haloRef = useRef(null);
     const { language } = useLanguage();
     const { theme } = useTheme();
 
@@ -51,12 +49,12 @@ export default function JoinUs() {
     const partnerLogoThemeClasses = theme === 'dark' ? 'brightness-110 contrast-105' : '';
     const partnerLogoClasses = `${partnerLogoBaseClasses} ${partnerLogoThemeClasses}`;
 
-    // 基礎比例（第二個 partner 預設較大）
+    // 基礎比例（第三個 partner 預設較大，即 SA）
     // 在桌機保持較大比例，但手機上縮小一些避免滿版感
-    const baseScales = [1, isDesktop ? 1.45 : 1.12, 1];
+    const baseScales = [1, 1, isDesktop ? 1.45 : 1.12, 1];
     // 每個項目被 hover 時的倍率（index 對應 partner）：
-    // 將第二個的 hover 倍率調小一點以符合需求
-    const hoveredMultipliers = [1.15, 1.08, 1.15];
+    // 將第三個的 hover 倍率調小一點以符合需求
+    const hoveredMultipliers = [1.15, 1.15, 1.08, 1.15];
     const scaleFor = (index) => {
         const base = baseScales[index] ?? 1;
         if (hoveredPartner === null) return base;
@@ -163,6 +161,15 @@ export default function JoinUs() {
         e.currentTarget.style.setProperty('--byp', '50%');
     }
 
+    // Partner card mouse move handler for rainbow border rotation
+    const handlePartnerMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        const angle = Math.atan2(y, x) * (180 / Math.PI);
+        e.currentTarget.style.setProperty('--mouse-angle', `${angle + 90}deg`);
+    };
+
     // 社群圖示磁吸效果
     const handleMagnetic = (e) => {
         const magnet = e.currentTarget.querySelector('.magnet');
@@ -178,140 +185,8 @@ export default function JoinUs() {
 
     // (per-card mousemove removed) — container-level proximity handler updates the shared halo
 
-    // Proximity-based hover: single shared halo, use RAF for smooth updates
-    useEffect(() => {
-        if (!isDesktop || !partnersRef.current || !haloRef.current) return;
-        const container = partnersRef.current;
-        const halo = haloRef.current;
-        let raf = null;
+    // Proximity-based hover removed.
 
-        const THRESH = 220; // proximity radius in px
-
-        // Track last pointer movement for directional exit
-        let lastMx = 0, lastMy = 0, lastDx = 0, lastDy = 0;
-
-        const updateHalo = (mx, my, size, visible, targetEl = null, exitVector = null) => {
-            if (!halo) return;
-            // determine parent element for halo: prefer targetEl (DOM element), else container
-            let parentEl = container;
-            let parentRect = container.getBoundingClientRect();
-
-            if (targetEl instanceof Element) {
-                // prefer the inner card element (the content div) so overflow:hidden + border-radius clip the halo
-                const inner = targetEl.querySelector('div') || targetEl;
-                if (inner) {
-                    parentEl = inner;
-                    parentRect = inner.getBoundingClientRect();
-                }
-            }
-
-            // append halo into parent element if not already
-            if (halo.parentElement !== parentEl) {
-                parentEl.appendChild(halo);
-                halo.style.position = 'absolute';
-                halo.style.left = '0px';
-                halo.style.top = '0px';
-            }
-
-            // size and basic visibility
-            halo.style.width = `${Math.max(8, size)}px`;
-            halo.style.height = `${Math.max(8, size)}px`;
-
-            // compute center relative to parent
-            const cx = mx - parentRect.left;
-            const cy = my - parentRect.top;
-            const tx = Math.round(cx - size / 2);
-            const ty = Math.round(cy - size / 2);
-
-            // if an exitVector is provided (mouse left direction), animate the halo outwards
-            if (exitVector && !visible) {
-                const [vx, vy] = exitVector;
-                const offset = Math.max(120, size * 0.9);
-                const ex = Math.round(tx + vx * offset);
-                const ey = Math.round(ty + vy * offset);
-                // trigger transition to moved + faded
-                halo.style.transform = `translate3d(${ex}px, ${ey}px, 0)`;
-                halo.style.opacity = '0';
-            } else {
-                halo.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
-                halo.style.opacity = visible ? '1' : '0';
-            }
-
-            halo.style.clipPath = 'none';
-            halo.style.webkitClipPath = 'none';
-        };
-
-        const handler = (e) => {
-            if (raf) cancelAnimationFrame(raf);
-            raf = requestAnimationFrame(() => {
-                const anchors = Array.from(container.querySelectorAll('.partner-card-wrap'));
-                if (!anchors.length) return;
-                const { clientX: mx, clientY: my } = e;
-
-                // track last movement vector
-                const dx = mx - lastMx;
-                const dy = my - lastMy;
-                lastDx = dx;
-                lastDy = dy;
-                lastMx = mx;
-                lastMy = my;
-
-                let nearest = { idx: null, dist: Infinity, rect: null };
-                anchors.forEach((a, i) => {
-                    const r = a.getBoundingClientRect();
-                    const cx = r.left + r.width / 2;
-                    const cy = r.top + r.height / 2;
-                    const ddx = mx - cx;
-                    const ddy = my - cy;
-                    const d = Math.hypot(ddx, ddy);
-                    if (d < nearest.dist) nearest = { idx: i, dist: d, rect: r };
-                });
-
-                if (nearest.idx !== null && nearest.dist <= THRESH) {
-                    const minSize = 140; // base size
-                    const maxSize = 300; // enlarged when a bit far
-                    const t = Math.max(0, Math.min(1, 1 - (nearest.dist / THRESH)));
-                    const size = Math.round(minSize + (maxSize - minSize) * (1 - t));
-                    setHoveredPartner(nearest.idx);
-                    const targetAnchor = anchors[nearest.idx];
-                    // pass the anchor element so updateHalo can append into its inner div and rely on overflow:hidden
-                    updateHalo(mx, my, size, true, targetAnchor);
-                } else {
-                    setHoveredPartner(null);
-                    // normalize last movement as exit vector
-                    let vx = lastDx;
-                    let vy = lastDy;
-                    const mag = Math.hypot(vx, vy);
-                    if (mag < 1) {
-                        // if there was almost no motion, default to fading downward
-                        vx = 0; vy = 1;
-                    } else {
-                        vx /= mag; vy /= mag;
-                    }
-                    updateHalo(lastMx, lastMy, 200, false, null, [vx, vy]);
-                }
-            });
-        };
-
-        const leaveHandler = () => {
-            setHoveredPartner(null);
-            if (raf) cancelAnimationFrame(raf);
-            // compute exit vector from last movement
-            let vx = lastDx;
-            let vy = lastDy;
-            const mag = Math.hypot(vx, vy);
-            if (mag < 1) { vx = 0; vy = 1; } else { vx /= mag; vy /= mag; }
-            updateHalo(lastMx, lastMy, 220, false, null, [vx, vy]);
-        };
-
-        container.addEventListener('mousemove', handler);
-        container.addEventListener('mouseleave', leaveHandler);
-        return () => {
-            container.removeEventListener('mousemove', handler);
-            container.removeEventListener('mouseleave', leaveHandler);
-            if (raf) cancelAnimationFrame(raf);
-        };
-    }, [isDesktop]);
 
     return (
         <section
@@ -468,18 +343,41 @@ export default function JoinUs() {
                     {/* 合作夥伴區塊 */}
                     <div className={`mt-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
                         <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
-                        <div ref={partnersRef} className="relative flex w-full flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-12">
-                            {/* shared halo element (single DOM node) */}
-                            <div ref={haloRef} className="partner-halo" style={{ opacity: 0, width: 0, height: 0, transform: 'translate3d(0,0,0)' }} aria-hidden />
+                        <div className="relative flex w-full flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-12">
+                                    <a
+                                href="https://www.google.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
+                                        onMouseEnter={() => setHoveredPartner(0)}
+                                        onMouseLeave={() => setHoveredPartner(null)}
+                                        onMouseMove={handlePartnerMouseMove}
+                            >
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}>
+                                    <div className="relative z-10">
+                                            <Image
+                                                src={'/Google.png'}
+                                                alt="Google Logo"
+                                                width={240}
+                                                height={96}
+                                                className={`${partnerLogoClasses} h-12 md:h-16 transition-transform duration-300 ease-out`}
+                                                priority={true}
+                                                style={{ transform: `scale(${scaleFor(0)})` }}
+                                                draggable={false}
+                                            />
+                                    </div>
+                                </div>
+                            </a>
                                     <a
                                 href="https://program.blendedlearn.org/learn-xpro-mit-edu"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                         className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                
+                                        onMouseEnter={() => setHoveredPartner(1)}
+                                        onMouseLeave={() => setHoveredPartner(null)}
+                                        onMouseMove={handlePartnerMouseMove}
                             >
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} group-hover:-translate-y-1`}>
-                                    {/* shared halo handles hover visuals */}
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}>
                                     <div className="relative z-10">
                                             <Image
                                                 src={'/BlendED.png'}
@@ -488,7 +386,7 @@ export default function JoinUs() {
                                                 height={96}
                                                 className={`${partnerLogoClasses} h-14 md:h-20 transition-transform duration-300 ease-out`}
                                                 priority={true}
-                                                style={{ transform: `scale(${scaleFor(0)})` }}
+                                                style={{ transform: `scale(${scaleFor(1)})` }}
                                                 draggable={false}
                                             />
                                     </div>
@@ -499,11 +397,12 @@ export default function JoinUs() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                         className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                
+                                        onMouseEnter={() => setHoveredPartner(2)}
+                                        onMouseLeave={() => setHoveredPartner(null)}
+                                        onMouseMove={handlePartnerMouseMove}
                             >
                                 {/* 減少此卡片的 padding，讓 logo 可視區域變大，但外部容器高度不變 */}
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} px-2 py-1 md:px-3 md:py-2 group-hover:-translate-y-1`}>
-                                    {/* shared halo handles hover visuals */}
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} px-2 py-1 md:px-3 md:py-2 partner-rainbow-hover`}>
                                     <div className="relative z-10">
                                         <div className="flex items-center justify-center p-0">
                                             <Image
@@ -512,7 +411,7 @@ export default function JoinUs() {
                                                 width={200}
                                                 height={72}
                                                 className={`${partnerLogoClasses} w-3/5 md:w-auto h-auto md:h-24 transition-transform duration-300 ease-out`}
-                                                style={{ transform: `scale(${scaleFor(1)})` }}
+                                                style={{ transform: `scale(${scaleFor(2)})` }}
                                                 draggable={false}
                                                 priority={true}
                                             />
@@ -526,16 +425,17 @@ export default function JoinUs() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                         className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                
+                                        onMouseEnter={() => setHoveredPartner(3)}
+                                        onMouseLeave={() => setHoveredPartner(null)}
+                                        onMouseMove={handlePartnerMouseMove}
                                 aria-label="OpenTPI"
                             >
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} group-hover:-translate-y-1`}> 
-                                    {/* shared halo handles hover visuals */}
+                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}> 
                                     <div className="relative z-10 flex items-center justify-center w-full h-full">
                                         {/* OpenTPI: text-only logo (no outer bg). Dark-blue in light theme, white in dark theme */}
                                         <span
                                             className={`${theme === 'dark' ? 'text-white' : 'text-[#071235]'} font-extrabold tracking-tight text-[2rem] md:text-[2.4rem] transition-transform duration-300 ease-out`}
-                                            style={{ transform: `scale(${scaleFor(2)})` }}
+                                            style={{ transform: `scale(${scaleFor(3)})` }}
                                         >
                                             OpenTPI
                                         </span>

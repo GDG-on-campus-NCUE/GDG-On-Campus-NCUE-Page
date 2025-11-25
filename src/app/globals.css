@@ -573,43 +573,58 @@ svg {
   pointer-events: none;
 }
 
-/* 合作夥伴卡片：循環四色光暈 */
+/* 合作夥伴卡片：固定藍色光暈，深色模式較淺，淺色模式較深 */
 .partner-halo {
+  display: none;
+}
+
+/* Google 4-color rainbow flow animation */
+@keyframes google-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.partner-rainbow-hover {
+  position: relative;
+  z-index: 1;
+}
+
+.partner-rainbow-hover::before {
+  content: "";
   position: absolute;
-  /* positioned relative to the partners container top-left; movement via transform (translate3d) */
-  left: 0;
-  top: 0;
-  width: 140px;
-  height: 140px;
-  transform: translate3d(0, 0, 0);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 0;
-  background-color: #4285F4;
+  inset: 0;
+  z-index: 10; /* On top of content, but masked to border */
+  border-radius: inherit;
+  padding: 2px; /* Border width */
+  /* Conic gradient follows mouse angle */
+  background: conic-gradient(from var(--mouse-angle, 0deg), #4285F4, #EA4335, #FBBC04, #34A853, #4285F4);
+  
+  /* Mask to show only the border area */
+  -webkit-mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  mask: 
+     linear-gradient(#fff 0 0) content-box, 
+     linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  
   opacity: 0;
-  filter: blur(18px) saturate(1.03);
-  mix-blend-mode: screen;
-  will-change: transform, opacity;
-  backface-visibility: hidden;
-  transition: transform 260ms cubic-bezier(0.22,1,0.36,1), width 180ms ease, height 180ms ease, opacity 260ms ease;
-  /* color animation cycles through Google four colors */
-  animation: halo-color 6s linear infinite;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-@keyframes halo-color {
-  0% { background-color: #4285F4; box-shadow: 0 0 40px #4285F4; }
-  25% { background-color: #EA4335; box-shadow: 0 0 40px #EA4335; }
-  50% { background-color: #FBBC05; box-shadow: 0 0 40px #FBBC05; }
-  75% { background-color: #34A853; box-shadow: 0 0 40px #34A853; }
-  100% { background-color: #4285F4; box-shadow: 0 0 40px #4285F4; }
+.partner-rainbow-hover:hover::before {
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .partner-halo {
-    animation: none;
-    transition: none;
-    filter: blur(12px);
-  }
+/* Optional: Add a slight outer glow if desired, using a second pseudo-element behind */
+/* But user asked for "Only card border", so we stick to the crisp border above. */
+/* If "outwards rendering" means a glow, we can add a drop-shadow to the ::before element? */
+/* drop-shadow on a masked element works on the visible parts. */
+.partner-rainbow-hover:hover::before {
+  filter: drop-shadow(0 0 4px rgba(66, 133, 244, 0.5));
 }
 
 /* 微效能提升與文字渲染優化 */
