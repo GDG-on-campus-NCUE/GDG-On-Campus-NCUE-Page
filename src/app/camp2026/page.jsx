@@ -15,8 +15,8 @@ export const metadata = {
         images: [
             {
                 url: "https://gdg.ncuesa.org.tw/images/camp2026/poster.png",
-                width: 1200,
-                height: 630,
+                width: 1264,
+                height: 1800,
                 alt: "AI 程式公益營",
             },
         ],
