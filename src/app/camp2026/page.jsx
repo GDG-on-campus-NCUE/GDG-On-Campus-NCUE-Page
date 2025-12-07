@@ -14,7 +14,7 @@ export const metadata = {
         siteName: "GDG On Campus NCUE",
         images: [
             {
-                url: "https://gdg.ncuesa.org.tw/images/camp2026/poster.png", // Assuming poster.png is the main image
+                url: "https://gdg.ncuesa.org.tw/images/camp2026/poster.png",
                 width: 1200,
                 height: 630,
                 alt: "AI 程式公益營",
