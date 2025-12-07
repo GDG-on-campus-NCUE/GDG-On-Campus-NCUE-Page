@@ -65,6 +65,7 @@ function SpotlightCard({ children, className = '' }) {
     const [opacity, setOpacity] = useState(0);
 
     const handleMouseMove = (e) => {
+        if (window.innerWidth < 768) return; // disable spotlight on mobile
         if (!divRef.current) return;
         const rect = divRef.current.getBoundingClientRect();
         setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -83,7 +84,7 @@ function SpotlightCard({ children, className = '' }) {
             className={`relative overflow-hidden rounded-2xl border transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl select-none ${className}`}
         >
             <div
-                className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+                className="pointer-events-none absolute -inset-px transition-opacity duration-300 max-md:hidden"
                 style={{
                     opacity,
                     background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(255,255,255,0.1), transparent 40%)`,
@@ -183,16 +184,44 @@ export default function Camp2026() {
                 },
                 schedule: {
                     title: "行程表",
-                    headers: ["時間", "1/26 ( Day 1 )", "1/27 ( Day 2 )", "1/28 ( Day 3 )"],
-                    rows: [
-                        { time: '09:30-10:00', d1: '集合、隊輔時間', d2: '集合、隊輔時間', d3: '集合、隊輔時間', bg: true },
-                        { time: '10:00-10:45', d1: '營隊開幕式', d1Class: 'text-blue-600 font-bold', d2: '5. Python 輸入', d3: '8. AI 操作' },
-                        { time: '11:00-11:45', d1: '破冰、1. 認識編譯器', d2: '6. 迴圈 (while)', d3: '9. GDGoC 業界小分享', bg: true },
-                        { time: '11:45-13:00', content: '午餐與午休時光', colSpan: 3, rowClass: 'bg-yellow-50/50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200' },
-                        { time: '13:00-13:45', d1: '2. 變數與資料型別', d2: '團康時間', d3: '10. 遊戲常見函數' },
-                        { time: '14:00-14:45', d1: '3. 輸出與基本運算', d2: '6. 迴圈 (for)', d3: '11. 小遊戲實作', bg: true },
-                        { time: '15:00-15:45', d1: '4. 如何使用 Github', d2: '7. 條件判斷式', d3: '12. 成果發表、結業', d3Class: 'text-blue-600 font-bold' },
-                    ]
+                    days: [
+                        {
+                            label: "1/26 ( Day 1 )",
+                            rows: [
+                                { time: '09:30-10:00', content: '集合、隊輔時間' },
+                                { time: '10:00-10:45', content: '營隊開幕式', emphasis: true },
+                                { time: '11:00-11:45', content: '破冰、1. 認識編譯器' },
+                                { time: '11:45-13:00', content: '午餐與午休時光', isLunch: true },
+                                { time: '13:00-13:45', content: '2. 變數與資料型別' },
+                                { time: '14:00-14:45', content: '3. 輸出與基本運算' },
+                                { time: '15:00-15:45', content: '4. 如何使用 Github' },
+                            ],
+                        },
+                        {
+                            label: "1/27 ( Day 2 )",
+                            rows: [
+                                { time: '09:30-10:00', content: '集合、隊輔時間' },
+                                { time: '10:00-10:45', content: '5. Python 輸入' },
+                                { time: '11:00-11:45', content: '6. 迴圈 (while)' },
+                                { time: '11:45-13:00', content: '午餐與午休時光', isLunch: true },
+                                { time: '13:00-13:45', content: '團康時間' },
+                                { time: '14:00-14:45', content: '6. 迴圈 (for)' },
+                                { time: '15:00-15:45', content: '7. 條件判斷式' },
+                            ],
+                        },
+                        {
+                            label: "1/28 ( Day 3 )",
+                            rows: [
+                                { time: '09:30-10:00', content: '集合、隊輔時間' },
+                                { time: '10:00-10:45', content: '8. AI 操作' },
+                                { time: '11:00-11:45', content: '9. GDGoC 業界小分享' },
+                                { time: '11:45-13:00', content: '午餐與午休時光', isLunch: true },
+                                { time: '13:00-13:45', content: '10. 遊戲常見函數' },
+                                { time: '14:00-14:45', content: '11. 小遊戲實作' },
+                                { time: '15:00-15:45', content: '12. 成果發表、結業', emphasis: true },
+                            ],
+                        },
+                    ],
                 }
             },
             gallery: {
@@ -263,16 +292,44 @@ export default function Camp2026() {
                 },
                 schedule: {
                     title: "Schedule",
-                    headers: ["Time", "1/26 (Day 1)", "1/27 (Day 2)", "1/28 (Day 3)"],
-                    rows: [
-                        { time: '09:30-10:00', d1: 'Gathering', d2: 'Gathering', d3: 'Gathering', bg: true },
-                        { time: '10:00-10:45', d1: 'Opening Ceremony', d1Class: 'text-blue-600 font-bold', d2: '5. Python Input', d3: '8. AI Operations' },
-                        { time: '11:00-11:45', d1: 'Ice Breaking / 1. Compiler', d2: '6. Loops (while)', d3: '9. GDGoC Sharing', bg: true },
-                        { time: '11:45-13:00', content: 'Lunch Break', colSpan: 3, rowClass: 'bg-yellow-100 dark:bg-yellow-900/40 text-yellow-900 dark:text-yellow-100' },
-                        { time: '13:00-13:45', d1: '2. Variables & Types', d2: 'Group Activity', d3: '10. Game Functions' },
-                        { time: '14:00-14:45', d1: '3. Output & Basic Math', d2: '6. Loops (for)', d3: '11. Mini Game Dev', bg: true },
-                        { time: '15:00-15:45', d1: '4. Using Github', d2: '7. Conditionals', d3: '12. Presentation & Closing', d3Class: 'text-blue-600 font-bold' },
-                    ]
+                    days: [
+                        {
+                            label: "1/26 (Day 1)",
+                            rows: [
+                                { time: '09:30-10:00', content: 'Gathering' },
+                                { time: '10:00-10:45', content: 'Opening Ceremony', emphasis: true },
+                                { time: '11:00-11:45', content: 'Ice Breaking / 1. Compiler' },
+                                { time: '11:45-13:00', content: 'Lunch Break', isLunch: true },
+                                { time: '13:00-13:45', content: '2. Variables & Types' },
+                                { time: '14:00-14:45', content: '3. Output & Basic Math' },
+                                { time: '15:00-15:45', content: '4. Using Github' },
+                            ],
+                        },
+                        {
+                            label: "1/27 (Day 2)",
+                            rows: [
+                                { time: '09:30-10:00', content: 'Gathering' },
+                                { time: '10:00-10:45', content: '5. Python Input' },
+                                { time: '11:00-11:45', content: '6. Loops (while)' },
+                                { time: '11:45-13:00', content: 'Lunch Break', isLunch: true },
+                                { time: '13:00-13:45', content: 'Group Activity' },
+                                { time: '14:00-14:45', content: '6. Loops (for)' },
+                                { time: '15:00-15:45', content: '7. Conditionals' },
+                            ],
+                        },
+                        {
+                            label: "1/28 (Day 3)",
+                            rows: [
+                                { time: '09:30-10:00', content: 'Gathering' },
+                                { time: '10:00-10:45', content: '8. AI Operations' },
+                                { time: '11:00-11:45', content: '9. GDGoC Sharing' },
+                                { time: '11:45-13:00', content: 'Lunch Break', isLunch: true },
+                                { time: '13:00-13:45', content: '10. Game Functions' },
+                                { time: '14:00-14:45', content: '11. Mini Game Dev' },
+                                { time: '15:00-15:45', content: '12. Presentation & Closing', emphasis: true },
+                            ],
+                        },
+                    ],
                 }
             },
             gallery: {
@@ -328,14 +385,15 @@ export default function Camp2026() {
                 <ScrollReveal className="max-w-5xl mx-auto text-center">
                     <SpotlightCard className={`px-6 py-10 md:px-16 md:py-20 ${cardClass} border-2`}>
                         <div className="flex justify-center mb-6">
-                            <div className={`inline-flex items-center justify-center w-20 h-20 rounded-full shadow-lg transition-all duration-500 ${
-                                isDark
-                                    ? 'bg-blue-900/60 shadow-blue-800/40'
-                                    : 'bg-white/80 shadow-blue-300/60'
-                            } group/rocket`}
+                            <div
+                                className={`inline-flex items-center justify-center w-20 h-20 rounded-full shadow-lg ${
+                                    isDark
+                                        ? 'bg-blue-900/60 shadow-blue-800/40'
+                                        : 'bg-white/80 shadow-blue-300/60'
+                                }`}
                             >
                                 <RocketLaunchIcon
-                                    className={`w-10 h-10 ${accentColor} transform transition-transform duration-500 group-hover/rocket:-translate-y-2 group-hover/rocket:scale-110`}
+                                    className={`w-10 h-10 ${accentColor}`}
                                 />
                             </div>
                         </div>
@@ -349,7 +407,7 @@ export default function Camp2026() {
                             href="https://forms.gle/c99YU9s1TrbLPyND7"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className={`group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 font-pj rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-105 shadow-lg ${
+                            className={`group relative inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-300 font-pj rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 hover:scale-105 shadow-lg overflow-hidden ${
                                 isDark 
                                     ? 'bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 focus:ring-blue-400 hover:shadow-blue-500/50 shadow-blue-600/30' 
                                     : 'bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 focus:ring-blue-600 hover:shadow-blue-600/60 shadow-blue-700/40'
@@ -462,7 +520,7 @@ export default function Camp2026() {
                                     </div>
                                     <ChevronDownIcon className="w-6 h-6 transition-transform group-open:rotate-180" />
                                 </summary>
-                                <div className={`px-6 pb-6 pt-2 ml-12 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} overflow-hidden transition-all duration-300 ease-out group-open:max-h-96 group-open:opacity-100 max-h-0 opacity-0`}>
+                                <div className={`px-6 pb-6 pt-2 ml-12 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} overflow-hidden transition-all duration-500 ease-out group-open:max-h-96 group-open:opacity-100 max-h-0 opacity-0`}>
                                     <ul className={`list-disc list-inside space-y-2 ${textMuted}`}>
                                         {t.info.participants.items.map((item, idx) => (
                                             <li key={idx}>{item}</li>
@@ -491,7 +549,7 @@ export default function Camp2026() {
                                     </div>
                                     <ChevronDownIcon className="w-6 h-6 transition-transform group-open:rotate-180" />
                                 </summary>
-                                <div className={`px-6 pb-6 pt-2 ml-12 border-t space-y-4 ${isDark ? 'border-gray-700' : 'border-gray-200'} ${textMain} overflow-hidden transition-all duration-300 ease-out group-open:max-h-[28rem] group-open:opacity-100 max-h-0 opacity-0`}>
+                                <div className={`px-6 pb-6 pt-2 ml-12 border-t space-y-4 ${isDark ? 'border-gray-700' : 'border-gray-200'} ${textMain} overflow-hidden transition-all duration-500 ease-out group-open:max-h-[28rem] group-open:opacity-100 max-h-0 opacity-0`}>
                                     <div className="flex items-start">
                                         <CalendarIcon className={`w-5 h-5 mr-3 mt-1 ${isDark ? 'text-gray-300' : 'text-blue-500'}`} />
                                         <p><strong>{t.info.dateLoc.date}</strong></p>
@@ -536,42 +594,56 @@ export default function Camp2026() {
                                     </div>
                                     <ChevronDownIcon className="w-6 h-6 transition-transform group-open:rotate-180" />
                                 </summary>
-                                <div className="px-6 pb-6 pt-2 overflow-x-auto overflow-hidden transition-all duration-300 ease-out group-open:max-h-[28rem] group-open:opacity-100 max-h-0 opacity-0">
-                                    <table className={`min-w-full border-collapse rounded-lg overflow-hidden text-sm md:text-base ${isDark ? 'bg-gray-900/50' : 'bg-white/50'}`}>
-                                        <thead>
-                                            <tr className="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-                                                {t.info.schedule.headers.map((h, i) => (
-                                                    <th key={i} className="px-4 py-4 text-center w-1/4 font-semibold tracking-wide">{h}</th>
-                                                ))}
-                                            </tr>
-                                        </thead>
-                                        <tbody className={`divide-y ${isDark ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                                            {t.info.schedule.rows.map((row, idx) => (
-                                                <tr
-                                                    key={idx}
-                                                    className={`transition-all duration-200 ${
-                                                        row.rowClass ||
-                                                        (row.bg
-                                                            ? isDark
-                                                                ? 'bg-gray-800/30'
-                                                                : 'bg-gray-50/50'
-                                                            : '')
-                                                    } hover:bg-blue-500/10 hover:scale-[1.01]`}
-                                                >
-                                                    <td className={`px-2 py-4 text-center font-mono font-bold ${textMuted}`}>{row.time}</td>
-                                                    {row.colSpan ? (
-                                                        <td colSpan={row.colSpan} className="px-2 py-4 text-center font-bold tracking-widest">{row.content}</td>
-                                                    ) : (
-                                                        <>
-                                                            <td className={`px-2 py-4 text-center ${row.d1Class || ''}`}>{row.d1}</td>
-                                                            <td className={`px-2 py-4 text-center ${row.d2Class || ''}`}>{row.d2}</td>
-                                                            <td className={`px-2 py-4 text-center ${row.d3Class || ''}`}>{row.d3}</td>
-                                                        </>
-                                                    )}
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <div className="px-3 md:px-6 pb-6 pt-2 overflow-x-visible overflow-hidden transition-all duration-500 ease-out group-open:max-h-[70rem] group-open:opacity-100 max-h-0 opacity-0">
+                                    <div className="flex flex-col gap-4 md:grid md:grid-cols-3">
+                                        {t.info.schedule.days.map((day, dayIndex) => (
+                                            <div
+                                                key={dayIndex}
+                                                className={`rounded-2xl border shadow-sm ${
+                                                    isDark
+                                                        ? 'bg-gray-900/50 border-gray-700'
+                                                        : 'bg-white/90 border-gray-200'
+                                                }`}
+                                            >
+                                                <div className="px-4 py-3 border-b border-white/10">
+                                                    <p className="text-sm font-semibold text-blue-400 md:text-center">
+                                                        {day.label}
+                                                    </p>
+                                                </div>
+                                                <div className="divide-y divide-gray-700/40 md:text-sm text-xs">
+                                                    {day.rows.map((row, idx) => (
+                                                        <div
+                                                            key={idx}
+                                                            className={`px-4 py-3 flex md:block items-center gap-3 ${
+                                                                row.isLunch
+                                                                    ? isDark
+                                                                        ? 'bg-yellow-900/40 text-yellow-100'
+                                                                        : 'bg-yellow-100 text-yellow-900'
+                                                                    : ''
+                                                            }`}
+                                                        >
+                                                            <div className="w-24 md:w-full">
+                                                                <p className="font-mono text-[11px] font-semibold opacity-80">
+                                                                    {row.time}
+                                                                </p>
+                                                            </div>
+                                                            <p
+                                                                className={`flex-1 font-medium ${
+                                                                    row.emphasis
+                                                                        ? isDark
+                                                                            ? 'text-blue-300'
+                                                                            : 'text-blue-700'
+                                                                        : ''
+                                                                }`}
+                                                            >
+                                                                {row.content}
+                                                            </p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
                             </details>
                         </SpotlightCard>
@@ -624,11 +696,11 @@ export default function Camp2026() {
                 </ScrollReveal>
             </section>
 
-            {/* FAQ */}
+            {/* FAQ + Contact */}
             <section id="faq" className="py-12 px-4">
                 <div className="max-w-4xl mx-auto">
                     <h2 className={`text-3xl font-bold mb-10 text-center ${textMain}`}>{t.faq.title}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <ScrollReveal>
                             <SpotlightCard className={`p-8 h-full ${cardClass} border-l-4 border-l-blue-500`}>
                                 <div className="flex items-start mb-4">
@@ -648,23 +720,26 @@ export default function Camp2026() {
                             </SpotlightCard>
                         </ScrollReveal>
                     </div>
-                </div>
-            </section>
 
-            {/* Contact */}
-            <section id="contact" className="py-12 px-4">
-                <ScrollReveal className="max-w-3xl mx-auto">
-                    <SpotlightCard className={`p-8 md:p-10 text-center ${cardClass}`}>
-                        <h2 className={`text-3xl font-bold mb-4 ${textMain}`}>{t.contact.title}</h2>
-                        <p className={`mb-4 text-lg ${textMuted}`}>{t.contact.emailLabel}</p>
-                        <a
-                            href={`mailto:${t.contact.email}`}
-                            className="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-base md:text-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300"
-                        >
-                            {t.contact.email}
-                        </a>
-                    </SpotlightCard>
-                </ScrollReveal>
+                    <ScrollReveal>
+                        <SpotlightCard className={`p-8 md:p-10 text-center ${cardClass} border-l-4 border-l-indigo-500`}>
+                            <h3 className={`text-2xl font-bold mb-3 ${textMain}`}>
+                                {language === 'zh' ? '有其他問題？聯繫我們' : 'Still have questions? Contact us'}
+                            </h3>
+                            <p className={`mb-4 text-lg ${textMuted}`}>
+                                {language === 'zh'
+                                    ? `${t.contact.emailLabel}：${t.contact.email}`
+                                    : `${t.contact.emailLabel}: ${t.contact.email}`}
+                            </p>
+                            <a
+                                href={`mailto:${t.contact.email}`}
+                                className="inline-flex items-center justify-center px-6 py-3 rounded-full font-semibold text-base md:text-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300"
+                            >
+                                {language === 'zh' ? '寫信給我們' : 'Email us'}
+                            </a>
+                        </SpotlightCard>
+                    </ScrollReveal>
+                </div>
             </section>
 
             {/* Organizers - Redesigned to not look like a footer */}
