@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
 import ThemeSwitcher from './ThemeSwitcher';
@@ -13,6 +15,8 @@ export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { theme } = useTheme();
+    const pathname = usePathname();
+    const router = useRouter();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -23,8 +27,12 @@ export default function Navbar() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const scrollToSection = (sectionId) => {
-        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    const handleNavClick = (sectionId) => {
+        if (pathname === '/') {
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            router.push(`/#${sectionId}`);
+        }
         setIsMobileMenuOpen(false);
     };
 
@@ -65,7 +73,7 @@ export default function Navbar() {
                 <div className="max-w-7xl mx-auto px-6 lg:px-8">
                     <div className="flex items-center justify-between h-16 md:h-24">
                         <div className="flex-shrink-0">
-                            <a href="#" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
+                            <Link href="/" className="flex items-center space-x-2 md:space-x-3" aria-label="Homepage">
                                 <div className="w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
                                     <Image
                                         src={bracketsGif}
@@ -80,20 +88,47 @@ export default function Navbar() {
                                     <div className="phone-liner-bold md:pc-liner-bold">Google Developer Group</div>
                                     <div className="text-xs md:text-sm font-light opacity-80">On Campus NCUE</div>
                                 </div>
-                            </a>
+                            </Link>
                         </div>
 
-                        <div className="hidden md:flex items-center space-x-8">
+                        <div className="hidden md:flex items-center space-x-6">
                             {navLinks.map(({ label, id }) => (
                                 <button
                                     key={id}
-                                    onClick={() => scrollToSection(id)}
+                                    onClick={() => handleNavClick(id)}
                                     className={`pc-liner-bold transition-all duration-300 relative group ${linkColor}`}
                                 >
                                     {label}
                                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
                                 </button>
                             ))}
+                            
+                            {/* Prominent Winter Camp Button */}
+                            <Link
+                                href="/camp2026"
+                                className="relative group inline-flex items-center justify-center px-[2px] py-[2px] rounded-lg overflow-hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                            >
+                                {/* animated multi-color border tied to theme */}
+                                <span
+                                    className={`absolute inset-0 rounded-lg bg-[length:200%_200%] animate-[gradient-move_4s_linear_infinite] ${
+                                        theme === 'dark'
+                                            ? 'bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400'
+                                            : 'bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500'
+                                    }`}
+                                />
+                                {/* glow on hover */}
+                                <span className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-60 bg-blue-500/40 blur-md transition-opacity duration-300" />
+                                <span
+                                    className={`relative inline-flex items-center justify-center px-5 py-2 rounded-md text-sm font-semibold transition-colors duration-200 select-none ${
+                                        theme === 'dark'
+                                            ? 'bg-gray-900 text-white group-hover:text-blue-200'
+                                            : 'bg-white text-slate-900 group-hover:text-blue-700'
+                                    }`}
+                                >
+                                    {language === 'zh' ? 'AI 公益營' : 'AI Camp'}
+                                </span>
+                            </Link>
+
                             <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                         </div>
@@ -113,18 +148,32 @@ export default function Navbar() {
                 </div>
 
                 <div
-                    className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-96 shadow-lg' : 'max-h-0'}`}
+                    className={`md:hidden overflow-hidden transition-[max-height] duration-300 ease-in-out ${isMobileMenuOpen ? 'max-h-[32rem] shadow-lg' : 'max-h-0'}`}
                 >
-                    <div className="p-4 space-y-4">
+                    <div className="p-4 space-y-4 bg-surface/95 backdrop-blur-xl">
                         {navLinks.map(({ label, id }) => (
                             <button
                                 key={id}
-                                onClick={() => scrollToSection(id)}
+                                onClick={() => handleNavClick(id)}
                                 className={`block w-full text-left phone-liner-bold ${mobileMenuItemColor} hover:text-brand transition-colors duration-200 py-2`}
                             >
                                 {label}
                             </button>
                         ))}
+                        
+                        {/* Mobile Winter Camp Button */}
+                        <Link 
+                            href="/camp2026" 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="relative block w-full text-center font-bold rounded-lg py-3 shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 overflow-hidden group"
+                        >
+                            <span className="absolute inset-0 bg-[length:200%_200%] bg-gradient-to-r from-blue-500 via-purple-500 to-blue-500 animate-[gradient-move_4s_linear_infinite]" />
+                            <span className="absolute inset-0 opacity-0 group-hover:opacity-60 bg-blue-500/40 blur-md transition-opacity duration-300" />
+                            <span className="relative px-4 text-white select-none">
+                                {language === 'zh' ? '報名 AI 公益營' : 'Join AI Camp'}
+                            </span>
+                        </Link>
+
                         {/* 手機版選單底部的語言切換 */}
                         <div className="pt-2 border-t border-surface-muted flex justify-center">
                             <LanguageSwitcher colorClass={mobileMenuItemColor} />
