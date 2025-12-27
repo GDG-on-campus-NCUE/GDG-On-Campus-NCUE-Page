@@ -156,8 +156,8 @@ export default function Camp2026() {
             },
             news: {
                 title: "最新消息",
-                deadline: "報名截止：12/25",
-                date: "2025/12/05 公告",
+                deadline: "報名截止：2026/01/07",
+                date: "2026/01/09 公告",
                 desc: "名額有限，欲報名者請從速！"
             },
             reminders: {
@@ -230,9 +230,9 @@ export default function Camp2026() {
             faq: {
                 title: "常見問題",
                 q1: "何時開始報名？",
-                a1: "即日起至 12/25 22:00 止。",
+                a1: "即日起至 1/7 22:00 止。",
                 q2: "如何知道是否報名成功？",
-                a2: "我們將於 12/28 17:00 前 寄發錄取通知信至您填寫的信箱，請密切留意。"
+                a2: "我們將於 1/9 17:00 前 寄發錄取通知信至您填寫的信箱，請密切留意。"
             },
             contact: {
                 title: "聯絡我們",
@@ -264,8 +264,8 @@ export default function Camp2026() {
             },
             news: {
                 title: "Latest News",
-                deadline: "Deadline: 12/25",
-                date: "Announced: 2025/12/05",
+                deadline: "Deadline: 2026/01/07",
+                date: "Announced: 2026/01/09",
                 desc: "Limited spots available, register now!"
             },
             reminders: {
@@ -338,9 +338,9 @@ export default function Camp2026() {
             faq: {
                 title: "FAQ",
                 q1: "When does registration start?",
-                a1: "From now until 12/25 22:00.",
+                a1: "From now until 1/7 22:00.",
                 q2: "How do I know if I'm accepted?",
-                a2: "We will send an acceptance email by 12/28 17:00."
+                a2: "We will send an acceptance email by 1/9 17:00."
             },
             contact: {
                 title: "Contact Us",
