@@ -1,6 +1,6 @@
 {
   "name": "GDG On Campus NCUE",
-  "short_name": "GDG NCUE",
+  "short_name": "GDGoC NCUE",
   "description": "GDG On Campus NCUE official website - 彰化師範大學 Google 開發者社群官方網站",
   "start_url": "/",
   "display": "standalone",

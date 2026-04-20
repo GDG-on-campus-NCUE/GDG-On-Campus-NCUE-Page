@@ -2,17 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ArrowRightIcon, EnvelopeIcon } from '@heroicons/react/24/solid';
+import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTheme } from '@/hooks/useTheme';
-import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
-import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
 import githubIcon from '@/images/icon/github.png';
 import instagramIcon from '@/images/icon/instagram.png';
 import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
-import lineIcon from '@/images/icon/line.png';
 
-// Gmail 圖示，使用 SVG 繪製
 function GmailIcon({ className = '' }) {
     return (
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className={className}>
@@ -25,431 +20,90 @@ function GmailIcon({ className = '' }) {
     );
 }
 
-// (Removed per-card glow) — a single shared halo element is rendered inside the partners container.
-
 export default function JoinUs() {
     const [isVisible, setIsVisible] = useState(false);
-    const [spotlight, setSpotlight] = useState(false); // 控制滑鼠聚光燈顯示
-    const [isDesktop, setIsDesktop] = useState(false); // 判斷是否為桌機
-    const [hoveredPartner, setHoveredPartner] = useState(null); // 哪個 partner 被 hover（null 表示無）
     const ref = useRef(null);
     const { language } = useLanguage();
-    const { theme } = useTheme();
 
-    const partnerCardBaseClasses =
-        'relative flex items-center justify-center overflow-hidden rounded-2xl border px-5 py-3 md:px-8 md:py-6 transition-all duration-300';
-    // 固定卡片高度以統一大小（放大一點讓 partner 更顯眼）
-    const partnerCardFixedSize = 'h-20 md:h-24';
-    const partnerCardThemeClasses =
-        theme === 'dark'
-            ? 'bg-white/10 border-white/15 shadow-[0_18px_45px_rgba(15,23,42,0.45)] backdrop-blur-md hover:border-white/25 hover:shadow-[0_28px_60px_rgba(15,23,42,0.55)]'
-            : 'bg-white border-black/5 shadow-[0_16px_45px_rgba(15,23,42,0.12)] hover:border-black/10 hover:shadow-[0_24px_60px_rgba(15,23,42,0.18)]';
-    const partnerCardClasses = `${partnerCardBaseClasses} ${partnerCardThemeClasses}`;
-    const partnerLogoBaseClasses = 'w-auto object-contain transition-transform duration-300';
-    const partnerLogoThemeClasses = theme === 'dark' ? 'brightness-110 contrast-105' : '';
-    const partnerLogoClasses = `${partnerLogoBaseClasses} ${partnerLogoThemeClasses}`;
-
-    // 基礎比例（第三個 partner 預設較大，即 SA）
-    // 在桌機保持較大比例，但手機上縮小一些避免滿版感
-    const baseScales = [1, 1, isDesktop ? 1.45 : 1.12, 1];
-    // 每個項目被 hover 時的倍率（index 對應 partner）：
-    // 將第三個的 hover 倍率調小一點以符合需求
-    const hoveredMultipliers = [1.15, 1.15, 1.08, 1.15];
-    const scaleFor = (index) => {
-        const base = baseScales[index] ?? 1;
-        if (hoveredPartner === null) return base;
-        // 只有被 hover 的那一項放大，其他回復基礎大小
-        if (hoveredPartner === index) return +(base * (hoveredMultipliers[index] ?? 1.12)).toFixed(3);
-        return base;
-    }
-
-    // 社群連結與圖示設定（新增 Gmail）
     const socialLinks = [
-        {
-            name: 'GitHub',
-            icon: githubIcon,
-            url: 'https://github.com/GDG-on-campus-NCUE',
-            labelZh: 'GitHub',
-            labelEn: 'GitHub',
-            isImage: true,
-        },
-        {
-            name: 'Instagram',
-            icon: instagramIcon,
-            url: 'https://www.instagram.com/gdg_ncue',
-            labelZh: 'Instagram',
-            labelEn: 'Instagram',
-            isImage: true,
-        },
-        {
-            name: 'Gmail',
-            icon: GmailIcon,
-            url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg',
-            // 調整名稱，移除 GDG 前綴
-            labelZh: 'Mail 通知',
-            labelEn: 'Mail Notifications',
-            isImage: false,
-        },
-        {
-            name: 'GDG Community',
-            icon: gdgCommunityIcon,
-            url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/',
-            labelZh: 'GDG 官網',
-            labelEn: 'GDG Official',
-            isImage: true,
-        },
+        { name: 'GitHub', icon: githubIcon, url: 'https://github.com/GDG-on-campus-NCUE', isImage: true },
+        { name: 'Instagram', icon: instagramIcon, url: 'https://www.instagram.com/gdg_ncue', isImage: true },
+        { name: 'Mail', icon: GmailIcon, url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg', isImage: false },
+        { name: 'GDG Official', icon: gdgCommunityIcon, url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/', isImage: true },
     ];
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => {
-            // 依據可見狀態切換動畫
             setIsVisible(entry.isIntersecting);
         }, { threshold: 0.1 });
-
         if (ref.current) observer.observe(ref.current);
         return () => { if (ref.current) observer.unobserve(ref.current) };
     }, []);
 
-    // 偵測是否為桌機環境
-    useEffect(() => {
-        const mq = window.matchMedia('(hover:hover) and (pointer:fine)');
-        const handler = (e) => setIsDesktop(e.matches);
-        handler(mq);
-        mq.addEventListener('change', handler);
-        return () => mq.removeEventListener('change', handler);
-    }, []);
-
-
-    const openLink = (url) => {
-        window.open(url, '_blank', 'noopener,noreferrer');
-    }
-
-    // 滑鼠移動時更新聚光燈位置
-    const handleAreaMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        e.currentTarget.style.setProperty('--mx', `${x}px`);
-        e.currentTarget.style.setProperty('--my', `${y}px`);
-    }
-
-    // CTA 按鈕虹彩光澤跟隨滑鼠
-    const handleButtonMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        // set pixel values (used by sheen) and percentage values (used by large halo background-position)
-        e.currentTarget.style.setProperty('--bx', `${x}px`);
-        e.currentTarget.style.setProperty('--by', `${y}px`);
-        const px = (x / rect.width) * 100;
-        const py = (y / rect.height) * 100;
-        e.currentTarget.style.setProperty('--bxp', `${px}%`);
-        e.currentTarget.style.setProperty('--byp', `${py}%`);
-        e.currentTarget.style.setProperty('--b-opacity', '1');
-    }
-
-    const handleButtonEnter = (e) => {
-        e.currentTarget.style.setProperty('--b-opacity', '1');
-    }
-
-    const handleButtonLeave = (e) => {
-        e.currentTarget.style.setProperty('--b-opacity', '0');
-        // reset sheen position for polish
-        e.currentTarget.style.setProperty('--bx', '50%');
-        e.currentTarget.style.setProperty('--by', '50%');
-        e.currentTarget.style.setProperty('--bxp', '50%');
-        e.currentTarget.style.setProperty('--byp', '50%');
-    }
-
-    // Partner card mouse move handler for rainbow border rotation
-    const handlePartnerMouseMove = (e) => {
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        const angle = Math.atan2(y, x) * (180 / Math.PI);
-        e.currentTarget.style.setProperty('--mouse-angle', `${angle + 90}deg`);
-    };
-
-    // 社群圖示磁吸效果
-    const handleMagnetic = (e) => {
-        const magnet = e.currentTarget.querySelector('.magnet');
-        const rect = magnet.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-    }
-    const resetMagnetic = (e) => {
-        const magnet = e.currentTarget.querySelector('.magnet');
-        magnet.style.transform = 'translate(0,0)';
-    }
-
-    // (per-card mousemove removed) — container-level proximity handler updates the shared halo
-
-    // Proximity-based hover removed.
-
-
     return (
-        <section
-            id="join"
-            className="relative overflow-hidden bg-gradient-to-b from-surface to-surface-muted"
-            ref={ref}
-        >
-            {/* 中央藍色光暈背景 */}
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <div
-                    className={`joinus-glow transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`}
-                ></div>
-            </div>
-            {/* 滑鼠聚光燈效果已移除 */}
-            {/* === 區塊一：行動號召 (CTA) - 全新設計與文案 === */}
-            {/* 將高度縮小以提升 RWD 觀感 */}
-            <div className="relative py-12 md:py-20 px-4 md:px-8 text-center overflow-hidden">
-                {/* 底部光暈，與下方 joinus 區塊光效相連 */}
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_bottom,rgba(66,133,244,0.15),transparent)]"></div>
-
-                <div className="relative z-10">
-                    <h2
-                        className={`rainbow-text phone-h1 md:pc-h1 mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-                        style={{ wordBreak: 'keep-all' }}
-                    >
-                        {/* 更新標題內容，改為「用程式碼定義彰師未來」 */}
-                        {language === 'zh'
-                            ? (
-                                <>
-                                    {/* 使用 wbr 控制換行位置 */}
-                                    用程式碼<wbr />定義彰師未來
-                                </>
-                            )
-                            : "Define NCUE's future with code"}
-                    </h2>
-                    <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto mb-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
-                        {language === 'zh'
-                            ? '我們相信，每一行程式碼都蘊含著改變的潛力。無論你的起點在哪，只要對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。'
-                            : 'We believe every line of code carries the power to change. Wherever you start, if you love technology and want to turn ideas into reality, this is the community to connect and grow.'}
-                    </p>
-
-                    {/* 手機版寬度全滿，桌機保持原樣 */}
-                    <button
-                        onClick={() => openLink('https://line.me/R/ti/g/s4qeWSAWR9')}
-                        onMouseMove={handleButtonMove}
-                        onMouseEnter={handleButtonEnter}
-                        onMouseLeave={handleButtonLeave}
-                        onFocus={handleButtonEnter}
-                        onBlur={handleButtonLeave}
-                        className={`holo-btn w-full md:w-auto inline-flex items-center justify-center gap-x-3 md:gap-x-4 bg-gradient-to-r from-[#06C755] to-[#00A752] text-white font-bold phone-liner-bold md:pc-liner-bold px-8 py-4 md:px-10 md:py-5 rounded-full shadow-lg shadow-green-500/30 transition-all duration-150 transform hover:scale-105 hover:shadow-xl hover:shadow-green-500/50 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-                        style={{ transitionDelay: '0.4s' }}
-                    >
-                        {/* halo element follows mouse on desktop via CSS vars --bxp/--byp */}
-                        <span aria-hidden="true" className="holo-halo pointer-events-none absolute inset-0 rounded-full -z-10" />
-                        <Image
-                            src={lineIcon}
-                            alt="Line Icon"
-                            width={32}
-                            height={32}
-                            className="w-7 h-7 md:w-8 md:h-8"
-                            draggable={false}
-                        />
-                        {/* 按鈕文字：加入 LINE 群組 */}
-                        <span>{language === 'zh' ? '立即加入 LINE 群組' : 'Join our LINE group now'}</span>
-                        <ArrowRightIcon className="w-6 h-6 md:w-7 md:h-7" />
-                    </button>
-                </div>
-            </div>
-
-            {/* === 區塊二：頁尾 (Footer) - 重新設計與互動 === */}
-            {/* 將頁尾改為科技感漸層與網格背景 */}
-            <footer className="relative overflow-hidden bg-transparent py-8 md:py-10 px-6 md:px-8">
-                {/* 漸層光暈 + 網格背景 */}
-                <div className="pointer-events-none absolute inset-0">
-                    {/* 漸層光暈 */}
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(66,133,244,0.15),transparent)]"></div>
-                    {/* 細緻網格增添科技感 */}
-                    <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-                </div>
-
-                <div className="relative max-w-7xl mx-auto">
-                    {/* RWD 兩欄版面 */}
-                    <div className="grid md:grid-cols-2 gap-8 mb-8">
-                        {/* 左側：社群介紹 */}
-                        <div className={`flex flex-col items-center md:items-start text-center md:text-left transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.6s' }}>
-                            <a href="#" className="inline-block mb-4 md:mb-6">
-                                {/* 依照主題顯示不同 Logo */}
-                                <Image
-                                    src={theme === 'dark' ? gdgLogoDark : gdgLogoLight}
-                                    alt="GDG on Campus NCUE Logo"
-                                    width={350}
-                                    height={70}
-                                    draggable={false}
-                                    priority={true}
-                                />
-                            </a>
-                            <p className="text-muted text-sm max-w-sm">
-                                {language === 'zh'
-                                    ? '一個由學生主導、Google 支持的校園技術方舟。我們致力於連結校園與真實世界，透過實戰專案、前沿分享與社群協作，賦能每一位懷抱理想的開發者。'
-                                    : 'A student-led, Google-supported tech hub. We bridge campus and the real world through practical projects, cutting-edge talks and community collaboration to empower every aspiring developer.'}
-                            </p>
-                        </div>
-
-                        {/* 右側：社群連結與聯絡方式 */}
-                        <div className={`flex flex-col items-center md:items-end text-center md:text-right gap-y-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.7s' }}>
-                            <div>
-                                <h3 className="font-bold text-heading mb-4">{language === 'zh' ? '關注我們' : 'Follow Us'}</h3>
-                                <div className="flex items-center justify-center md:justify-end gap-x-6">
-                                    {socialLinks.map((social) => (
-                                        <a
-                                            key={social.name}
-                                            href={social.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            title={social.name}
-                                            aria-label={social.name}
-                                            className="group flex flex-col items-center focus:outline-none select-none"
-                                            {...(isDesktop ? { onMouseMove: handleMagnetic, onMouseLeave: resetMagnetic } : {})}
-                                        >
-                                            {/* 圓形圖示容器 */}
-                                            <div className="magnet w-14 h-14 bg-surface-muted rounded-full flex items-center justify-center transition-transform duration-300 ease-out group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-brand/30 group-hover:bg-gradient-to-br group-hover:from-brand/10 group-hover:to-purple-600/10 group-focus-visible:ring-2 group-focus-visible:ring-brand group-focus-visible:ring-offset-2">
-                                                {social.isImage ? (
-                                                    <Image
-                                                        src={social.icon}
-                                                        alt={social.name}
-                                                        width={32}
-                                                        height={32}
-                                                        className="w-8 h-8 transition-transform duration-300 ease-out group-hover:scale-110 group-hover:brightness-110 group-hover:saturate-125"
-                                                        {...(social.name === 'GDG Community' ? { priority: true } : {})}
-                                                        draggable={false}
-                                                    />
-                                                ) : (
-                                                    <social.icon className="w-8 h-8 text-muted transition-transform duration-300 ease-out group-hover:scale-110 group-hover:text-brand" />
-                                                )}
-                                            </div>
-                                            {/* 圖示下方文字說明 */}
-                                            <span className="mt-2 text-xs text-muted group-hover:text-brand text-center">
-                                                {language === 'zh' ? social.labelZh : social.labelEn}
-                                            </span>
-                                        </a>
-                                    ))}
-                                </div>
+        <section id="join" className="relative py-32 px-6 md:px-12 bg-transparent overflow-hidden" ref={ref}>
+            <div className="max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+                    
+                    {/* 左側文字內容 */}
+                    <div className={`lg:col-span-7 space-y-10 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
+                        <div className="space-y-6">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-brand"></span>
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted">Join Our Community</span>
                             </div>
-                            <div className="flex items-center justify-center md:justify-end gap-x-2 text-sm text-muted">
-                                <EnvelopeIcon className="w-5 h-5 text-brand" />
-                                <span>{language === 'zh' ? '聯絡我們:' : 'Contact Us:'}</span>
-                                <a href="mailto:gdg-core@ncuesa.org.tw" className="hover:text-brand transition-colors">
-                                    gdg-core@ncuesa.org.tw
+                            <h2 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white tracking-tighter leading-[1.05]">
+                                {language === 'zh' ? '用程式碼' : 'Define the future'}
+                                <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-brand dark:to-blue-400 bg-clip-text text-transparent mt-2">
+                                    {language === 'zh' ? '定義彰師未來' : 'with your code'}
+                                </span>
+                            </h2>
+                        </div>
+                        
+                        <p className="text-xl text-gray-500 dark:text-gray-400 max-w-xl leading-relaxed font-medium">
+                            {language === 'zh' 
+                                ? '無論你的起點在哪，只要對技術懷抱熱情，渴望將想法付諸實踐，這裡就是你連結同好、共同成長的最佳社群。' 
+                                : 'Whether you are just starting or already an expert, if you are passionate about technology, this is the community to connect and grow.'}
+                        </p>
+                        
+                        <a 
+                            href="https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-taiwan/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group inline-flex items-center gap-3 bg-gray-900 dark:bg-white text-white dark:text-black px-10 py-5 rounded-2xl font-bold transition-all shadow-xl hover:-translate-y-1 active:scale-95"
+                        >
+                            <span>{language === 'zh' ? '立即加入社群' : 'Join Us Now'}</span>
+                            <ArrowRightIcon className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+                        </a>
+                    </div>
+
+                    {/* 右側社交卡片群 (修正 Hover 位移問題) */}
+                    <div className={`lg:col-span-5 grid grid-cols-2 gap-6 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+                        {socialLinks.map((social, idx) => (
+                            <div key={social.name} className={`${idx % 2 === 1 ? 'lg:translate-y-12' : ''}`}>
+                                <a
+                                    href={social.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group block p-8 rounded-[2.5rem] bg-gray-50 dark:bg-white/[0.03] border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-2xl hover:bg-white dark:hover:bg-white/[0.08] hover:-translate-y-2 transition-all duration-500"
+                                >
+                                    <div className="w-16 h-16 rounded-2xl bg-white dark:bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:shadow-lg transition-all duration-500">
+                                        {social.isImage ? (
+                                            <Image src={social.icon} alt={social.name} width={36} height={36} className="object-contain dark:brightness-110" />
+                                        ) : (
+                                            <social.icon className="w-9 h-9 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-brand" />
+                                        )}
+                                    </div>
+                                    <div className="space-y-1">
+                                        <span className="block text-base font-bold text-gray-900 dark:text-gray-100">{social.name}</span>
+                                        <span className="block text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">Connect</span>
+                                    </div>
                                 </a>
                             </div>
-                        </div>
-                    </div>
-
-                    {/* 合作夥伴區塊 */}
-                    <div className={`mt-12 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.8s' }}>
-                        <h3 className="font-bold text-heading text-center mb-6">{language === 'zh' ? '我們的合作夥伴' : 'Our Partners'}</h3>
-                        <div className="relative flex w-full flex-col items-center justify-center gap-6 md:flex-row md:flex-wrap md:gap-12">
-                                    <a
-                                href="https://www.google.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                        onMouseEnter={() => setHoveredPartner(0)}
-                                        onMouseLeave={() => setHoveredPartner(null)}
-                                        onMouseMove={handlePartnerMouseMove}
-                            >
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}>
-                                    <div className="relative z-10">
-                                            <Image
-                                                src={'/Google.png'}
-                                                alt="Google Logo"
-                                                width={240}
-                                                height={96}
-                                                className={`${partnerLogoClasses} h-12 md:h-16 transition-transform duration-300 ease-out`}
-                                                priority={true}
-                                                style={{ transform: `scale(${scaleFor(0)})` }}
-                                                draggable={false}
-                                            />
-                                    </div>
-                                </div>
-                            </a>
-                                    <a
-                                href="https://program.blendedlearn.org/learn-xpro-mit-edu"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                        onMouseEnter={() => setHoveredPartner(1)}
-                                        onMouseLeave={() => setHoveredPartner(null)}
-                                        onMouseMove={handlePartnerMouseMove}
-                            >
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}>
-                                    <div className="relative z-10">
-                                            <Image
-                                                src={'/BlendED.png'}
-                                                alt="BlendED Logo"
-                                                width={240}
-                                                height={96}
-                                                className={`${partnerLogoClasses} h-14 md:h-20 transition-transform duration-300 ease-out`}
-                                                priority={true}
-                                                style={{ transform: `scale(${scaleFor(1)})` }}
-                                                draggable={false}
-                                            />
-                                    </div>
-                                </div>
-                            </a>
-                                    <a
-                                href="https://ncuesa.ncue.edu.tw/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                        onMouseEnter={() => setHoveredPartner(2)}
-                                        onMouseLeave={() => setHoveredPartner(null)}
-                                        onMouseMove={handlePartnerMouseMove}
-                            >
-                                {/* 減少此卡片的 padding，讓 logo 可視區域變大，但外部容器高度不變 */}
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} px-2 py-1 md:px-3 md:py-2 partner-rainbow-hover`}>
-                                    <div className="relative z-10">
-                                        <div className="flex items-center justify-center p-0">
-                                            <Image
-                                                src={theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png'}
-                                                alt="SA Logo"
-                                                width={200}
-                                                height={72}
-                                                className={`${partnerLogoClasses} w-3/5 md:w-auto h-auto md:h-24 transition-transform duration-300 ease-out`}
-                                                style={{ transform: `scale(${scaleFor(2)})` }}
-                                                draggable={false}
-                                                priority={true}
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                            {/* OpenTPI partner - styled per provided image */}
-                                    <a
-                                href="https://tpi.dev/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                        className="group partner-card-wrap w-full max-w-[220px] md:max-w-[220px]"
-                                        onMouseEnter={() => setHoveredPartner(3)}
-                                        onMouseLeave={() => setHoveredPartner(null)}
-                                        onMouseMove={handlePartnerMouseMove}
-                                aria-label="OpenTPI"
-                            >
-                                <div className={`${partnerCardBaseClasses} ${partnerCardThemeClasses} ${partnerCardFixedSize} partner-rainbow-hover`}> 
-                                    <div className="relative z-10 flex items-center justify-center w-full h-full">
-                                        {/* OpenTPI: text-only logo (no outer bg). Dark-blue in light theme, white in dark theme */}
-                                        <span
-                                            className={`${theme === 'dark' ? 'text-white' : 'text-[#071235]'} font-extrabold tracking-tight text-[2rem] md:text-[2.4rem] transition-transform duration-300 ease-out`}
-                                            style={{ transform: `scale(${scaleFor(3)})` }}
-                                        >
-                                            OpenTPI
-                                        </span>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div className={`mt-8 text-center text-sm md:text-base text-muted transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1s' }}>
-                        <p>© 2025 GDG On Campus NCUE. All Rights Reserved.</p>
+                        ))}
                     </div>
                 </div>
-            </footer>
+            </div>
         </section>
     );
 }

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -20,7 +20,7 @@ export default function Navbar() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10); // 稍微降低觸發滾動的閾值
+            setIsScrolled(window.scrollY > 10);
         };
         window.addEventListener('scroll', handleScroll);
         handleScroll();
@@ -37,6 +37,7 @@ export default function Navbar() {
     };
 
     const { language } = useLanguage();
+    const loginLabel = language === 'zh' ? '登入' : 'Login';
     const navLinks = language === 'zh'
         ? [
             { label: '社群願景', id: 'vision' },
@@ -53,12 +54,11 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    // 在淺色主題下無論是否位於頂端皆套用深色元件
     const useDarkStyle = theme === 'light';
 
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
-            : 'bg-transparent' // 在頂部時完全透明
+            : 'bg-transparent'
         }`;
 
     const logoColor = useDarkStyle ? 'text-slate-800' : 'text-white drop-shadow-lg';
@@ -103,6 +103,14 @@ export default function Navbar() {
                                 </button>
                             ))}
                             
+                            <Link
+                                href="/admin/login"
+                                className={`pc-liner-bold transition-all duration-300 relative group ${linkColor}`}
+                            >
+                                {loginLabel}
+                                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                            
                             <LanguageSwitcher colorClass={themeSwitcherColor} />
                             <ThemeSwitcher colorClass={themeSwitcherColor} />
                         </div>
@@ -135,7 +143,14 @@ export default function Navbar() {
                             </button>
                         ))}
 
-                        {/* 手機版選單底部的語言切換 */}
+                        <Link
+                            href="/admin/login"
+                            className={`block w-full text-left phone-liner-bold ${mobileMenuItemColor} hover:text-brand transition-colors duration-200 py-2`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                            {loginLabel}
+                        </Link>
+
                         <div className="pt-2 border-t border-surface-muted flex justify-center">
                             <LanguageSwitcher colorClass={mobileMenuItemColor} />
                         </div>

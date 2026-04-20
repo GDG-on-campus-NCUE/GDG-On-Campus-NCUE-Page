@@ -1,14 +1,11 @@
 'use client';
 
-// 語言切換 Hook 與 Context
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-// 建立語言 Context
 const LanguageContext = createContext();
 
 // 語言提供者
 export function LanguageProvider({ children }) {
-    // 預設語言由使用者裝置語言決定，若無則為中文
     const [language, setLanguage] = useState('zh');
     const [isLoaded, setIsLoaded] = useState(false); // 是否已載入
 
@@ -34,7 +31,7 @@ export function LanguageProvider({ children }) {
 
     // 切換語言
     const toggleLanguage = useCallback(() => {
-        if (!isLoaded) return; // 尚未載入時不進行切換
+        if (!isLoaded) return;
         const newLang = language === 'zh' ? 'en' : 'zh';
         setLanguage(newLang);
         localStorage.setItem('language', newLang);

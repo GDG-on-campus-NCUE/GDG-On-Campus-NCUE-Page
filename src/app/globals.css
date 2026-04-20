@@ -585,48 +585,6 @@ svg {
   100% { background-position: 0% 50%; }
 }
 
-.partner-rainbow-hover {
-  position: relative;
-  z-index: 1;
-}
-
-.partner-rainbow-hover::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 10; /* On top of content, but masked to border */
-  border-radius: inherit;
-  padding: 2px; /* Border width */
-  /* Conic gradient follows mouse angle */
-  background: conic-gradient(from var(--mouse-angle, 0deg), #4285F4, #EA4335, #FBBC04, #34A853, #4285F4);
-  
-  /* Mask to show only the border area */
-  -webkit-mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  mask: 
-     linear-gradient(#fff 0 0) content-box, 
-     linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.partner-rainbow-hover:hover::before {
-  opacity: 1;
-}
-
-/* Optional: Add a slight outer glow if desired, using a second pseudo-element behind */
-/* But user asked for "Only card border", so we stick to the crisp border above. */
-/* If "outwards rendering" means a glow, we can add a drop-shadow to the ::before element? */
-/* drop-shadow on a masked element works on the visible parts. */
-.partner-rainbow-hover:hover::before {
-  filter: drop-shadow(0 0 4px rgba(66, 133, 244, 0.5));
-}
-
 /* 微效能提升與文字渲染優化 */
 * {
   -webkit-font-smoothing: antialiased;

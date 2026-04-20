@@ -1,6 +1,5 @@
 import { Source_Sans_3 } from "next/font/google";
 import "./globals.css";
-import ScrollToTop from '@/components/ScrollToTop';
 import { LanguageProvider } from '@/hooks/useLanguage';
 import { ThemeProvider } from '@/hooks/useTheme';
 import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
@@ -13,6 +12,12 @@ const sourceSans = Source_Sans_3({
   weight: ['300', '400', '600', '700'],
 });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata = {
   // 基礎設定
   title: "GDG On Campus NCUE",
@@ -22,9 +27,6 @@ export const metadata = {
   // PWA & Web App
   manifest: "/manifest.json",
   
-  // 改善的 viewport 設定
-  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
-
   // Open Graph (OG)
   openGraph: {
     title: "GDG On Campus NCUE",
@@ -102,7 +104,6 @@ export default function RootLayout({ children }) {
             <div className="fixed inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]"></div>
             <div className="fixed inset-0 -z-20 h-full w-full bg-background [mask-image:radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
             {children}
-            <ScrollToTop />
           </LanguageProvider>
         </ThemeProvider>
       </body>

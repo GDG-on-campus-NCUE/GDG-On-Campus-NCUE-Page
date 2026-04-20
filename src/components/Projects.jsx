@@ -46,7 +46,7 @@ export default function Projects() {
             {
                 status: '已上線',
                 title: '生輔組獎學金資訊平台',
-                description: '一個以多模態 LLM 為核心所打造的智慧獎學金資訊平台。它能動態分析管理員提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 2.5 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，讓學校能夠更有效率的處理相關事務。',
+                description: '一個以多模態 LLM 為核心所打造的智慧獎學金資訊平台。它能動態分析管理員提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 3 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，讓學校能夠更有效率的處理相關事務。',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['資訊整合', '流程優化', 'AI 應用' ]
             },
@@ -94,7 +94,7 @@ export default function Projects() {
             {
                 status: 'Launched',
                 title: 'Student Affairs Scholarship Information Platform',
-                description: 'A smart scholarship information platform built around a multimodal LLM. It dynamically analyzes administrator-provided sources (such as PDF files or web links) and, powered by the Gemini 2.5 Flash model, performs fully automated parsing, key information extraction, and content summarization to streamline announcement workflows.',
+                description: 'A smart scholarship information platform built around a multimodal LLM. It dynamically analyzes administrator-provided sources (such as PDF files or web links) and, powered by the Gemini 3 Flash model, performs fully automated parsing, key information extraction, and content summarization to streamline announcement workflows.',
                 link: 'https://scholarship.ncuesa.org.tw',
                 tags: ['Information Integration', 'Process Optimization', 'AI Application']
             },
@@ -348,8 +348,8 @@ export default function Projects() {
                                 </h2>
                                 <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
                                     {language === 'zh'
-                                        ? '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 2.5 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。'
-                                        : 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 2.5 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.'}
+                                        ? '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 3 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。'
+                                        : 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 3 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.'}
                                 </p>
                                 <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">
                                     {language === 'zh' ? '技術棧' : 'Tech Stack'}

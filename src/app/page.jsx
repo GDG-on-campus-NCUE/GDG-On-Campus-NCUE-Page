@@ -5,6 +5,8 @@ import Events from '@/components/Events';
 import Projects from '@/components/Projects';
 import Calendar from '@/components/Calendar';
 import JoinUs from '@/components/JoinUs';
+import Footer from '@/components/Footer';
+import ScrollToTop from '@/components/ScrollToTop';
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
       <Projects />
       <Calendar />
       <JoinUs />
+      <Footer />
+      <ScrollToTop />
     </main>
   );
 }

@@ -4,7 +4,14 @@
   "private": true,
   "description": "GDG On Campus NCUE official website - 彰化師範大學 Google 開發者社群官方網站",
   "homepage": "https://gdg.ncuesa.org.tw",
-  "keywords": ["gdg", "ncue", "website", "nextjs", "react", "google-developer-groups"],
+  "keywords": [
+    "gdg",
+    "ncue",
+    "website",
+    "nextjs",
+    "react",
+    "google-developer-groups"
+  ],
   "author": "GDG On Campus NCUE",
   "scripts": {
     "dev": "next dev",
@@ -13,6 +20,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
+    "@supabase/supabase-js": "^2.103.3",
     "autoprefixer": "^10.4.21",
     "next": "15.5.2",
     "postcss": "^8.5.6",

@@ -37,7 +37,7 @@ module.exports = {
                 'pc-h3': ['1.5rem', { lineHeight: '1' }], // 24px
                 'pc-liner-bold': ['1rem', { lineHeight: '1' }], // 16px
                 'pc-liner': ['1rem', { lineHeight: '1' }],
-                // Phone sizes - 優化後的手機尺寸
+                // Phone sizes
                 'phone-h1': ['2.25rem', { lineHeight: '1.2' }], // 36px
                 'phone-h2': ['1.5rem', { lineHeight: '1.3' }], // 24px
                 'phone-h3': ['1.125rem', { lineHeight: '1.4' }], // 18px

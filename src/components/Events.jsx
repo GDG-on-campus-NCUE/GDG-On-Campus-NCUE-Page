@@ -3,11 +3,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import Image from 'next/image';
-import event_img_1 from '@/images/events/1.png';
-import event_img_2 from '@/images/events/2.png';
-import event_img_3 from '@/images/events/3.png';
-import event_img_4 from '@/images/events/4.png';
-import event_img_5 from '@/images/events/5.png';
+import event_img_1 from '@/images/events/1.jpg';
+import event_img_2 from '@/images/events/2.jpg';
+import event_img_3 from '@/images/events/3.jpg';
+import event_img_4 from '@/images/events/4.jpg';
+import event_img_5 from '@/images/events/5.jpg';
+import event_img_6 from '@/images/events/6.jpg';
 import assemblyGif from '@/images/stickers/assembly.gif';
 
 
@@ -19,18 +20,15 @@ export default function Events() {
     // 卡片參考，用於行動版捲動偵測
     const cardRefs = useRef([]);
 
-    // 活動圖片 - 使用 public 目錄中的圖片
     const eventImages = [
         event_img_1,
         event_img_2,
         event_img_3,
         event_img_4,
-        event_img_5
+        event_img_5,
+        event_img_6
     ];
 
-    // 亮點內容
-    // - 行動版卡片由下而上進場
-    // - 桌面版卡片由右至左進場
     const highlights = language === 'zh'
         ? [
             {
@@ -97,12 +95,10 @@ export default function Events() {
         }
     }, [eventImages.length]);
 
-    // 手機版偵測靠近螢幕中間的卡片並套用高科技感強調樣式
     useEffect(() => {
         if (typeof window === 'undefined') return;
-        if (window.innerWidth >= 768) return; // 只在手機版運作
+        if (window.innerWidth >= 768) return;
 
-        // 將十六進位色碼轉為帶透明度的 RGBA 色碼
         const hexToRGBA = (hex, alpha) => {
             const h = hex.trim().replace('#', '');
             const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
@@ -133,16 +129,16 @@ export default function Events() {
                 if (!card) return;
                 const isActive = card === closestCard;
                 const brandBase = getComputedStyle(document.documentElement).getPropertyValue('--brand');
-                // 以平移與光暈呈現專業的過渡效果，避免因放大造成爆版
+
                 card.style.transform = `translateY(${isActive ? '-4px' : '0'}) scale(${isActive ? '1.02' : '1'})`;
                 card.style.boxShadow = isActive ? '0 0 20px var(--brand)' : '';
                 card.classList.toggle('bg-brand/10', isActive);
                 card.classList.toggle('border-brand', isActive);
                 card.classList.toggle('card-active', isActive);
-                // 非活躍卡片使用透明藍色邊框
+                
                 card.style.borderColor = isActive ? '' : hexToRGBA(brandBase, 0.4);
 
-                // 非活躍卡片文字淡化為灰色，根據主題使用對應灰色
+                
                 const title = card.querySelector('h3');
                 const desc = card.querySelector('p');
                 if (title && desc) {
@@ -150,7 +146,6 @@ export default function Events() {
                         title.style.color = '';
                         desc.style.color = '';
                     } else {
-                        // 使用 --border 作為灰色值：深色主題為深灰，淺色主題為淡灰
                         title.style.color = 'var(--border)';
                         desc.style.color = 'var(--border)';
                     }
@@ -189,7 +184,6 @@ export default function Events() {
                                                 className="object-cover transition-transform duration-500 group-hover:scale-105"
                                                 draggable={false}
                                                 onError={(e) => {
-                                                    // 如果圖片加載失敗，隱藏 img 並顯示同父容器內的佔位符
                                                     try {
                                                         const img = e.target;
                                                         img.style.display = 'none';
@@ -276,8 +270,7 @@ export default function Events() {
                         </div>
 
                         {/* Highlights */}
-        
-                        {/* 行動版由下而上、桌面版由右至左進場 */}
+                        
                         <div className="space-y-6">
                             {highlights.map((highlight, index) => (
                                 <div
