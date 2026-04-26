@@ -1,20 +1,17 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { useTheme } from '@/hooks/useTheme';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import bracketsGif from '@/images/stickers/brackets.gif';
-import ThemeSwitcher from './ThemeSwitcher';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { theme } = useTheme();
     const pathname = usePathname();
     const router = useRouter();
 
@@ -54,18 +51,16 @@ export default function Navbar() {
             { label: 'Join Us', id: 'join' },
         ];
     
-    const useDarkStyle = theme === 'light';
-
     const navClasses = `fixed top-0 left-0 right-0 z-50 backdrop-blur-xl transition-colors duration-300 ${isScrolled || isMobileMenuOpen
             ? 'bg-surface/90 shadow-lg'
             : 'bg-transparent'
         }`;
 
-    const logoColor = useDarkStyle ? 'text-slate-800' : 'text-white drop-shadow-lg';
-    const linkColor = useDarkStyle ? 'text-slate-700 hover:text-slate-900' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const mobileIconColor = useDarkStyle ? 'text-slate-800' : 'text-white';
-    const themeSwitcherColor = useDarkStyle ? 'text-slate-700 hover:text-brand' : 'text-white hover:text-gray-200 drop-shadow-md';
-    const mobileMenuItemColor = useDarkStyle ? 'text-heading' : theme === 'dark' ? 'text-heading' : 'text-white';
+    const logoColor = 'text-white drop-shadow-lg';
+    const linkColor = 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileIconColor = 'text-white';
+    const switcherColor = 'text-white hover:text-gray-200 drop-shadow-md';
+    const mobileMenuItemColor = 'text-white';
 
     return (
         <>
@@ -111,15 +106,13 @@ export default function Navbar() {
                                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand transition-all duration-300 group-hover:w-full"></span>
                             </Link>
                             
-                            <LanguageSwitcher colorClass={themeSwitcherColor} />
-                            <ThemeSwitcher colorClass={themeSwitcherColor} />
+                            <LanguageSwitcher colorClass={switcherColor} />
                         </div>
 
                         <div className="md:hidden flex items-center">
-                            <ThemeSwitcher colorClass={themeSwitcherColor} />
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                className={`p-2 ml-2 transition-colors duration-300 ${mobileIconColor}`}
+                                className={`p-2 transition-colors duration-300 ${mobileIconColor}`}
                                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={isMobileMenuOpen}
                             >
@@ -160,7 +153,7 @@ export default function Navbar() {
 
             {isMobileMenuOpen && (
                 <div
-                    className="md:hidden fixed inset-0 bg-background/60 z-40"
+                    className="md:hidden fixed inset-0 bg-black/60 z-40"
                     onClick={() => setIsMobileMenuOpen(false)}
                 ></div>
             )}

@@ -39,7 +39,7 @@ export default function Footer() {
     const partners = [
         { src: '/Google.png', alt: 'Google', href: 'https://google.com', scale: 'scale-[0.8] sm:scale-[0.9]' },
         { src: '/BlendED.png', alt: 'BlendED', href: 'https://program.blendedlearn.org', scale: 'scale-[1.0] sm:scale-[1.1]' },
-        { src: theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png', alt: 'SA', href: 'https://ncuesa.ncue.edu.tw/', scale: 'scale-[1.4] sm:scale-[1.6]' },
+        { src: theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png', alt: 'SA', href: 'https://ncuesa.ncue.edu.tw/', scale: 'scale-[1.1] sm:scale-[1.6]' },
         { name: 'OpenTPI', href: 'https://tpi.dev/', scale: 'scale-[1.3] sm:scale-[1.5]' } 
     ];
 
@@ -124,10 +124,10 @@ export default function Footer() {
                                                 alt={p.alt} 
                                                 width={160} 
                                                 height={80} 
-                                                className="max-w-[120px] max-h-[50px] object-contain dark:brightness-125 dark:contrast-125 transition-all" 
+                                                className="max-w-[100px] sm:max-w-[120px] max-h-[50px] object-contain dark:brightness-125 dark:contrast-125 transition-all" 
                                             />
                                         ) : (
-                                            <span className="text-xl font-black text-gray-900 dark:text-white tracking-tighter opacity-80 group-hover:opacity-100 transition-all">OpenTPI</span>
+                                            <span className="text-xl font-black text-slate-900 dark:text-white tracking-tighter opacity-80 group-hover:opacity-100 transition-all">OpenTPI</span>
                                         )}
                                     </div>
                                 </a>
@@ -137,15 +137,9 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-20 pt-10 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-widest transition-colors">
+                    <p className="text-xs font-bold text-gray-400 dark:text-gray-400 tracking-widest transition-colors">
                         © {new Date().getFullYear()} GDG On Campus NCUE. All rights reserved.
                     </p>
-                    <div className="flex items-center gap-3">
-                        <div className="h-px w-8 bg-gray-200 dark:bg-white/10 hidden md:block"></div>
-                        <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.2em] transition-colors">
-                            For NCUE
-                        </p>
-                    </div>
                 </div>
             </div>
         </footer>

@@ -15,10 +15,10 @@
   --accent: #ea4335;
   --warn: #fbbc04;
   --text-on-brand: #ffffff;
-  --matrix-bg: rgba(255, 255, 255, 0.1); /* 原為 0.45 */
-  --matrix-head: #006400; /* 下落文字主色改為深綠色 */
-  --matrix-default: #006400; /* 下落文字預設色改為深綠色 */
-  --matrix-brackets: #006400; /* 下落括號顏色改為深綠色 */
+  --matrix-bg: rgba(255, 255, 255, 0.03); /* 大幅降低淺色模式背景干擾，讓文字浮現 */
+  --matrix-head: rgba(0, 100, 0, 0.15); /* 降低下落文字亮度 */
+  --matrix-default: rgba(0, 100, 0, 0.1);
+  --matrix-brackets: rgba(0, 100, 0, 0.15);
 
   /* Font Variables */
   --font-source-sans: 'Source Sans 3', 'Source Sans Pro', Arial, Helvetica, sans-serif;

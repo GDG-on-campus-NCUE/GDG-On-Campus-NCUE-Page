@@ -52,7 +52,7 @@ export default function JoinUs() {
                                 <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-brand"></span>
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-muted">Join Our Community</span>
                             </div>
-                            <h2 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white tracking-tighter leading-[1.05]">
+                            <h2 className="text-5xl md:text-7xl font-extrabold text-[#111827] dark:text-white tracking-tighter leading-[1.05]">
                                 {language === 'zh' ? '用程式碼' : 'Define the future'}
                                 <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-brand dark:to-blue-400 bg-clip-text text-transparent mt-2">
                                     {language === 'zh' ? '定義彰師未來' : 'with your code'}
@@ -77,7 +77,7 @@ export default function JoinUs() {
                         </a>
                     </div>
 
-                    {/* 右側社交卡片群 (修正 Hover 位移問題) */}
+                    {/* 右側社交卡片群 */}
                     <div className={`lg:col-span-5 grid grid-cols-2 gap-6 transition-all duration-1000 delay-300 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
                         {socialLinks.map((social, idx) => (
                             <div key={social.name} className={`${idx % 2 === 1 ? 'lg:translate-y-12' : ''}`}>
@@ -96,7 +96,7 @@ export default function JoinUs() {
                                     </div>
                                     <div className="space-y-1">
                                         <span className="block text-base font-bold text-gray-900 dark:text-gray-100">{social.name}</span>
-                                        <span className="block text-[10px] text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">Connect</span>
+                                        <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Connect</span>
                                     </div>
                                 </a>
                             </div>
