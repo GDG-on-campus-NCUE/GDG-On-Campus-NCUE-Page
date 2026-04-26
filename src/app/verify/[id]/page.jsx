@@ -89,11 +89,11 @@ export default function VerifyCertificate() {
                         {/* 驗證成功卡片 */}
                         <div className="bg-surface border-2 border-brand/20 rounded-3xl shadow-2xl overflow-hidden mb-8">
                             <div className="bg-brand/5 py-8 px-6 text-center border-b border-brand/10">
-                                <CheckCircleIcon className="w-20 h-20 text-brand mx-auto mb-4" />
+                                <CheckCircleIcon className="w-20 h-20 text-emerald-500 mx-auto mb-4" />
                                 <h1 className="text-3xl font-extrabold text-heading mb-2">證書驗證成功</h1>
-                                <p className="text-brand font-semibold flex items-center justify-center gap-x-2">
-                                    <ShieldCheckIcon className="w-5 h-5" />
-                                    此證書由 GDG On Campus NCUE 官方認證
+                                <p className="text-brand font-bold flex items-center justify-center gap-x-2 text-[15px] sm:text-xs">
+                                    <ShieldCheckIcon className="w-4 h-4" />
+                                    此證書由 Google Developer Group 官方認證
                                 </p>
                             </div>
 

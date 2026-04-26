@@ -187,7 +187,8 @@ export default function AdminDashboard() {
     };
 
     const handleCopyUrl = () => {
-        const url = `${window.location.origin}/verify/${newCert.id}`;
+        const baseUrl = 'https://gdg.ncuesa.org.tw';
+        const url = `${baseUrl}/verify/${newCert.id}`;
         navigator.clipboard.writeText(url);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -487,7 +488,7 @@ export default function AdminDashboard() {
                                         </button>
                                     </div>
                                     <div className="font-mono text-[11px] bg-white/60 p-3 rounded-lg border border-emerald-100 text-emerald-800 break-all select-all">
-                                        {typeof window !== 'undefined' ? window.location.origin : ''}/verify/{newCert.id}
+                                        https://gdg.ncuesa.org.tw/verify/{newCert.id}
                                     </div>
                                     <p className="text-[10px] text-emerald-600/70 font-medium">
                                         ※ 請先複製此網址製作 QR Code 並嵌入證書圖檔中，完成後再上傳圖檔。
