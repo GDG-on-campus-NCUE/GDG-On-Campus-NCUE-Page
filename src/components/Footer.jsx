@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTheme } from '@/hooks/useTheme';
 import gdgIcon from '@/images/icon/GDG_icon.png';
+import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
+import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
 import { EnvelopeIcon } from '@heroicons/react/24/solid';
 
 export default function Footer() {
@@ -38,7 +40,7 @@ export default function Footer() {
         { src: '/Google.png', alt: 'Google', href: 'https://google.com', scale: 'scale-[0.8] sm:scale-[0.9]' },
         { src: '/BlendED.png', alt: 'BlendED', href: 'https://program.blendedlearn.org', scale: 'scale-[1.0] sm:scale-[1.1]' },
         { src: theme === 'dark' ? '/sa_logo_white.png' : '/sa_logo_black.png', alt: 'SA', href: 'https://ncuesa.ncue.edu.tw/', scale: 'scale-[1.4] sm:scale-[1.6]' },
-        { name: 'OpenTPI', href: 'https://tpi.dev/', scale: 'scale-[1.3] sm:scale-[1.5]' } // 再次放大了 OpenTPI
+        { name: 'OpenTPI', href: 'https://tpi.dev/', scale: 'scale-[1.3] sm:scale-[1.5]' } 
     ];
 
     return (
@@ -46,19 +48,16 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8">
                     
-                    {/* 品牌區塊 (修正大小寫，強化深色模式文字) */}
+                    {/* 品牌區塊 */}
                     <div className="lg:col-span-5 space-y-8">
-                        <div className="flex items-start gap-5">
-                            <div className="relative group">
-                                <div className="absolute inset-0 bg-blue-500/20 dark:bg-brand/30 blur-xl rounded-full scale-110 group-hover:scale-150 transition-transform duration-700"></div>
-                                <div className="relative w-16 h-16 bg-white dark:bg-white/5 rounded-2xl shadow-xl p-3 flex items-center justify-center border border-gray-100 dark:border-white/10 overflow-hidden transition-all">
-                                    <Image src={gdgIcon} alt="GDG Logo" width={56} height={56} className="object-contain" />
-                                </div>
-                            </div>
-                            <div className="space-y-1 pt-1">
-                                <h2 className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">Google Developer Group</h2>
-                                <p className="text-[10px] font-bold text-blue-600 dark:text-brand tracking-[0.15em]">on Campus NCUE</p>
-                            </div>
+                        <div className="flex items-center gap-5">
+                            <Image 
+                                src={theme === 'dark' ? gdgLogoDark : gdgLogoLight} 
+                                alt="GDG On Campus NCUE" 
+                                width={400} 
+                                height={80} 
+                                className="h-16 w-auto object-contain"
+                            />
                         </div>
                         
                         <p className="text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm font-medium transition-colors">
@@ -75,7 +74,7 @@ export default function Footer() {
                         </a>
                     </div>
 
-                    {/* 快速連結區塊 (簡約文字風格) */}
+                    {/* 快速連結區塊 */}
                     <div className="lg:col-span-3 grid grid-cols-2 lg:grid-cols-1 gap-8">
                         <div>
                             <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-6">{sections.resources.title}</h3>
@@ -103,7 +102,7 @@ export default function Footer() {
                         </div>
                     </div>
 
-                    {/* 合作夥伴區塊 (優化深色模式感官) */}
+                    {/* 合作夥伴區塊 */}
                     <div className="lg:col-span-4 space-y-8">
                         <h3 className="text-sm font-black uppercase tracking-[0.2em] text-gray-400 dark:text-gray-500 mb-6">
                             {language === 'zh' ? '我們的夥伴' : 'Our Partners'}
@@ -118,7 +117,7 @@ export default function Footer() {
                                     className="relative h-24 bg-gray-50 dark:bg-white/[0.03] rounded-2xl flex items-center justify-center overflow-hidden group hover:bg-white dark:hover:bg-white/[0.08] hover:shadow-2xl dark:hover:shadow-brand/5 transition-all duration-500 border border-transparent hover:border-gray-100 dark:hover:border-white/10"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-br from-transparent to-gray-200/20 dark:to-white/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                    <div className={`relative transition-all duration-500 group-hover:scale-110 ${p.scale}`}>
+                                    <div className={`relative transition-all duration-500 ${p.scale}`}>
                                         {p.src ? (
                                             <Image 
                                                 src={p.src} 
@@ -138,13 +137,13 @@ export default function Footer() {
                 </div>
 
                 <div className="mt-20 pt-10 border-t border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest transition-colors">
-                        © {new Date().getFullYear()} GDG On Campus NCUE All rights reserved.
+                    <p className="text-xs font-bold text-gray-400 dark:text-gray-500 tracking-widest transition-colors">
+                        © {new Date().getFullYear()} GDG On Campus NCUE. All rights reserved.
                     </p>
                     <div className="flex items-center gap-3">
                         <div className="h-px w-8 bg-gray-200 dark:bg-white/10 hidden md:block"></div>
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 font-black uppercase tracking-[0.2em] transition-colors">
-                            Developed with <span className="text-red-500 mx-1 animate-pulse">❤</span> for NCUE
+                            For NCUE
                         </p>
                     </div>
                 </div>

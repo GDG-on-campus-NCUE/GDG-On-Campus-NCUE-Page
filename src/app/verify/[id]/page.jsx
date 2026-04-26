@@ -13,7 +13,8 @@ import {
     UserIcon, 
     TrophyIcon,
     IdentificationIcon,
-    ShieldCheckIcon
+    ShieldCheckIcon,
+    ArrowDownTrayIcon
 } from '@heroicons/react/24/solid';
 import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
 import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
@@ -40,6 +41,26 @@ export default function VerifyCertificate() {
         if (id) fetchCertificate();
     }, [id]);
 
+    const handleDownload = async () => {
+        if (!cert?.image_url) return;
+        
+        try {
+            const response = await fetch(cert.image_url);
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Certificate-${cert.cert_number || 'GDG'}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Download failed:', err);
+            window.open(cert.image_url, '_blank');
+        }
+    };
+
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center bg-surface-muted">
             <div className="animate-pulse flex flex-col items-center">
@@ -50,16 +71,16 @@ export default function VerifyCertificate() {
     );
 
     return (
-        <div className="min-h-screen bg-surface-muted py-12 px-4">
+        <div className="min-h-screen bg-surface-muted py-12 px-4 select-none">
             <div className="max-w-3xl mx-auto">
                 {/* Header Logo */}
-                <div className="flex justify-center mb-10">
+                <div className="flex justify-center mb-12">
                     <Image
                         src={theme === 'dark' ? gdgLogoDark : gdgLogoLight}
                         alt="GDG Logo"
-                        width={300}
-                        height={60}
-                        className="h-12 w-auto object-contain"
+                        width={600}
+                        height={120}
+                        className="h-16 md:h-24 w-auto object-contain"
                     />
                 </div>
 
@@ -113,14 +134,20 @@ export default function VerifyCertificate() {
                                         <div className="relative group">
                                             <div className="absolute -inset-2 bg-gradient-to-tr from-brand to-purple-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
                                             <div className="relative aspect-[4/3] bg-surface-muted rounded-xl border border-border overflow-hidden">
-                                                <img 
-                                                    src={cert.image_url} 
-                                                    alt="Certificate Preview" 
-                                                    className="w-full h-full object-cover cursor-zoom-in"
-                                                    onClick={() => window.open(cert.image_url, '_blank')}
-                                                />
+                                                <a 
+                                                    href={cert.image_url} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="block w-full h-full cursor-zoom-in pointer-events-auto"
+                                                >
+                                                    <img 
+                                                        src={cert.image_url} 
+                                                        alt="Certificate Preview" 
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                </a>
                                             </div>
-                                            <p className="text-center text-xs text-muted mt-3 italic">點擊查看證書原圖</p>
+                                            <p className="text-center text-xs text-muted mt-3 italic">點擊圖片可查看原圖</p>
                                         </div>
                                     )}
                                 </div>
@@ -132,10 +159,11 @@ export default function VerifyCertificate() {
                                         </p>
                                     </div>
                                     <button 
-                                        onClick={() => window.print()}
-                                        className="bg-heading text-surface px-6 py-2.5 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg"
+                                        onClick={handleDownload}
+                                        className="flex items-center gap-2 bg-heading text-surface px-8 py-3 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg"
                                     >
-                                        列印驗證結果
+                                        <ArrowDownTrayIcon className="w-5 h-5" />
+                                        下載證書
                                     </button>
                                 </div>
                             </div>

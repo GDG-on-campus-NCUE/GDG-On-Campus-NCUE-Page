@@ -2,7 +2,7 @@
 
 export const runtime = 'edge';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -23,7 +23,9 @@ import {
     SparklesIcon,
     ShieldCheckIcon,
     ClipboardIcon,
-    ClipboardDocumentCheckIcon
+    ClipboardDocumentCheckIcon,
+    ChevronUpIcon,
+    ChevronDownIcon
 } from '@heroicons/react/24/solid'; 
 
 export default function AdminDashboard() {
@@ -36,6 +38,7 @@ export default function AdminDashboard() {
     const [selectedFile, setSelectedFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [copied, setCopied] = useState(false);
+    const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc'
     
     // 全亂碼證號產生器
     const generateCertNumber = () => {
@@ -210,11 +213,25 @@ export default function AdminDashboard() {
         }
     };
 
-    const filteredCerts = certs.filter(cert => 
-        cert.recipient_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cert.cert_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cert.event_name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filteredAndSortedCerts = useMemo(() => {
+        let result = certs.filter(cert => 
+            cert.recipient_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            cert.cert_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            cert.event_name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        result.sort((a, b) => {
+            const dateA = new Date(a.issue_date).getTime();
+            const dateB = new Date(b.issue_date).getTime();
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
+
+        return result;
+    }, [certs, searchQuery, sortOrder]);
+
+    const toggleSort = () => {
+        setSortOrder(prev => prev === 'desc' ? 'asc' : 'desc');
+    };
 
     if (loading && !user) return (
         <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
@@ -226,7 +243,7 @@ export default function AdminDashboard() {
     );
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+        <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] select-none">
             {/* Topbar */}
             <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -242,11 +259,7 @@ export default function AdminDashboard() {
                                 />
                             </div>
                             <div>
-                                <h1 className="text-lg font-bold tracking-tight text-gray-900">GDGoC NCUE</h1>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="w-1.5 h-1.5 bg-blue-600 rounded-full"></span>
-                                    <p className="text-[10px] text-gray-500 font-bold uppercase tracking-[0.1em] leading-none">Console</p>
-                                </div>
+                                <h1 className="text-base sm:text-lg font-bold tracking-tight text-gray-900">Google Developer Group on Campus NCUE</h1>
                             </div>
                         </div>
                         <div className="flex items-center gap-4">
@@ -329,12 +342,22 @@ export default function AdminDashboard() {
                                     <th className="px-6 py-4 font-semibold">證書編號</th>
                                     <th className="px-6 py-4 font-semibold">獲證成員</th>
                                     <th className="px-6 py-4 font-semibold">所屬活動 / 專案</th>
-                                    <th className="px-6 py-4 font-semibold">發放日期</th>
+                                    <th 
+                                        className="px-6 py-4 font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                                        onClick={toggleSort}
+                                    >
+                                        <div className="flex items-center gap-1 group">
+                                            發放日期
+                                            <span className="text-gray-400 group-hover:text-blue-600 transition-colors">
+                                                {sortOrder === 'desc' ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronUpIcon className="w-4 h-4" />}
+                                            </span>
+                                        </div>
+                                    </th>
                                     <th className="px-6 py-4 text-right font-semibold">操作</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 bg-white text-sm">
-                                {filteredCerts.length > 0 ? filteredCerts.map((cert) => (
+                                {filteredAndSortedCerts.length > 0 ? filteredAndSortedCerts.map((cert) => (
                                     <tr key={cert.id} className="hover:bg-gray-50/50 transition-colors group">
                                         <td className="px-6 py-4">
                                             <span className="font-mono text-xs bg-gray-100 px-2.5 py-1 rounded-md text-gray-600 border border-gray-200">
@@ -372,7 +395,7 @@ export default function AdminDashboard() {
                                                 {cert.issue_date}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-right">
                                             <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <a 
                                                     href={`/verify/${cert.id}`} 
@@ -469,18 +492,6 @@ export default function AdminDashboard() {
                                     <p className="text-[10px] text-emerald-600/70 font-medium">
                                         ※ 請先複製此網址製作 QR Code 並嵌入證書圖檔中，完成後再上傳圖檔。
                                     </p>
-                                </div>
-
-                                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex items-center justify-between gap-4">
-                                    <div>
-                                        <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">自動分配證號</label>
-                                        <div className="font-mono text-lg font-semibold text-gray-900 mt-1">
-                                            {newCert.cert_number}
-                                        </div>
-                                    </div>
-                                    <div className="bg-white text-gray-500 border border-gray-200 px-2.5 py-1 rounded text-xs font-semibold">
-                                        系統產生
-                                    </div>
                                 </div>
 
                                 <div className="space-y-1.5">
