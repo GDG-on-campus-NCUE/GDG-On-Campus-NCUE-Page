@@ -7,15 +7,16 @@ import { supabase } from '@/lib/supabase';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import { 
-    CheckCircleIcon, 
+    CheckBadgeIcon, 
     XCircleIcon, 
     CalendarIcon, 
     UserIcon, 
-    TrophyIcon,
+    AcademicCapIcon,
     IdentificationIcon,
     ShieldCheckIcon,
-    ArrowDownTrayIcon
-} from '@heroicons/react/24/solid';
+    ArrowDownTrayIcon,
+    EnvelopeIcon
+} from '@heroicons/react/24/outline';
 import gdgLogoDark from '@/images/icon/GDG_On_Campus_dark.png';
 import gdgLogoLight from '@/images/icon/GDG_On_Campus_light.png';
 import { useTheme } from '@/hooks/useTheme';
@@ -62,141 +63,166 @@ export default function VerifyCertificate() {
     };
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-surface-muted">
-            <div className="animate-pulse flex flex-col items-center">
-                <div className="w-16 h-16 border-4 border-brand border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p className="text-muted font-medium">安全驗證中...</p>
+        <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+            <div className="flex flex-col items-center">
+                <div className="w-12 h-12 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-slate-500 dark:text-slate-400 font-medium animate-pulse">Verifying credentials...</p>
             </div>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-surface-muted py-12 px-4 select-none">
-            <div className="max-w-3xl mx-auto">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 py-8 lg:py-0 lg:flex lg:flex-col lg:justify-center px-4 sm:px-6 lg:px-8 selection:bg-blue-100 dark:selection:bg-blue-900 select-none">
+            <div className="max-w-4xl mx-auto w-full">
                 {/* Header Logo */}
-                <div className="flex justify-center mb-12">
+                <div className="flex justify-center mb-8 lg:mb-10 transform transition-transform hover:scale-[1.02] duration-500">
                     <Image
                         src={theme === 'dark' ? gdgLogoDark : gdgLogoLight}
                         alt="GDG Logo"
                         width={600}
                         height={120}
-                        className="h-16 md:h-24 w-auto object-contain"
+                        className="h-12 md:h-20 lg:h-24 w-auto object-contain"
+                        priority
                     />
                 </div>
 
                 {cert ? (
-                    <div className="animate-fade-in-up">
-                        {/* 驗證成功卡片 */}
-                        <div className="bg-surface border-2 border-brand/20 rounded-3xl shadow-2xl overflow-hidden mb-8">
-                            <div className="bg-brand/5 py-8 px-6 text-center border-b border-brand/10">
-                                <CheckCircleIcon className="w-20 h-20 text-emerald-500 mx-auto mb-4" />
-                                <h1 className="text-3xl font-extrabold text-heading mb-2">證書驗證成功</h1>
-                                <p className="text-brand font-bold flex items-center justify-center gap-x-2 text-[15px] sm:text-xs">
+                    <div className="space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                        {/* Status Card */}
+                        <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] border border-slate-200 dark:border-slate-800 overflow-hidden">
+                            <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 py-6 lg:py-8 px-6 text-center">
+                                {/* Decorative elements */}
+                                <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+                                    <div className="absolute top-[-50%] left-[-10%] w-[40%] h-[200%] bg-white rotate-12 blur-3xl"></div>
+                                </div>
+                                
+                                <CheckBadgeIcon className="w-12 h-12 lg:w-16 lg:h-16 text-white mx-auto mb-3 drop-shadow-lg" />
+                                <h1 className="text-2xl lg:text-3xl font-bold text-white mb-1 tracking-tight">Credential Verified</h1>
+                                <div className="flex items-center justify-center gap-2 text-blue-50 font-medium text-xs lg:text-sm">
                                     <ShieldCheckIcon className="w-4 h-4" />
-                                    此證書由 Google Developer Group 官方認證
-                                </p>
+                                    <span>Officially authenticated by GDG on Campus NCUE</span>
+                                </div>
                             </div>
 
-                            <div className="p-8 md:p-12">
-                                <div className="grid md:grid-cols-2 gap-8">
-                                    <div className="space-y-6">
-                                        <div className="flex items-start gap-x-4">
-                                            <UserIcon className="w-6 h-6 text-muted mt-1" />
-                                            <div>
-                                                <p className="text-xs font-bold text-muted uppercase tracking-wider mb-1">獲證者姓名</p>
-                                                <p className="text-xl font-bold text-heading">{cert.recipient_name}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start gap-x-4">
-                                            <TrophyIcon className="w-6 h-6 text-muted mt-1" />
-                                            <div>
-                                                <p className="text-xs font-bold text-muted uppercase tracking-wider mb-1">活動名稱</p>
-                                                <p className="text-xl font-bold text-heading">{cert.event_name}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start gap-x-4">
-                                            <IdentificationIcon className="w-6 h-6 text-muted mt-1" />
-                                            <div>
-                                                <p className="text-xs font-bold text-muted uppercase tracking-wider mb-1">證書編號</p>
-                                                <p className="text-lg font-mono text-heading">{cert.cert_number}</p>
-                                            </div>
-                                        </div>
-                                        <div className="flex items-start gap-x-4">
-                                            <CalendarIcon className="w-6 h-6 text-muted mt-1" />
-                                            <div>
-                                                <p className="text-xs font-bold text-muted uppercase tracking-wider mb-1">發放日期</p>
-                                                <p className="text-lg text-heading">{cert.issue_date}</p>
-                                            </div>
+                            <div className="p-6 lg:p-10">
+                                <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                                    <div className="space-y-6 lg:space-y-8">
+                                        <div className="grid gap-4 lg:gap-6">
+                                            <DetailItem 
+                                                icon={UserIcon} 
+                                                label="Recipient Name" 
+                                                value={cert.recipient_name} 
+                                            />
+                                            <DetailItem 
+                                                icon={AcademicCapIcon} 
+                                                label="Certificate Name" 
+                                                value={cert.event_name} 
+                                            />
+                                            <DetailItem 
+                                                icon={IdentificationIcon} 
+                                                label="Certificate ID" 
+                                                value={cert.cert_number} 
+                                                isMono 
+                                            />
+                                            <DetailItem 
+                                                icon={CalendarIcon} 
+                                                label="Issue Date" 
+                                                value={cert.issue_date} 
+                                            />
                                         </div>
                                     </div>
 
-                                    {cert.image_url && (
-                                        <div className="relative group">
-                                            <div className="absolute -inset-2 bg-gradient-to-tr from-brand to-purple-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                                            <div className="relative aspect-[4/3] bg-surface-muted rounded-xl border border-border overflow-hidden">
-                                                <a 
-                                                    href={cert.image_url} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer"
-                                                    className="block w-full h-full cursor-zoom-in pointer-events-auto"
-                                                >
-                                                    <img 
-                                                        src={cert.image_url} 
-                                                        alt="Certificate Preview" 
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                </a>
-                                            </div>
-                                            <p className="text-center text-xs text-muted mt-3 italic">點擊圖片可查看原圖</p>
+                                    <div className="relative group lg:max-w-sm mx-auto">
+                                        <div className="absolute -inset-1 bg-gradient-to-tr from-blue-500 to-indigo-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-500"></div>
+                                        <div className="relative bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+                                            <a 
+                                                href={cert.image_url} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className="block aspect-[4/3] group-hover:scale-[1.02] transition-transform duration-500"
+                                            >
+                                                <img 
+                                                    src={cert.image_url} 
+                                                    alt="Certificate Preview" 
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center">
+                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 dark:bg-slate-900/90 px-4 py-2 rounded-full text-[10px] font-bold text-slate-700 dark:text-slate-200 shadow-xl">
+                                                        Click to view original
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                                 
-                                <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-                                    <div className="text-center md:text-left">
-                                        <p className="text-xs text-muted font-mono break-all">
-                                            數位簽章: {cert.id}
-                                        </p>
+                                <div className="mt-8 lg:mt-10 pt-6 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4 lg:gap-6">
+                                    <div className="flex flex-col gap-1">
+                                        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Digital Signature</span>
+                                        <code className="text-xs text-slate-500 dark:text-slate-400 break-all bg-slate-50 dark:bg-slate-800/50 px-2 py-1 rounded">
+                                            {cert.id}
+                                        </code>
                                     </div>
                                     <button 
                                         onClick={handleDownload}
-                                        className="flex items-center gap-2 bg-heading text-surface px-8 py-3 rounded-xl font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg"
+                                        className="w-full md:w-auto flex items-center justify-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-3 rounded-2xl font-bold text-sm hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
                                     >
                                         <ArrowDownTrayIcon className="w-5 h-5" />
-                                        下載證書
+                                        Download Certificate
                                     </button>
                                 </div>
                             </div>
                         </div>
 
-                        <p className="text-center text-muted text-sm">
-                            如有任何疑問，請聯絡 <a href="mailto:gdg-core@ncuesa.org.tw" className="text-brand hover:underline">gdg-core@ncuesa.org.tw</a>
-                        </p>
+                        <div className="flex flex-col items-center gap-4 text-center">
+                            <p className="text-slate-500 dark:text-slate-400 text-xs font-medium flex items-center gap-2">
+                                <EnvelopeIcon className="w-4 h-4" />
+                                For inquiries, please contact <a href="mailto:gdg-core@ncuesa.org.tw" className="text-blue-600 dark:text-blue-400 hover:underline font-semibold">gdg-core@ncuesa.org.tw</a>
+                            </p>
+                        </div>
                     </div>
                 ) : (
-                    <div className="animate-fade-in-up text-center">
-                        <div className="bg-surface border-2 border-accent/20 rounded-3xl shadow-2xl p-12">
-                            <XCircleIcon className="w-24 h-24 text-accent mx-auto mb-6" />
-                            <h1 className="text-3xl font-extrabold text-heading mb-4">驗證失敗</h1>
-                            <p className="text-muted text-lg mb-8">
-                                找不到此證書編號，請確認您掃描的 QR Code 是否正確。<br />
-                                如果您認為這是個錯誤，請與我們聯繫。
+                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 text-center">
+                        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-xl p-8 lg:p-12">
+                            <div className="bg-red-50 dark:bg-red-950/30 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <XCircleIcon className="w-12 h-12 text-red-500" />
+                            </div>
+                            <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Verification Failed</h1>
+                            <p className="text-slate-500 dark:text-slate-400 text-base mb-8 max-w-md mx-auto leading-relaxed">
+                                We couldn't find a record for this certificate ID. Please verify the QR code or link you used. 
+                                If you believe this is an error, please reach out to our team.
                             </p>
                             <a 
                                 href="/" 
-                                className="inline-flex items-center justify-center bg-brand text-white px-8 py-3 rounded-xl font-bold shadow-lg hover:scale-105 transition-all"
+                                className="inline-flex items-center justify-center bg-blue-600 text-white px-8 py-3.5 rounded-2xl font-bold shadow-lg hover:shadow-blue-500/25 hover:-translate-y-0.5 transition-all duration-300"
                             >
-                                回到首頁
+                                Back to Home
                             </a>
                         </div>
                     </div>
                 )}
             </div>
             
-            {/* Background elements */}
-            <div className="fixed inset-0 -z-10 pointer-events-none opacity-50">
-                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_right,rgba(66,133,244,0.05),transparent)]"></div>
-                <div className="absolute bottom-0 right-0 w-full h-full bg-[radial-gradient(circle_at_bottom_left,rgba(219,68,55,0.05),transparent)]"></div>
+            {/* Subtle background gradients */}
+            <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/5 dark:bg-blue-500/10 blur-[120px] rounded-full"></div>
+                <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/5 dark:bg-indigo-500/10 blur-[120px] rounded-full"></div>
+            </div>
+        </div>
+    );
+}
+
+function DetailItem({ icon: Icon, label, value, isMono = false }) {
+    return (
+        <div className="flex items-start gap-4 p-1">
+            <div className="mt-1 bg-slate-50 dark:bg-slate-800 p-2 rounded-lg">
+                <Icon className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+            </div>
+            <div>
+                <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">{label}</p>
+                <p className={`text-lg font-bold text-slate-900 dark:text-white ${isMono ? 'font-mono tracking-tight' : ''}`}>
+                    {value}
+                </p>
             </div>
         </div>
     );
