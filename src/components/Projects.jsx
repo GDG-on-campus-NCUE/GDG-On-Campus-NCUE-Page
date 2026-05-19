@@ -71,16 +71,25 @@ export default function Projects() {
                 tags: ['流程數位化', '數據分析']
             },
             {
-                status: '開發中',
+                status: '已上線',
                 title: '學生會投票系統',
-                description: '開發一個安全、公正、透明的線上投票平台，用於學生會選舉及重大議題投票，提升學生參與公共事務的便利性與意願。',
-                tags: ['電子投票', '資訊安全']
-            },
-            {
-                status: '開發中',
-                title: '資訊工程學系系網',
-                description: '重寫資工系系網，捨棄原生 PHP，以框架方式重構，提升網站可維護性。',
-                tags: ['網站開發', 'UI 優化']
+                description: [
+                    {
+                        title: '彰師單一登入(SSO)驗證',
+                        content: '對接彰師標準授權介面進行資格審查。系統僅獲取必要的投票權限聲明，全程不經手且不儲存您的登入憑據，確保個人身分資訊受技術與法律雙重保障。'
+                    },
+                    {
+                        title: '隱私保護金鑰與零知識證明生成',
+                        content: '在您的本地終端生成專屬加密金鑰。基於零知識證明(Zero-Knowledge Proof)技術，您可在不揭露真實身分的前提下，向系統證明合法的投票權，實現絕對匿名與抗關聯性。'
+                    },
+                    {
+                        title: '端對端加密投票與分散式存證',
+                        content: '選票經由高強度非對稱加密函數加密。一旦完成提交，內容即具備不可篡改性與公開可稽核性，確保選舉過程絕對公正、透明。'
+                    }
+                ],
+                link: 'https://sa-election.ncue.edu.tw/',
+                repo: 'https://github.com/GDG-on-campus-NCUE/NCUE-SAVote',
+                tags: ['電子投票', '零知識證明', '資訊安全']
             },
             {
                 status: '已上線',
@@ -106,12 +115,6 @@ export default function Projects() {
                 tags: ['Information Integration', 'UI Optimization']
             },
             {
-                status: 'Planning',
-                title: 'Dorm Checkout Management System',
-                description: 'Plans to digitize and simplify the dormitory checkout process, bringing application, inspection, and approval fully online to reduce paperwork and enhance efficiency and convenience.',
-                tags: ['Workflow Digitalization', 'Administrative Efficiency']
-            },
-            {
                 status: 'Launched',
                 title: 'Meal Voucher Management System',
                 description: 'Uses Google Apps Script to integrate Google Forms, Docs, and Sheets into an electronic meal voucher system that streamlines student applications and provides administrators with voucher tracking and data analysis.',
@@ -119,16 +122,25 @@ export default function Projects() {
                 tags: ['Workflow Digitalization', 'Data Analysis']
             },
             {
-                status: 'In Development',
+                status: 'Launched',
                 title: 'Student Association Voting System',
-                description: 'Developing a secure, fair, and transparent online voting platform for student association elections and major issues to boost student participation in public affairs.',
-                tags: ['E-Voting', 'Information Security']
-            },
-            {
-                status: 'In Development',
-                title: 'Department of Computer Science Website',
-                description: 'Rebuilding the CS department website with a modern framework instead of raw PHP to improve maintainability.',
-                tags: ['Website Development', 'UI Optimization']
+                description: [
+                    {
+                        title: 'NCUE SSO Authentication',
+                        content: 'Qualification review via standard NCUE authorization. The system only obtains necessary voting rights claims, never handles or stores login credentials, ensuring identity info is legally and technically protected.'
+                    },
+                    {
+                        title: 'Privacy Keys & ZKP Generation',
+                        content: 'Generates exclusive encryption keys locally. Using Zero-Knowledge Proof (ZKP), users prove legal voting rights without revealing identity, achieving absolute anonymity and anti-correlation.'
+                    },
+                    {
+                        title: 'E2E Encryption & Distributed Evidence',
+                        content: 'Ballots are encrypted with high-strength asymmetric functions. Once submitted, content is immutable and publicly auditable, ensuring a fair and transparent election process.'
+                    }
+                ],
+                link: 'https://sa-election.ncue.edu.tw/',
+                repo: 'https://github.com/GDG-on-campus-NCUE/NCUE-SAVote',
+                tags: ['E-Voting', 'ZKP', 'Information Security']
             },
             {
                 status: 'Launched',
@@ -414,107 +426,117 @@ export default function Projects() {
                     </div>
                 </div>
 
-                {/* --- 區段三：更多專案 --- */}
-                <div className={`grid grid-cols-1 md:grid-cols-2 ${columnClass} gap-6 md:gap-8 mb-16 md:mb-24`}>
+                {/* --- 區段三：更多專案 (全新設計) --- */}
+                <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16 md:mb-24`}>
                     {otherFeatures.map((feature, index) => (
                         <div
                             key={index}
                             data-index={index}
                             ref={el => cardWrapperRefs.current[index] = el}
-                            className={`group relative rounded-2xl transition-all duration-300 transform ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'} ${isMobile ? (activeCard === index ? '-translate-y-1 scale-105' : 'scale-95') : 'scale-100 hover:scale-105'}`}
+                            className={`group relative rounded-3xl transition-all duration-500 transform ${visibleCards[index] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                         >
-                            {/* 背景發光層 */}
+                            {/* 懸浮發光背景 */}
+                            <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-3xl blur opacity-0 group-hover:opacity-30 transition duration-500 pointer-events-none"></div>
+                            
                             <div
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                // 手機非焦點卡片淡化：淺色主題用淺灰，深色主題用深灰
-                                className={`relative rounded-2xl border p-6 flex flex-col h-full shadow-lg transition-transform duration-75 transform-gpu will-change-transform overflow-hidden ${isMobile ? (activeCard === index ? 'bg-surface border-border shadow-[0_0_25px_rgba(59,130,246,0.5)]' : 'bg-surface-muted border-gray-200 dark:border-gray-700') : 'bg-surface border-border hover:shadow-[0_0_25px_rgba(59,130,246,0.5)]'}`}
+                                className="relative bg-surface/80 backdrop-blur-xl border border-border/50 rounded-3xl p-8 md:p-10 flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 transform-gpu will-change-transform overflow-hidden"
                             >
-                                <span className={`pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 blur-md transition-opacity duration-300 ${isMobile ? (activeCard === index ? 'opacity-50' : 'opacity-0') : 'opacity-0 group-hover:opacity-50'}`}></span>
-                                {/* 實際內容 */}
-                                <div className="relative z-10 flex flex-col h-full">
-                                    {/* 允許狀態膠囊在手機版換行避免爆版 */}
-                                    <div className="flex flex-wrap justify-between items-start gap-2 mb-4">
-                                        <h3 className={`phone-h3 md:pc-h3 font-bold leading-tight ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500' : 'text-heading'}`}>{feature.title}</h3>
-                                        {(() => {
-                                            // 依狀態取得對應色碼
-                                            const getColor = (status) => {
-                                                // 依照狀態回傳對應顏色：已上線/Launched -> 綠色、開發中/In Development -> 黃色、籌畫中/Planning -> 灰色
-                                                if (['已上線', 'Launched'].includes(status)) return '#22c55e';
-                                                if (['開發中', 'In Development'].includes(status)) return '#eab308';
-                                                return '#6b7280';
-                                            };
-                                            const color = getColor(feature.status);
-                                            const isActive = activeCard === index;
-                                            if (isMobile) {
-                                                const animClass = isActive
-                                                    ? (scrollDirection === 'down' ? 'tag-fill-down' : 'tag-fill-up')
-                                                    : '';
-                                                // 基礎樣式，禁止縮小避免文字被壓縮
-                                                const baseClass = 'px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap border shrink-0';
-                                                return isActive ? (
-                                                    <span
-                                                        className={`${baseClass} status-pill text-white ${animClass}`}
-                                                        style={{ backgroundColor: color }}
-                                                    >
-                                                        <span className="relative z-10">{feature.status}</span>
-                                                    </span>
-                                                ) : (
-                                                    // 非焦點狀態標籤改為灰色邊框與文字
-                                                    <span className={`${baseClass} bg-surface-muted text-gray-400 dark:text-gray-500 border border-gray-200 dark:border-gray-700`}>
-                                                        {feature.status}
-                                                    </span>
-                                                );
-                                            }
-                                            const desktopClass =
-                                                feature.status === '已上線' || feature.status === 'Launched'
-                                                    ? 'bg-green-500 text-white dark:bg-green-600'
-                                                    : feature.status === '開發中' || feature.status === 'In Development'
-                                                        ? 'bg-yellow-500 text-white dark:bg-yellow-600'
-                                                        : 'bg-gray-500 text-white dark:bg-gray-600';
-                                            return (
-                                                <span className={`px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${desktopClass}`}>
+                                {/* 裝飾性幾何圖形 */}
+                                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-brand/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+
+                                {/* 頂部：標題與狀態 */}
+                                <div className="flex justify-between items-start mb-6 gap-4">
+                                    <h3 className="text-2xl md:text-3xl font-extrabold text-heading tracking-tight leading-tight group-hover:text-brand transition-colors">
+                                        {feature.title}
+                                    </h3>
+                                    {(() => {
+                                        const statusConfig = {
+                                            '已上線': { color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20', dot: 'bg-green-500' },
+                                            'Launched': { color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20', dot: 'bg-green-500' },
+                                            '開發中': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', dot: 'bg-yellow-500' },
+                                            'In Development': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', dot: 'bg-yellow-500' },
+                                        };
+                                        const config = statusConfig[feature.status] || { color: 'text-gray-500', bg: 'bg-gray-500/10', border: 'border-gray-500/20', dot: 'bg-gray-500' };
+                                        
+                                        return (
+                                            <div className={`flex items-center px-3 py-1.5 rounded-full ${config.bg} ${config.border} border shrink-0 backdrop-blur-sm`}>
+                                                <span className={`w-2 h-2 rounded-full ${config.dot} mr-2 animate-pulse`}></span>
+                                                <span className={`text-xs font-bold ${config.color} tracking-wide`}>
                                                     {feature.status}
                                                 </span>
-                                            );
-                                        })()}
-                                    </div>
-                                    <p className={`phone-liner md:pc-liner mb-4 leading-relaxed flex-grow ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500 opacity-70' : 'text-muted'}`}>{feature.description}</p>
-                                    <div className="flex flex-wrap gap-2 mb-4">
+                                            </div>
+                                        );
+                                    })()}
+                                </div>
+                                
+                                {/* 內容區塊 */}
+                                <div className="flex-grow">
+                                    {Array.isArray(feature.description) ? (
+                                        <div className="space-y-4 mb-8">
+                                            {feature.description.map((item, i) => (
+                                                <div key={i} className="pl-4 border-l-2 border-brand/30 hover:border-brand transition-colors">
+                                                    <h4 className="text-sm md:text-base font-bold text-heading mb-1">{item.title}</h4>
+                                                    <p className="text-sm text-muted leading-relaxed">{item.content}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <p className="text-base md:text-lg text-muted leading-relaxed mb-8 font-medium">
+                                            {feature.description}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* 底部：標籤與操作 */}
+                                <div className="mt-auto">
+                                    <div className="flex flex-wrap gap-2 mb-8">
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                // 手機非焦點卡片標籤改為灰色文字
-                                                className={`px-2 py-1 text-xs rounded ${isMobile && activeCard !== index ? 'bg-surface-muted text-gray-400 dark:text-gray-500' : 'bg-brand/10 text-brand'}`}
+                                                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-muted border border-border text-muted hover:text-brand hover:border-brand/30 transition-colors"
                                             >
-                                                {tag}
+                                                #{tag}
                                             </span>
                                         ))}
                                     </div>
-                                    {feature.link && (
-                                        <a
-                                            href={feature.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className={`phone-liner-bold font-medium transition-colors group flex items-center mt-auto self-end ${isMobile && activeCard !== index ? 'text-gray-400 dark:text-gray-500 hover:text-gray-400 dark:hover:text-gray-500' : 'text-brand hover:text-brand-accent'}`}
-                                        >
-                                            {language === 'zh' ? '查看專案' : 'View Project'}
-                                            <svg
-                                                className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
+                                    
+                                    <div className="flex items-center gap-4 pt-6 border-t border-border/50">
+                                        {feature.link && (
+                                            <a
+                                                href={feature.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-brand text-white font-bold hover:bg-brand-accent transition-all duration-300 hover:shadow-lg hover:shadow-brand/25 group/btn"
                                             >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                            </svg>
-                                        </a>
-                                    )}
+                                                {language === 'zh' ? '前往專案' : 'Visit Project'}
+                                                <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                                </svg>
+                                            </a>
+                                        )}
+                                        {feature.repo && (
+                                            <a
+                                                href={feature.repo}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="flex items-center justify-center p-3 rounded-xl bg-surface-muted text-muted hover:text-heading hover:bg-border/50 border border-transparent hover:border-border transition-all duration-300"
+                                                title="View Source Code"
+                                            >
+                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                                                </svg>
+                                            </a>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
+
 
                 {/* --- 區段四：CTA 按鈕 --- */}
                 <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '1s' }}>

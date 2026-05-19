@@ -6,6 +6,7 @@ import { ArrowRightIcon } from '@heroicons/react/24/solid';
 import { useLanguage } from '@/hooks/useLanguage';
 import githubIcon from '@/images/icon/github.png';
 import instagramIcon from '@/images/icon/instagram.png';
+import lineIcon from '@/images/icon/line.png';
 import gdgCommunityIcon from '@/images/icon/GDG_icon.png';
 
 function GmailIcon({ className = '' }) {
@@ -26,10 +27,10 @@ export default function JoinUs() {
     const { language } = useLanguage();
 
     const socialLinks = [
-        { name: 'GitHub', icon: githubIcon, url: 'https://github.com/GDG-on-campus-NCUE', isImage: true },
-        { name: 'Instagram', icon: instagramIcon, url: 'https://www.instagram.com/gdg_ncue', isImage: true },
-        { name: 'Mail', icon: GmailIcon, url: 'https://groups.google.com/a/ncuesa.org.tw/g/gdg', isImage: false },
-        { name: 'GDG Official', icon: gdgCommunityIcon, url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/', isImage: true },
+        { name: 'GitHub', icon: githubIcon, url: 'https://github.com/GDG-on-campus-NCUE', isImage: true, label: { zh: '探索專案', en: 'Explore Repos' } },
+        { name: 'Instagram', icon: instagramIcon, url: 'https://www.instagram.com/gdg_ncue', isImage: true, label: { zh: '追蹤我們', en: 'Follow Us' } },
+        { name: 'LINE', icon: lineIcon, url: 'https://line.me/R/ti/g/s4qeWSAWR9', isImage: true, label: { zh: '活動資訊', en: 'Event Info' } },
+        { name: 'GDG Official', icon: gdgCommunityIcon, url: 'https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/', isImage: true, label: { zh: '社群主頁', en: 'Chapter Page' } },
     ];
 
     useEffect(() => {
@@ -67,7 +68,7 @@ export default function JoinUs() {
                         </p>
                         
                         <a 
-                            href="https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-taiwan/"
+                            href="https://gdg.community.dev/gdg-on-campus-national-changhua-university-of-education-changhua-city-taiwan/"
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group inline-flex items-center gap-3 bg-gray-900 dark:bg-white text-white dark:text-black px-10 py-5 rounded-2xl font-bold transition-all shadow-xl hover:-translate-y-1 active:scale-95"
@@ -96,7 +97,7 @@ export default function JoinUs() {
                                     </div>
                                     <div className="space-y-1">
                                         <span className="block text-base font-bold text-gray-900 dark:text-gray-100">{social.name}</span>
-                                        <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">Connect</span>
+                                        <span className="block text-[10px] text-gray-500 dark:text-gray-400 font-bold uppercase tracking-widest">{language === 'zh' ? social.label.zh : social.label.en}</span>
                                     </div>
                                 </a>
                             </div>
