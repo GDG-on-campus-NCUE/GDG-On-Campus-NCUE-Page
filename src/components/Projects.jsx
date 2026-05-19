@@ -58,12 +58,6 @@ export default function Projects() {
                 tags: ['資訊整合', 'UI 優化']
             },
             {
-                status: '籌畫中',
-                title: '宿舍退宿管理系統',
-                description: '旨在數位化及簡化宿舍退宿流程，從申請、檢查到核准全程線上化，減少紙本作業，提升行政效率與學生便利性。',
-                tags: ['流程數位化', '行政效率']
-            },
-            {
                 status: '已上線',
                 title: '生輔組餐券管理系統',
                 description: '透過 Google Apps Script 連動 Google Forms、Google Docs、Google Sheets 建立一套電子餐券系統，除了簡化學生端申請流程之外，更提供後台餐券追蹤、數據分析等多項管理員友善功能！',
