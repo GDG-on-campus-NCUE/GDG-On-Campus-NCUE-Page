@@ -1,3 +1,16 @@
+-- 1. 授權 schema 使用權限 (針對 Supabase 新版安全性政策)
+GRANT USAGE ON SCHEMA public TO postgres, anon, authenticated, service_role;
+
+-- 2. 授權所有資料表權限
+GRANT ALL ON ALL TABLES IN SCHEMA public TO postgres, anon, authenticated, service_role;
+GRANT ALL ON ALL FUNCTIONS IN SCHEMA public TO postgres, anon, authenticated, service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO postgres, anon, authenticated, service_role;
+
+-- 3. 設定未來新建資料表的預設授權
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO postgres, anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO postgres, anon, authenticated, service_role;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO postgres, anon, authenticated, service_role;
+
 CREATE TABLE IF NOT EXISTS certificates (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   cert_number TEXT UNIQUE NOT NULL,

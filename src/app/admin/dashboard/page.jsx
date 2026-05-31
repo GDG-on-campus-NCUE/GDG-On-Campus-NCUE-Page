@@ -497,7 +497,7 @@ export default function AdminDashboard() {
                         className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
                         onClick={() => setIsModalOpen(false)}
                     />
-                    <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl relative z-10 flex flex-col max-h-[95vh]">
+                    <div className="bg-white w-full max-w-5xl rounded-2xl shadow-xl relative z-10 flex flex-col max-h-[95vh]">
                         <div className="px-6 py-4 sm:py-5 border-b border-gray-200 flex justify-between items-center">
                             <div className="flex items-center gap-3">
                                 <div className="bg-blue-50 p-2 rounded-lg">
@@ -513,17 +513,16 @@ export default function AdminDashboard() {
                             </button>
                         </div>
                         
-                        <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
+                        <div className="p-4 sm:p-8 overflow-y-auto custom-scrollbar">
                             <form onSubmit={handleAddCertificate} className="space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div className="space-y-5">
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                                    <div className="lg:col-span-5 space-y-5">
                                         <div className="space-y-1.5">
                                             <label className="text-xs font-bold text-gray-700">受證成員姓名</label>
                                             <input 
                                                 required
-                                                type="text" 
-                                                placeholder="例：王小明" 
-                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                type="text"
+                                                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
                                                 value={newCert.recipient_name}
                                                 onChange={e => setNewCert({...newCert, recipient_name: e.target.value})}
                                             />
@@ -535,9 +534,8 @@ export default function AdminDashboard() {
                                                 <span className="text-[10px] text-gray-400 font-normal">自動寄送證書連結</span>
                                             </label>
                                             <input 
-                                                type="email" 
-                                                placeholder="例：example@mail.com" 
-                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                type="email"
+                                                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
                                                 value={newCert.recipient_email}
                                                 onChange={e => setNewCert({...newCert, recipient_email: e.target.value})}
                                             />
@@ -548,82 +546,88 @@ export default function AdminDashboard() {
                                             <input 
                                                 required
                                                 type="text" 
-                                                placeholder="例：Build with AI 2025" 
-                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                placeholder="e.g. Build with AI 2026" 
+                                                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
                                                 value={newCert.event_name}
                                                 onChange={e => setNewCert({...newCert, event_name: e.target.value})}
                                             />
                                         </div>
 
-                                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3.5 space-y-2.5">
+                                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 space-y-3">
                                             <div className="flex items-center justify-between">
                                                 <label className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5">
                                                     <ShieldCheckIcon className="w-3.5 h-3.5" />
-                                                    驗證 ID
+                                                    驗證 ID (UUID)
                                                 </label>
                                                 <button 
                                                     type="button"
                                                     onClick={handleCopyUrl}
-                                                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all shadow-sm ${copied ? 'bg-emerald-500 text-white' : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
+                                                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all shadow-sm ${copied ? 'bg-emerald-500 text-white' : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
                                                 >
-                                                    {copied ? '已複製' : '複製連結'}
+                                                    {copied ? '已複製' : '複製驗證連結'}
                                                 </button>
                                             </div>
-                                            <div className="font-mono text-[9px] bg-white/60 p-2 rounded-lg border border-emerald-100 text-emerald-800 break-all">
+                                            <div className="font-mono text-[10px] bg-white/60 p-2.5 rounded-lg border border-emerald-100 text-emerald-800 break-all leading-relaxed">
                                                 {newCert.id}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-3">
+                                    <div className="lg:col-span-7 space-y-4">
                                         <label className="text-xs font-bold text-gray-700 flex items-center justify-between">
-                                            <span>證書即時預覽</span>
+                                            <span className="flex items-center gap-2">
+                                                即時預覽 
+                                                {!newCert.recipient_name && <span className="text-[10px] font-normal text-orange-500">(請輸入姓名以啟用預覽)</span>}
+                                            </span>
                                             {isGenerating && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin text-blue-600" />}
                                         </label>
-                                        <div className="relative aspect-[4/3] w-full border border-gray-200 rounded-xl bg-gray-50 overflow-hidden shadow-inner group">
+                                        <div className="relative aspect-[1.414/1] w-full border border-gray-200 rounded-2xl bg-gray-50 overflow-hidden shadow-md group">
                                             {autoPreview ? (
                                                 <>
                                                     <img src={autoPreview} alt="Certificate Preview" className="w-full h-full object-contain" />
-                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors cursor-zoom-in flex items-center justify-center">
-                                                        <span className="opacity-0 group-hover:opacity-100 bg-white/90 px-3 py-1.5 rounded-full text-[10px] font-bold text-gray-600 shadow-sm transition-opacity">預覽生成成功</span>
+                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+                                                        <span className="opacity-0 group-hover:opacity-100 bg-white/90 px-4 py-2 rounded-full text-xs font-bold text-gray-600 shadow-lg transition-opacity border border-gray-100">預覽生成成功</span>
                                                     </div>
                                                 </>
                                             ) : (
-                                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-                                                    <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3">
-                                                        <SparklesIcon className="w-8 h-8 text-gray-200" />
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gray-50/50">
+                                                    <div className="bg-white p-4 rounded-3xl shadow-sm border border-gray-100 mb-4">
+                                                        <SparklesIcon className="w-10 h-10 text-gray-200" />
                                                     </div>
-                                                    <p className="text-[10px] sm:text-xs font-semibold text-gray-400">填寫左側資訊以生成預覽</p>
+                                                    <p className="text-xs sm:text-sm font-semibold text-gray-400 max-w-[200px] leading-relaxed">填寫姓名與活動資訊以生成即時預覽</p>
                                                 </div>
                                             )}
                                         </div>
-                                        <p className="text-[10px] text-gray-400 text-center font-medium italic leading-relaxed px-4">
-                                            ※ 系統將自動嵌入專屬 QR Code、證號與數位簽章
-                                        </p>
+                                        <div className="flex items-start gap-2 px-1">
+                                            <div className="mt-1 flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                            <p className="text-[10px] text-gray-500 font-medium leading-relaxed italic">
+                                                系統將自動依據 A4 比例嵌入專屬 QR Code、證號與數位簽章。
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 flex flex-col-reverse sm:flex-row gap-3 border-t border-gray-200">
+                                <div className="pt-8 flex flex-col-reverse sm:flex-row gap-4 border-t border-gray-200">
                                     <button 
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors text-sm"
+                                        className="flex-1 px-6 py-3 rounded-xl font-bold text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-all text-sm"
                                     >
                                         取消
                                     </button>
                                     <button 
                                         type="submit" 
                                         disabled={uploading || !autoPreview}
-                                        className="flex-[2] bg-blue-600 text-white py-2.5 rounded-xl font-semibold shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                                        className="flex-[2] bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg shadow-blue-600/20 hover:bg-blue-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm active:scale-[0.98]"
                                     >
                                         {uploading ? (
                                             <>
                                                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                                <span className="text-white">處理中...</span>
+                                                <span className="text-white">上傳雲端並核發中...</span>
                                             </>
                                         ) : (
                                             <>
-                                                <span className="text-white">正式核發證書</span>
+                                                <span className="text-white">正式核發數位證書</span>
                                                 <CheckBadgeIcon className="w-5 h-5 text-white" />
                                             </>
                                         )}
