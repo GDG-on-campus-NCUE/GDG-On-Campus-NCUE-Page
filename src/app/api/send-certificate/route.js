@@ -18,6 +18,8 @@ export async function POST(req) {
             return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
         }
 
+        const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=10&data=${encodeURIComponent(certUrl)}`;
+
         const { data, error } = await resend.emails.send({
             from: 'GDG on Campus NCUE <noreply@ncuesa.org.tw>',
             to: [to],
@@ -68,16 +70,41 @@ export async function POST(req) {
                             color: #475569;
                             margin-bottom: 24px;
                         }
+                        .cta-area {
+                            text-align: center;
+                            margin: 32px 0;
+                            padding: 32px;
+                            background-color: #f8fafc;
+                            border-radius: 16px;
+                            border: 1px solid #f1f5f9;
+                        }
                         .cta-button {
                             display: inline-block;
-                            padding: 14px 28px;
+                            padding: 14px 32px;
                             background-color: #2563eb;
                             color: #ffffff !important;
                             text-decoration: none;
                             border-radius: 8px;
                             font-weight: 600;
                             font-size: 16px;
-                            margin: 20px 0;
+                            margin-bottom: 24px;
+                        }
+                        .qr-box {
+                            margin-top: 8px;
+                        }
+                        .qr-image {
+                            width: 140px;
+                            height: 140px;
+                            background-color: white;
+                            padding: 8px;
+                            border-radius: 8px;
+                            border: 1px solid #e2e8f0;
+                        }
+                        .qr-hint {
+                            font-size: 11px;
+                            color: #94a3b8;
+                            margin-top: 8px;
+                            font-weight: 500;
                         }
                         .metadata {
                             margin-top: 40px;
@@ -109,8 +136,16 @@ export async function POST(req) {
                             <h1>Certificate of Participation</h1>
                             <p>Dear ${name},</p>
                             <p>Congratulations on successfully participating in the <strong>${eventName}</strong>. We are pleased to provide you with your official digital certificate.</p>
-                            <a href="${certUrl}" class="cta-button">View Your Certificate</a>
-                            <p>You can also access your certificate at any time by using the link above or scanning the QR code on the document.</p>
+                            
+                            <div class="cta-area">
+                                <a href="${certUrl}" class="cta-button">View Your Certificate</a>
+                                <div class="qr-box">
+                                    <img src="${qrCodeUrl}" alt="Verification QR Code" class="qr-image">
+                                    <p class="qr-hint">Scan to verify on another device</p>
+                                </div>
+                            </div>
+
+                            <p>You can also access your certificate at any time by using the link above or visiting the official verification portal.</p>
                         </div>
                         <div class="metadata">
                             <p>Verification ID: <code>${certId}</code></p>
