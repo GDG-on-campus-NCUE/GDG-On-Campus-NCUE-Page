@@ -19,7 +19,7 @@ export async function POST(req) {
         }
 
         const { data, error } = await resend.emails.send({
-            from: 'GDG on Campus NCUE <noreply@gdg.ncuesa.org.tw>',
+            from: 'GDG on Campus NCUE <noreply@ncuesa.org.tw>',
             to: [to],
             subject: `Your Certificate of Participation - ${eventName}`,
             html: `
