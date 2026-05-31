@@ -1,9 +1,17 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const runtime = 'edge';
 
 export async function POST(req) {
     try {
+        const apiKey = process.env.RESEND_API_KEY;
+
+        if (!apiKey) {
+            console.error('RESEND_API_KEY is missing');
+            return new Response(JSON.stringify({ error: 'Mail server configuration error' }), { status: 500 });
+        }
+
+        const resend = new Resend(apiKey);
         const { to, name, eventName, certId, certUrl } = await req.json();
 
         if (!to || !name || !eventName || !certUrl) {
