@@ -50,3 +50,4 @@ CREATE TRIGGER update_certificates_updated_at
 BEFORE UPDATE ON certificates
 FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_column();
+ALTER TABLE certificates ADD COLUMN IF NOT EXISTS recipient_email TEXT;

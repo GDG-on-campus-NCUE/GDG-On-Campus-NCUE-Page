@@ -25,8 +25,10 @@ import {
     ClipboardIcon,
     ClipboardDocumentCheckIcon,
     ChevronUpIcon,
-    ChevronDownIcon
+    ChevronDownIcon,
+    ArrowPathIcon
 } from '@heroicons/react/24/solid'; 
+import { generateCertificate } from '@/lib/certificateGenerator';
 
 export default function AdminDashboard() {
     const [user, setUser] = useState(null);
@@ -35,8 +37,8 @@ export default function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [filePreview, setFilePreview] = useState(null);
+    const [autoPreview, setAutoPreview] = useState(null);
+    const [isGenerating, setIsGenerating] = useState(false);
     const [copied, setCopied] = useState(false);
     const [sortOrder, setSortOrder] = useState('desc'); // 'asc' or 'desc'
     
@@ -64,6 +66,7 @@ export default function AdminDashboard() {
         id: '', // 預先產生的 UUID
         cert_number: '',
         recipient_name: '',
+        recipient_email: '',
         event_name: '',
         issue_date: new Date().toISOString().split('T')[0],
     });
@@ -83,6 +86,34 @@ export default function AdminDashboard() {
         checkAuth();
     }, [router]);
 
+    // Update auto preview when content changes
+    useEffect(() => {
+        const updatePreview = async () => {
+            if (newCert.recipient_name && newCert.event_name && newCert.id) {
+                setIsGenerating(true);
+                try {
+                    const dataUrl = await generateCertificate({
+                        name: newCert.recipient_name,
+                        eventName: newCert.event_name,
+                        id: newCert.id,
+                        certNumber: newCert.cert_number,
+                        issueDate: newCert.issue_date
+                    });
+                    setAutoPreview(dataUrl);
+                } catch (error) {
+                    console.error('Failed to generate preview:', error);
+                } finally {
+                    setIsGenerating(false);
+                }
+            } else {
+                setAutoPreview(null);
+            }
+        };
+
+        const timer = setTimeout(updatePreview, 800);
+        return () => clearTimeout(timer);
+    }, [newCert]);
+
     const fetchCertificates = async () => {
         setLoading(true);
         const { data, error } = await supabase
@@ -99,18 +130,22 @@ export default function AdminDashboard() {
         router.push('/');
     };
 
-    const handleFileChange = (e) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            setSelectedFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => setFilePreview(reader.result);
-            reader.readAsDataURL(file);
+    const dataURLtoBlob = (dataurl) => {
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
         }
-    };
+        return new Blob([u8arr], {type:mime});
+    }
 
     const handleAddCertificate = async (e) => {
         e.preventDefault();
+        if (!autoPreview) {
+            alert('請先填寫完整資訊以生成證書預覽');
+            return;
+        }
+        
         setUploading(true);
 
         try {
@@ -124,24 +159,25 @@ export default function AdminDashboard() {
                 d: newCert.issue_date
             });
 
-            if (selectedFile) {
-                const fileExt = selectedFile.name.split('.').pop();
-                const fileName = `${newCert.cert_number}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-                const filePath = `${fileName}`;
+            // Use auto-generated image
+            const finalImage = dataURLtoBlob(autoPreview);
 
-                const { error: uploadError } = await supabase.storage
-                    .from('certificates')
-                    .upload(filePath, selectedFile);
+            const fileName = `${newCert.cert_number}-${Math.random().toString(36).substring(7)}.png`;
+            const filePath = `${fileName}`;
 
-                if (uploadError) throw uploadError;
+            const { error: uploadError } = await supabase.storage
+                .from('certificates')
+                .upload(filePath, finalImage);
 
-                const { data: { publicUrl } } = supabase.storage
-                    .from('certificates')
-                    .getPublicUrl(filePath);
-                
-                image_url = publicUrl;
-            }
+            if (uploadError) throw uploadError;
 
+            const { data: { publicUrl } } = supabase.storage
+                .from('certificates')
+                .getPublicUrl(filePath);
+            
+            image_url = publicUrl;
+
+            // 1. Insert into database
             const { error: dbError } = await supabase
                 .from('certificates')
                 .insert([{ 
@@ -151,6 +187,25 @@ export default function AdminDashboard() {
                 }]);
 
             if (dbError) throw dbError;
+
+            // 2. Send email if email is provided
+            if (newCert.recipient_email) {
+                try {
+                    await fetch('/api/send-certificate', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            to: newCert.recipient_email,
+                            name: newCert.recipient_name,
+                            eventName: newCert.event_name,
+                            certId: newCert.id,
+                            certUrl: `${window.location.origin}/verify/${newCert.id}`
+                        })
+                    });
+                } catch (emailError) {
+                    console.error('Failed to send email:', emailError);
+                }
+            }
 
             setIsModalOpen(false);
             resetForm();
@@ -163,13 +218,13 @@ export default function AdminDashboard() {
     };
 
     const resetForm = () => {
-        setSelectedFile(null);
-        setFilePreview(null);
+        setAutoPreview(null);
         setCopied(false);
         setNewCert({
             id: '',
             cert_number: '',
             recipient_name: '',
+            recipient_email: '',
             event_name: '',
             issue_date: new Date().toISOString().split('T')[0],
         });
@@ -187,7 +242,7 @@ export default function AdminDashboard() {
     };
 
     const handleCopyUrl = () => {
-        const baseUrl = 'https://gdg.ncuesa.org.tw';
+        const baseUrl = window.location.origin;
         const url = `${baseUrl}/verify/${newCert.id}`;
         navigator.clipboard.writeText(url);
         setCopied(true);
@@ -248,9 +303,9 @@ export default function AdminDashboard() {
             {/* Topbar */}
             <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16 items-center">
-                        <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 bg-white rounded-xl shadow-sm border border-gray-100 p-1.5 flex items-center justify-center">
+                    <div className="flex justify-between h-16 items-center gap-4">
+                        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white rounded-lg sm:rounded-xl shadow-sm border border-gray-100 p-1.5 flex flex-shrink-0 items-center justify-center">
                                 <Image
                                     src={gdgIcon}
                                     alt="GDG Logo"
@@ -259,55 +314,58 @@ export default function AdminDashboard() {
                                     className="w-full h-full object-contain"
                                 />
                             </div>
-                            <div>
-                                <h1 className="text-base sm:text-lg font-bold tracking-tight text-gray-900">Google Developer Group on Campus NCUE</h1>
+                            <div className="truncate">
+                                <h1 className="text-sm sm:text-base md:text-lg font-bold tracking-tight text-gray-900 truncate">
+                                    <span className="hidden xs:inline">Google Developer Group on Campus</span>
+                                    <span className="xs:hidden">GDG on Campus</span> NCUE
+                                </h1>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                            <div className="hidden md:flex flex-col items-end border-r border-gray-200 pr-4">
-                                <span className="text-sm font-semibold text-gray-900">{user?.email?.split('@')[0]}</span>
-                                <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Admin</span>
+                        <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                            <div className="hidden sm:flex flex-col items-end border-r border-gray-200 pr-4">
+                                <span className="text-xs sm:text-sm font-semibold text-gray-900">{user?.email?.split('@')[0]}</span>
+                                <span className="text-[9px] sm:text-[10px] text-blue-600 font-bold uppercase tracking-wider">Admin</span>
                             </div>
                             <button 
                                 onClick={handleLogout}
-                                className="flex items-center gap-1.5 px-3 py-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg font-medium transition-all"
+                                className="flex items-center gap-1 px-2 py-1.5 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg font-medium transition-all"
                             >
                                 <ArrowLeftOnRectangleIcon className="w-5 h-5" />
-                                <span className="text-sm hidden sm:inline">登出</span>
+                                <span className="text-sm hidden md:inline">登出</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
                 {/* Stats Section */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
-                        <div className="bg-blue-50 p-3 rounded-xl text-blue-600 border border-blue-100">
-                            <DocumentTextIcon className="w-7 h-7" />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 sm:gap-5 hover:shadow-md transition-shadow">
+                        <div className="bg-blue-50 p-2.5 sm:p-3 rounded-xl text-blue-600 border border-blue-100">
+                            <DocumentTextIcon className="w-6 h-6 sm:w-7 sm:h-7" />
                         </div>
                         <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">總核發證書</p>
-                            <h3 className="text-2xl font-bold text-gray-900">{certs.length}</h3>
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5 sm:mb-1">總核發證書</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{certs.length}</h3>
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
-                        <div className="bg-purple-50 p-3 rounded-xl text-purple-600 border border-purple-100">
-                            <UserGroupIcon className="w-7 h-7" />
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 sm:gap-5 hover:shadow-md transition-shadow">
+                        <div className="bg-purple-50 p-2.5 sm:p-3 rounded-xl text-purple-600 border border-purple-100">
+                            <UserGroupIcon className="w-6 h-6 sm:w-7 sm:h-7" />
                         </div>
                         <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">受證總人數</p>
-                            <h3 className="text-2xl font-bold text-gray-900">{new Set(certs.map(c => c.recipient_name)).size}</h3>
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5 sm:mb-1">受證總人數</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">{new Set(certs.map(c => c.recipient_name)).size}</h3>
                         </div>
                     </div>
-                    <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-5 hover:shadow-md transition-shadow">
-                        <div className="bg-orange-50 p-3 rounded-xl text-orange-600 border border-orange-100">
-                            <CalendarDaysIcon className="w-7 h-7" />
+                    <div className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-200 shadow-sm flex items-center gap-4 sm:gap-5 hover:shadow-md transition-shadow">
+                        <div className="bg-orange-50 p-2.5 sm:p-3 rounded-xl text-orange-600 border border-orange-100">
+                            <CalendarDaysIcon className="w-6 h-6 sm:w-7 sm:h-7" />
                         </div>
                         <div>
-                            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">本月新增發放</p>
-                            <h3 className="text-2xl font-bold text-gray-900">
+                            <p className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wide mb-0.5 sm:mb-1">本月新增發放</p>
+                            <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                                 {certs.filter(c => new Date(c.created_at).getMonth() === new Date().getMonth()).length}
                             </h3>
                         </div>
@@ -316,35 +374,35 @@ export default function AdminDashboard() {
 
                 {/* Main Content Area */}
                 <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                    <div className="px-6 py-5 border-b border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 bg-gray-50/50">
-                        <div className="relative w-full md:w-96">
+                    <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-gray-200 flex flex-col md:flex-row justify-between items-stretch md:items-center gap-4 bg-gray-50/50">
+                        <div className="relative flex-grow max-w-md">
                             <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                             <input 
                                 type="text" 
                                 placeholder="搜尋證號、姓名或活動..." 
-                                className="w-full pl-11 pr-4 py-2.5 bg-white border border-gray-200 rounded-xl focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all text-sm font-medium shadow-sm"
+                                className="w-full pl-11 pr-4 py-2 sm:py-2.5 bg-white border border-gray-200 rounded-xl focus:border-blue-600 focus:ring-1 focus:ring-blue-600 outline-none transition-all text-sm font-medium shadow-sm"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                             />
                         </div>
                         <button 
                             onClick={openModal}
-                            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm flex items-center justify-center gap-2 transition-all active:scale-95"
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow-sm flex items-center justify-center gap-2 transition-all active:scale-95"
                         >
                             <PlusIcon className="w-5 h-5 text-white" />
-                            <span className="text-white">發放新證書</span>
+                            <span className="text-white whitespace-nowrap">發放新證書</span>
                         </button>
                     </div>
 
                     <div className="overflow-x-auto min-h-[400px]">
-                        <table className="w-full text-left border-collapse">
+                        <table className="w-full text-left border-collapse min-w-[600px] md:min-w-full">
                             <thead>
-                                <tr className="text-gray-500 text-xs font-semibold uppercase tracking-wider bg-gray-50/80 border-b border-gray-200">
-                                    <th className="px-6 py-4 font-semibold">證書編號</th>
-                                    <th className="px-6 py-4 font-semibold">獲證成員</th>
-                                    <th className="px-6 py-4 font-semibold">所屬活動 / 專案</th>
+                                <tr className="text-gray-500 text-[10px] sm:text-xs font-semibold uppercase tracking-wider bg-gray-50/80 border-b border-gray-200">
+                                    <th className="px-4 sm:px-6 py-4 font-semibold hidden lg:table-cell">證書編號</th>
+                                    <th className="px-4 sm:px-6 py-4 font-semibold">獲證成員</th>
+                                    <th className="px-4 sm:px-6 py-4 font-semibold hidden sm:table-cell">所屬活動 / 專案</th>
                                     <th 
-                                        className="px-6 py-4 font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
+                                        className="px-4 sm:px-6 py-4 font-semibold cursor-pointer hover:bg-gray-200 transition-colors select-none"
                                         onClick={toggleSort}
                                     >
                                         <div className="flex items-center gap-1 group">
@@ -354,64 +412,59 @@ export default function AdminDashboard() {
                                             </span>
                                         </div>
                                     </th>
-                                    <th className="px-6 py-4 text-right font-semibold">操作</th>
+                                    <th className="px-4 sm:px-6 py-4 text-right font-semibold">操作</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 bg-white text-sm">
                                 {filteredAndSortedCerts.length > 0 ? filteredAndSortedCerts.map((cert) => (
                                     <tr key={cert.id} className="hover:bg-gray-50/50 transition-colors group">
-                                        <td className="px-6 py-4">
-                                            <span className="font-mono text-xs bg-gray-100 px-2.5 py-1 rounded-md text-gray-600 border border-gray-200">
+                                        <td className="px-4 sm:px-6 py-4 hidden lg:table-cell">
+                                            <span className="font-mono text-[10px] bg-gray-100 px-2 py-0.5 rounded-md text-gray-600 border border-gray-200">
                                                 {cert.cert_number}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-4 sm:px-6 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-10 h-10 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-200">
+                                                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-100 flex-shrink-0 overflow-hidden border border-gray-200">
                                                     {cert.image_url ? (
                                                         <img src={cert.image_url} alt="" className="w-full h-full object-cover" />
                                                     ) : (
                                                         <div className="w-full h-full flex items-center justify-center">
-                                                            <PhotoIcon className="w-5 h-5 text-gray-400" />
+                                                            <PhotoIcon className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div className="flex flex-col">
-                                                    <span className="font-semibold text-gray-900">{cert.recipient_name}</span>
-                                                    {cert.signature && (
-                                                        <div className="flex items-center gap-1 text-[10px] text-emerald-600 font-medium mt-0.5">
-                                                            <ShieldCheckIcon className="w-3 h-3" />
-                                                            已加密簽署
-                                                        </div>
-                                                    )}
+                                                <div className="flex flex-col min-w-0">
+                                                    <span className="font-semibold text-gray-900 truncate">{cert.recipient_name}</span>
+                                                    <span className="lg:hidden font-mono text-[9px] text-gray-400 truncate">{cert.cert_number}</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className="text-gray-700 font-medium">{cert.event_name}</span>
+                                        <td className="px-4 sm:px-6 py-4 hidden sm:table-cell">
+                                            <span className="text-gray-700 font-medium truncate block max-w-[200px]">{cert.event_name}</span>
                                         </td>
-                                        <td className="px-6 py-4">
-                                            <span className="text-gray-500 flex items-center gap-1.5">
-                                                <CalendarDaysIcon className="w-4 h-4" />
+                                        <td className="px-4 sm:px-6 py-4">
+                                            <span className="text-gray-500 flex items-center gap-1.5 text-xs sm:text-sm">
+                                                <CalendarDaysIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                                 {cert.issue_date}
                                             </span>
                                         </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <td className="px-4 sm:px-6 py-4 text-right">
+                                            <div className="flex items-center justify-end gap-1 sm:gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <a 
                                                     href={`/verify/${cert.id}`} 
                                                     target="_blank" 
-                                                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200"
+                                                    className="p-1.5 sm:p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors border border-transparent hover:border-blue-200"
                                                     title="查看驗證頁面"
                                                 >
-                                                    <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+                                                    <ArrowTopRightOnSquareIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                                 </a>
                                                 <button 
                                                     onClick={() => handleDelete(cert.id, cert.image_url)}
-                                                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-200"
+                                                    className="p-1.5 sm:p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-transparent hover:border-red-200"
                                                     title="撤銷此證書"
                                                 >
-                                                    <TrashIcon className="w-4 h-4" />
+                                                    <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                                                 </button>
                                             </div>
                                         </td>
@@ -444,15 +497,15 @@ export default function AdminDashboard() {
                         className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
                         onClick={() => setIsModalOpen(false)}
                     />
-                    <div className="bg-white w-full max-w-xl rounded-2xl shadow-xl relative z-10 flex flex-col max-h-[95vh]">
-                        <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+                    <div className="bg-white w-full max-w-2xl rounded-2xl shadow-xl relative z-10 flex flex-col max-h-[95vh]">
+                        <div className="px-6 py-4 sm:py-5 border-b border-gray-200 flex justify-between items-center">
                             <div className="flex items-center gap-3">
                                 <div className="bg-blue-50 p-2 rounded-lg">
                                     <SparklesIcon className="w-5 h-5 text-blue-600" />
                                 </div>
                                 <div>
-                                    <h2 className="text-lg font-bold text-gray-900">核發新證書</h2>
-                                    <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider mt-0.5">Issue Certificate</p>
+                                    <h2 className="text-base sm:text-lg font-bold text-gray-900 leading-tight">自動生成並核發證書</h2>
+                                    <p className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider mt-0.5">Automated Issuance</p>
                                 </div>
                             </div>
                             <button onClick={() => setIsModalOpen(false)} className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
@@ -460,110 +513,108 @@ export default function AdminDashboard() {
                             </button>
                         </div>
                         
-                        <div className="p-6 overflow-y-auto custom-scrollbar">
+                        <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar">
                             <form onSubmit={handleAddCertificate} className="space-y-6">
-                                {/* 驗證網址複製作業區 */}
-                                <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-5 space-y-3">
-                                    <div className="flex items-center justify-between">
-                                        <label className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5">
-                                            <ShieldCheckIcon className="w-3.5 h-3.5" />
-                                            驗證頁面連結 (製作 QR Code 用)
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-5">
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-gray-700">受證成員姓名</label>
+                                            <input 
+                                                required
+                                                type="text" 
+                                                placeholder="例：王小明" 
+                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                value={newCert.recipient_name}
+                                                onChange={e => setNewCert({...newCert, recipient_name: e.target.value})}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-gray-700 flex justify-between">
+                                                <span>受證成員電子郵件</span>
+                                                <span className="text-[10px] text-gray-400 font-normal">自動寄送證書連結</span>
+                                            </label>
+                                            <input 
+                                                type="email" 
+                                                placeholder="例：example@mail.com" 
+                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                value={newCert.recipient_email}
+                                                onChange={e => setNewCert({...newCert, recipient_email: e.target.value})}
+                                            />
+                                        </div>
+
+                                        <div className="space-y-1.5">
+                                            <label className="text-xs font-bold text-gray-700">活動或專案名稱</label>
+                                            <input 
+                                                required
+                                                type="text" 
+                                                placeholder="例：Build with AI 2025" 
+                                                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm text-sm"
+                                                value={newCert.event_name}
+                                                onChange={e => setNewCert({...newCert, event_name: e.target.value})}
+                                            />
+                                        </div>
+
+                                        <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-3.5 space-y-2.5">
+                                            <div className="flex items-center justify-between">
+                                                <label className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1.5">
+                                                    <ShieldCheckIcon className="w-3.5 h-3.5" />
+                                                    驗證 ID
+                                                </label>
+                                                <button 
+                                                    type="button"
+                                                    onClick={handleCopyUrl}
+                                                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all shadow-sm ${copied ? 'bg-emerald-500 text-white' : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
+                                                >
+                                                    {copied ? '已複製' : '複製連結'}
+                                                </button>
+                                            </div>
+                                            <div className="font-mono text-[9px] bg-white/60 p-2 rounded-lg border border-emerald-100 text-emerald-800 break-all">
+                                                {newCert.id}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <label className="text-xs font-bold text-gray-700 flex items-center justify-between">
+                                            <span>證書即時預覽</span>
+                                            {isGenerating && <ArrowPathIcon className="w-3.5 h-3.5 animate-spin text-blue-600" />}
                                         </label>
-                                        <button 
-                                            type="button"
-                                            onClick={handleCopyUrl}
-                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm ${copied ? 'bg-emerald-500 text-white' : 'bg-white text-emerald-600 border border-emerald-200 hover:bg-emerald-100'}`}
-                                        >
-                                            {copied ? (
+                                        <div className="relative aspect-[4/3] w-full border border-gray-200 rounded-xl bg-gray-50 overflow-hidden shadow-inner group">
+                                            {autoPreview ? (
                                                 <>
-                                                    <ClipboardDocumentCheckIcon className="w-3.5 h-3.5" />
-                                                    已複製
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <ClipboardIcon className="w-3.5 h-3.5" />
-                                                    複製網址
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                    <div className="font-mono text-[11px] bg-white/60 p-3 rounded-lg border border-emerald-100 text-emerald-800 break-all select-all">
-                                        https://gdg.ncuesa.org.tw/verify/{newCert.id}
-                                    </div>
-                                    <p className="text-[10px] text-emerald-600/70 font-medium">
-                                        ※ 請先複製此網址製作 QR Code 並嵌入證書圖檔中，完成後再上傳圖檔。
-                                    </p>
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700">受證成員姓名</label>
-                                    <input 
-                                        required
-                                        type="text" 
-                                        placeholder="例：王小明" 
-                                        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm"
-                                        value={newCert.recipient_name}
-                                        onChange={e => setNewCert({...newCert, recipient_name: e.target.value})}
-                                    />
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700">活動或專案名稱</label>
-                                    <input 
-                                        required
-                                        type="text" 
-                                        placeholder="例：Build with AI 2025 Workshop" 
-                                        className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all font-medium text-gray-900 placeholder:text-gray-400 shadow-sm"
-                                        value={newCert.event_name}
-                                        onChange={e => setNewCert({...newCert, event_name: e.target.value})}
-                                    />
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 flex justify-between">
-                                        <span>上傳證書圖檔 (需包含 QR Code)</span>
-                                        <span className="text-gray-400 font-normal">PNG, JPG, WEBP</span>
-                                    </label>
-                                    <div className="relative group">
-                                        <input 
-                                            required={!selectedFile}
-                                            type="file" 
-                                            accept="image/*"
-                                            onChange={handleFileChange}
-                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20"
-                                        />
-                                        <div className={`w-full border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-colors min-h-[180px] ${selectedFile ? 'border-blue-500 bg-blue-50/50' : 'border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-gray-400'}`}>
-                                            {filePreview ? (
-                                                <div className="relative w-full max-w-[240px] aspect-[4/3] rounded-lg overflow-hidden shadow-md border border-gray-200">
-                                                    <img src={filePreview} alt="Preview" className="w-full h-full object-cover" />
-                                                    <div className="absolute inset-0 bg-gray-900/50 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm">
-                                                        <CloudArrowUpIcon className="w-8 h-8 text-white mb-1" />
-                                                        <span className="text-white font-medium text-sm">更換檔案</span>
+                                                    <img src={autoPreview} alt="Certificate Preview" className="w-full h-full object-contain" />
+                                                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors cursor-zoom-in flex items-center justify-center">
+                                                        <span className="opacity-0 group-hover:opacity-100 bg-white/90 px-3 py-1.5 rounded-full text-[10px] font-bold text-gray-600 shadow-sm transition-opacity">預覽生成成功</span>
                                                     </div>
-                                                </div>
+                                                </>
                                             ) : (
-                                                <div className="flex flex-col items-center text-center">
-                                                    <CloudArrowUpIcon className="w-8 h-8 text-gray-400 mb-2" />
-                                                    <p className="text-sm font-semibold text-gray-700 mb-1">點擊或拖放檔案至此</p>
-                                                    <p className="text-xs text-gray-500">建議上傳已嵌入 QR Code 的成品</p>
+                                                <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                                                    <div className="bg-white p-3 rounded-2xl shadow-sm border border-gray-100 mb-3">
+                                                        <SparklesIcon className="w-8 h-8 text-gray-200" />
+                                                    </div>
+                                                    <p className="text-[10px] sm:text-xs font-semibold text-gray-400">填寫左側資訊以生成預覽</p>
                                                 </div>
                                             )}
                                         </div>
+                                        <p className="text-[10px] text-gray-400 text-center font-medium italic leading-relaxed px-4">
+                                            ※ 系統將自動嵌入專屬 QR Code、證號與數位簽章
+                                        </p>
                                     </div>
                                 </div>
 
-                                <div className="pt-6 flex gap-3 border-t border-gray-200">
+                                <div className="pt-6 flex flex-col-reverse sm:flex-row gap-3 border-t border-gray-200">
                                     <button 
                                         type="button"
                                         onClick={() => setIsModalOpen(false)}
-                                        className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                                        className="flex-1 px-4 py-2.5 rounded-xl font-semibold text-gray-600 bg-white border border-gray-300 hover:bg-gray-50 transition-colors text-sm"
                                     >
                                         取消
                                     </button>
                                     <button 
                                         type="submit" 
-                                        disabled={uploading}
-                                        className="flex-[2] bg-blue-600 text-white py-2.5 rounded-xl font-semibold shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        disabled={uploading || !autoPreview}
+                                        className="flex-[2] bg-blue-600 text-white py-2.5 rounded-xl font-semibold shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
                                     >
                                         {uploading ? (
                                             <>
@@ -572,7 +623,7 @@ export default function AdminDashboard() {
                                             </>
                                         ) : (
                                             <>
-                                                <span className="text-white">正式發放證書</span>
+                                                <span className="text-white">正式核發證書</span>
                                                 <CheckBadgeIcon className="w-5 h-5 text-white" />
                                             </>
                                         )}
