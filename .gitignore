@@ -56,3 +56,6 @@ Thumbs.db
 # temporary files
 *.tmp
 *.temp
+
+# local sqlite data + uploaded certificate images
+/data

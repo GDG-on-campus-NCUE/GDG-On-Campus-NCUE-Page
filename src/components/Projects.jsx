@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useLanguage } from '@/hooks/useLanguage';
+import ScholarshipShowcase from './ScholarshipShowcase';
 
 import next_js_img from '@/images/tech/nextjs.svg'
 import ts_img from '@/images/tech/typescript.svg'
@@ -249,7 +250,9 @@ export default function Projects() {
                 // 依據可見狀態切換動畫
                 setIsVisible(entry.isIntersecting);
             },
-            { threshold: 0.1 }
+            // 這個 section 含捲動劇場後高達數百 vh，threshold 不能設比例：
+            // 「整體的 10%」可能高於一個視窗，永遠不會被判定為 intersecting。
+            { threshold: 0 }
         );
 
         if (ref.current) observer.observe(ref.current);
@@ -327,96 +330,45 @@ export default function Projects() {
 
                 {/* --- 區段一：介紹 (RWD 已優化) --- */}
                 <div className="text-center mb-16 md:mb-24">
-                    <h2 className={`phone-h1 md:pc-h1 text-heading mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+                    <h2 className={`phone-h1 md:pc-h1 text-[var(--foreground)] mb-6 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
                         {language === 'zh'
                             ? (<>{'你的程式碼，'}<span className="block md:inline">在校園日常迴響</span></>)
                             : (<>{'Your code, '}<span className="block md:inline">echoes through campus life</span></>)}
                     </h2>
-                    <p className={`phone-liner md:pc-h3 text-muted max-w-3xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
+                    <p className={`phone-liner md:pc-h3 text-[var(--muted)] max-w-3xl mx-auto leading-relaxed transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.2s' }}>
                         {language === 'zh'
                             ? '我們不僅是打造酷炫的專案，更是構築支撐校園運作的數位基石。從賦能學生的獎學金資訊平台，到優化校園網站的使用體驗，我們的技術無聲地運行在背景之中，成為每一位同學都能依賴的、穩定而強大的隱形力量。'
                             : 'We are not just building flashy projects; we also lay the digital foundation that supports campus operations. From empowering students with a scholarship information platform to enhancing user experiences on campus websites, our technology runs silently in the background, becoming a stable and powerful invisible force every student can rely on.'}
                     </p>
                 </div>
 
-                {/* --- 區段二：主要專案展示 (RWD 已重構) --- */}
-                <div className="bg-surface rounded-3xl shadow-2xl overflow-hidden mb-16 md:mb-24">
-                    {/* [RWD 優化] 在 lg 以下的螢幕，會自動變為單欄上下堆疊 */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2">
-                        {/* 左側內容 (手機版會在上) */}
-                        <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-center order-2 lg:order-1">
-                            <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '0.4s' }}>
-                                <h3 className="phone-h3 md:pc-h2 text-brand mb-4 font-bold">
-                                    {language === 'zh' ? '精選專案' : 'Featured Project'}
-                                </h3>
-                                <h2 className="phone-h2 md:pc-h1 text-heading mb-6 leading-tight">
-                                    {language === 'zh' ? '生輔組獎學金資訊平台' : 'Student Affairs Scholarship Info Platform'}
-                                </h2>
-                                <p className="phone-liner md:pc-liner text-muted mb-8 leading-relaxed">
-                                    {language === 'zh'
-                                        ? '一個以前瞻性的多模態大型語言模型為核心所打造的智慧獎學金資訊平台。它能動態分析使用者提供的任何資料來源（如 PDF 文件、網頁連結），並透過強大的 Gemini 3 Flash 模型，實現全自動的資料解析、關鍵資訊萃取與內容摘要，旨在徹底顛覆傳統的資訊整理與公告發布流程，為學校提供一個前所未有的高效體驗。'
-                                        : 'An intelligent scholarship information platform built around a cutting-edge Multimodal Large Language Model. It dynamically analyzes any user-provided data source, such as PDF documents and web links, leveraging the powerful Gemini 3 Flash model to achieve fully automated data parsing, key information extraction, and content summarization. The platform is designed to revolutionize traditional information management and announcement workflows, offering the institution an unprecedented level of efficiency.'}
-                                </p>
-                                <h4 className="phone-liner-bold md:pc-liner-bold text-heading mb-4 font-bold">
-                                    {language === 'zh' ? '技術棧' : 'Tech Stack'}
-                                </h4>
+                {/* --- 區段二：精選專案展示（瀏覽器外框 + 捲動驅動輪播） --- */}
+                <ScholarshipShowcase />
 
-                                <div className="relative w-full overflow-hidden rounded-lg bg-surface/50 select-none">
-                                    <div className="marquee-container flex text-foreground whitespace-nowrap">
-                                        {Array.from({ length: 12 }, (_, setIndex) =>
-                                            techStack.map((tech, techIndex) => (
-                                                <div
-                                                    key={`${setIndex}-${techIndex}`}
-                                                    className="flex items-center p-3 mx-3 md:p-4 md:mx-4 flex-shrink-0 min-w-fit"
-                                                    style={{ animationDelay: `${(setIndex * techStack.length + techIndex) * 0.2}s` }}
-                                                >
-                                                    <div className="bg-white/90 dark:bg-white rounded-full p-1.5 mr-3 shadow-sm">
-                                                        <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" draggable={false} />
-                                                    </div>
-                                                    <span className="text-sm md:text-base font-semibold">{tech.name}</span>
-                                                </div>
-                                            ))
-                                        ).flat()}
+                {/* --- 區段二之二：該平台的技術棧 --- */}
+                <div className="mb-16 md:mb-24">
+                    <h4 className="phone-liner-bold md:pc-liner-bold text-[var(--foreground)] mb-4 text-center font-bold">
+                        {language === 'zh' ? '技術棧' : 'Tech Stack'}
+                    </h4>
+                    <div className="relative w-full select-none overflow-hidden py-2">
+                        <div className="marquee-container flex whitespace-nowrap text-[var(--foreground)]">
+                            {Array.from({ length: 12 }, (_, setIndex) =>
+                                techStack.map((tech, techIndex) => (
+                                    <div
+                                        key={`${setIndex}-${techIndex}`}
+                                        className="mx-3 flex min-w-fit flex-shrink-0 items-center p-3 md:mx-4 md:p-4"
+                                        style={{ animationDelay: `${(setIndex * techStack.length + techIndex) * 0.2}s` }}
+                                    >
+                                        <div className="mr-3 rounded-full bg-white/90 p-1.5 shadow-sm dark:bg-white">
+                                            <Image src={tech.icon} alt={tech.name} width={40} height={40} className="h-6 w-6 md:h-8 md:w-8" draggable={false} />
+                                        </div>
+                                        <span className="text-sm font-semibold md:text-base">{tech.name}</span>
                                     </div>
-                                    <div className="absolute inset-y-0 left-0 w-12 md:w-16 bg-gradient-to-r from-surface to-transparent pointer-events-none z-10"></div>
-                                    <div className="absolute inset-y-0 right-0 w-12 md:w-16 bg-gradient-to-l from-surface to-transparent pointer-events-none z-10"></div>
-                                </div>
-                            </div>
+                                ))
+                            ).flat()}
                         </div>
-
-                        {/* 右側模型 (手機版會在下) */}
-                        <div className={`bg-gradient-to-br from-blue-500 via-purple-600 to-purple-700 p-6 md:p-8 flex items-center justify-center transition-all duration-1000 relative order-1 lg:order-2 w-full max-w-full box-border overflow-hidden ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`} style={{ transitionDelay: '0.5s' }}>
-                            <div className="w-full h-full min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center justify-center px-2 text-center">
-                                {/* 桌面版加寬按鈕寬度 */}
-                                <button
-                                    onClick={() => openLink('https://scholarship.ncuesa.org.tw/')}
-                                    className="bg-white/25 backdrop-blur-lg border border-white/40 rounded-2xl p-4 md:p-5 lg:p-6 shadow-2xl w-full max-w-[90%] md:max-w-[80%] lg:max-w-[75%] xl:max-w-[70%] mx-auto hover:bg-white/30 group-hover:scale-105 hover:scale-105 active:scale-98 transition-transform duration-300 transform-gpu will-change-transform cursor-pointer relative z-10 overflow-visible"
-                                >
-                                    {/* 卡片模擬內容 */}
-                                    <div className="space-y-2 md:space-y-3 mb-6 md:mb-8">
-                                        <div className="h-2 md:h-3 bg-white/80 rounded w-3/4"></div>
-                                        <div className="h-2 md:h-2 bg-white/70 rounded w-full"></div>
-                                        <div className="h-2 md:h-2 bg-white/70 rounded w-4/5"></div>
-                                        <div className="bg-teal-400/70 rounded-lg p-2 md:p-3 space-y-1 border border-white/30 shadow-md">
-                                            <div className="h-1.5 md:h-2 bg-white/90 rounded w-2/3"></div>
-                                            <div className="h-1.5 md:h-2 bg-white/80 rounded w-full"></div>
-                                        </div>
-                                        <div className="bg-green-400/70 rounded-lg p-2 md:p-3 space-y-1 border border-white/30 shadow-md">
-                                            <div className="h-1.5 md:h-2 bg-white/90 rounded w-3/5"></div>
-                                        </div>
-                                    </div>
-
-                                    {/* 底部資訊區塊 - 確保置中且不會爆版 */}
-                                    <div className="text-center w-full">
-                                        <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-orange-400 to-red-500 rounded-full mx-auto flex items-center justify-center shadow-lg mb-3 group-hover:scale-110 transition-transform">
-                                            <span className="text-white text-xl md:text-2xl lg:text-3xl">🎓</span>
-                                        </div>
-                                        <p className="font-semibold text-sm md:text-base text-white leading-tight mb-1 px-2">{language === 'zh' ? '生輔組獎學金資訊平台' : 'Student Affairs Scholarship Info Platform'}</p>
-                                        <p className="text-xs md:text-sm text-white/90 px-2">{language === 'zh' ? '點擊訪問' : 'Visit site'}</p>
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
+                        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-[var(--background)] to-transparent md:w-16"></div>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-[var(--background)] to-transparent md:w-16"></div>
                     </div>
                 </div>
 
@@ -436,28 +388,28 @@ export default function Projects() {
                                 ref={el => cardInnerRefs.current[index] = el}
                                 onMouseMove={e => handleMouseMove(e, index)}
                                 onMouseLeave={() => handleMouseLeave(index)}
-                                className="relative bg-surface/80 backdrop-blur-xl border border-border/50 rounded-3xl p-8 md:p-10 flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 transform-gpu will-change-transform overflow-hidden"
+                                className="relative bg-[var(--surface)]/80 backdrop-blur-xl border border-[var(--border)]/50 rounded-3xl p-8 md:p-10 flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300 transform-gpu will-change-transform overflow-hidden"
                             >
                                 {/* 裝飾性幾何圖形 */}
-                                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-brand/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
+                                <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-gradient-to-bl from-[#4285f4]/20 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
                                 {/* 頂部：標題與狀態 */}
                                 <div className="flex justify-between items-start mb-6 gap-4">
-                                    <h3 className="text-2xl md:text-3xl font-extrabold text-heading tracking-tight leading-tight group-hover:text-brand transition-colors">
+                                    <h3 className="text-2xl md:text-3xl font-extrabold text-[var(--foreground)] tracking-tight leading-tight group-hover:text-[#4285f4] transition-colors">
                                         {feature.title}
                                     </h3>
                                     {(() => {
                                         const statusConfig = {
-                                            '已上線': { color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20', dot: 'bg-green-500' },
-                                            'Launched': { color: 'text-green-500', bg: 'bg-green-500/10', border: 'border-green-500/20', dot: 'bg-green-500' },
-                                            '開發中': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', dot: 'bg-yellow-500' },
-                                            'In Development': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', border: 'border-yellow-500/20', dot: 'bg-yellow-500' },
+                                            '已上線': { color: 'text-green-500', bg: 'bg-green-500/10', dot: 'bg-green-500' },
+                                            'Launched': { color: 'text-green-500', bg: 'bg-green-500/10', dot: 'bg-green-500' },
+                                            '開發中': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', dot: 'bg-yellow-500' },
+                                            'In Development': { color: 'text-yellow-500', bg: 'bg-yellow-500/10', dot: 'bg-yellow-500' },
                                         };
-                                        const config = statusConfig[feature.status] || { color: 'text-gray-500', bg: 'bg-gray-500/10', border: 'border-gray-500/20', dot: 'bg-gray-500' };
-                                        
+                                        const config = statusConfig[feature.status] || { color: 'text-gray-500', bg: 'bg-gray-500/10', dot: 'bg-gray-500' };
+
                                         return (
-                                            <div className={`flex items-center px-3 py-1.5 rounded-full ${config.bg} ${config.border} border shrink-0 backdrop-blur-sm`}>
-                                                <span className={`w-2 h-2 rounded-full ${config.dot} mr-2 animate-pulse`}></span>
+                                            <div className={`flex items-center px-3 py-1.5 rounded-full ${config.bg} shrink-0`}>
+                                                <span className={`w-2 h-2 rounded-full ${config.dot} mr-2`}></span>
                                                 <span className={`text-xs font-bold ${config.color} tracking-wide`}>
                                                     {feature.status}
                                                 </span>
@@ -471,14 +423,14 @@ export default function Projects() {
                                     {Array.isArray(feature.description) ? (
                                         <div className="space-y-4 mb-8">
                                             {feature.description.map((item, i) => (
-                                                <div key={i} className="pl-4 border-l-2 border-brand/30 hover:border-brand transition-colors">
-                                                    <h4 className="text-sm md:text-base font-bold text-heading mb-1">{item.title}</h4>
-                                                    <p className="text-sm text-muted leading-relaxed">{item.content}</p>
+                                                <div key={i} className="pl-4 border-l-2 border-[#4285f4]/30 hover:border-[#4285f4] transition-colors">
+                                                    <h4 className="text-sm md:text-base font-bold text-[var(--foreground)] mb-1">{item.title}</h4>
+                                                    <p className="text-sm text-[var(--muted)] leading-relaxed">{item.content}</p>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
-                                        <p className="text-base md:text-lg text-muted leading-relaxed mb-8 font-medium">
+                                        <p className="text-base md:text-lg text-[var(--muted)] leading-relaxed mb-8 font-medium">
                                             {feature.description}
                                         </p>
                                     )}
@@ -490,20 +442,20 @@ export default function Projects() {
                                         {feature.tags.map(tag => (
                                             <span
                                                 key={tag}
-                                                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-surface-muted border border-border text-muted hover:text-brand hover:border-brand/30 transition-colors"
+                                                className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[var(--foreground)]/[0.06] text-[var(--muted)] hover:bg-[#4285f4]/10 hover:text-[#4285f4] transition-colors"
                                             >
                                                 #{tag}
                                             </span>
                                         ))}
                                     </div>
                                     
-                                    <div className="flex items-center gap-4 pt-6 border-t border-border/50">
+                                    <div className="flex items-center gap-4">
                                         {feature.link && (
                                             <a
                                                 href={feature.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-brand text-white font-bold hover:bg-brand-accent transition-all duration-300 hover:shadow-lg hover:shadow-brand/25 group/btn"
+                                                className="flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#4285f4] text-white font-bold hover:bg-[#3367d6] transition-all duration-300 hover:shadow-lg hover:shadow-[#4285f4]/25 group/btn"
                                             >
                                                 {language === 'zh' ? '前往專案' : 'Visit Project'}
                                                 <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -516,7 +468,7 @@ export default function Projects() {
                                                 href={feature.repo}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="flex items-center justify-center p-3 rounded-xl bg-surface-muted text-muted hover:text-heading hover:bg-border/50 border border-transparent hover:border-border transition-all duration-300"
+                                                className="flex items-center justify-center p-3 rounded-xl bg-[var(--surface-muted)] text-[var(--muted)] hover:text-[var(--foreground)] hover:bg-[var(--border)]/50 border border-transparent hover:border-[var(--border)] transition-all duration-300"
                                                 title="View Source Code"
                                             >
                                                 <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -536,7 +488,7 @@ export default function Projects() {
                 <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '1s' }}>
                     <button
                         onClick={() => openLink('https://github.com/GDG-on-campus-NCUE/NCUE-Scholarship')}
-                        className="bg-brand hover:bg-brand-accent text-text-on-brand px-6 py-3 md:px-8 md:py-4 rounded-lg phone-liner-bold md:pc-liner-bold transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center space-x-3 group transform hover:scale-105"
+                        className="bg-[#4285f4] hover:bg-[#3367d6] text-white px-6 py-3 md:px-8 md:py-4 rounded-lg phone-liner-bold md:pc-liner-bold transition-all duration-300 shadow-lg hover:shadow-xl inline-flex items-center space-x-3 group transform hover:scale-105"
                     >
                         <svg aria-hidden="true" className="w-5 h-5 md:w-6 md:h-6 group-hover:rotate-12 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />

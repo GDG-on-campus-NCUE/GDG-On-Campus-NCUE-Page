@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* 注意：這裡刻意「不」加 @config 去載入 tailwind.config.cjs。
+   Tailwind v4 是 CSS-first 設定，不會自動讀取舊版 JS config，所以設定檔裡的
+   brand / surface / border / heading / muted 等色彩 token 其實從未產生過 utility，
+   全站畫面都是照著這個狀態調出來的。一旦補上 @config，深色模式的
+   --heading (#8ab4f8) 會讓所有標題變藍、螢光筆標註與文字同色而看不清、
+   原本透明的按鈕會突然填上藍底。
+   需要這些 token 的元件請直接寫 var(--token) 的 arbitrary value，
+   例如 text-[var(--muted)]、border-[var(--border)]。 */
+
 :root,
 [data-theme="light"] {
   /* Light Theme Palette - Google/GDG Brand Colors */
@@ -44,11 +53,17 @@
     --matrix-brackets: #39FF14; /* 下落括號顏色改為綠色 */
 }
 
-html,
-body {
-  /* 防止頁面在手機上左右滾動 */
+html {
+  /* 防止頁面在手機上左右滾動。
+     這裡刻意「只」設在 html：若 body 也設 overflow-x，body 會變成捲動容器，
+     內部的 position:sticky 就會失效（獎學金平台展示區需要 sticky）。
+     根元素的 overflow 會被瀏覽器提升到 viewport，單獨設在 html 一樣擋得住橫向捲動。 */
   max-width: 100%;
   overflow-x: hidden;
+}
+
+body {
+  max-width: 100%;
 }
 
 body {
@@ -168,11 +183,6 @@ html {
 
 /* 手機版面優化 */
 @media (max-width: 768px) {
-
-  /* 隱藏手機上不必要的滾動條 */
-  body {
-    overflow-x: hidden;
-  }
 
   /* 優化按鈕觸摸體驗 */
   button {
@@ -576,6 +586,38 @@ svg {
 /* 合作夥伴卡片：固定藍色光暈，深色模式較淺，淺色模式較深 */
 .partner-halo {
   display: none;
+}
+
+/* 獎學金平台展示區：徽章漂浮、捲動提示、敘述段落進場 */
+@keyframes badge-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes hint-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+@keyframes beat-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Google 4-color rainbow flow animation */

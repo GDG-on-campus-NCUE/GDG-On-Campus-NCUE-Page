@@ -1,67 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GDG On Campus NCUE 官方網站
 
-## Getting Started
+彰化師範大學 Google 開發者社群官方網站，含**數位證書核發／驗證系統**。
 
-First, run the development server:
+- 正式站：<https://gdg.ncuesa.org.tw>
+- 後台：`/admin/login`（Google 登入 + 管理員白名單）
+- 公開驗證頁：`/verify/<證書 UUID>`
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 技術架構
+
+| 層 | 用什麼 |
+|---|---|
+| 前端 / 後端 | Next.js 15（App Router）、React 19、Tailwind CSS 4 |
+| 資料庫 | **SQLite**，透過 Node.js 內建的 `node:sqlite`，零外部依賴 |
+| 檔案儲存 | 伺服器本機磁碟（Zeabur 持久化 Volume） |
+| 身分驗證 | 自建 Google OAuth 2.0 + HMAC 簽章的 httpOnly session cookie |
+| 郵件 | Resend |
+| 部署 | Docker → Zeabur 專屬伺服器 |
+
+> 這個專案原本使用 Supabase（Postgres + Storage + Auth）並部署在 Cloudflare Pages，
+> 已全面改為單一容器 + SQLite 的架構。詳見 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)
+> 與 [docs/GOOGLE-OAUTH.md](docs/GOOGLE-OAUTH.md)。
+
+### 資料放在哪
+
+所有狀態都在 `DATA_DIR` 這一個目錄底下，備份／搬家只要複製它：
+
+```
+$DATA_DIR/
+├── gdg.db            # certificates、audit_log 兩張表
+└── certificates/     # 核發出去的證書 PNG
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## Deploy to GitHub Pages（使用 GitHub Actions 自動部署）
-
-如果你的專案可以被靜態匯出（沒有使用 getServerSideProps / API Routes / 需要 server 的功能），可以使用 GitHub Pages 搭配 Actions 自動部署。此專案已包含一個範例 workflow：`.github/workflows/deploy-gh-pages.yml`，當你 push 到 `main` 時會執行 build + `next export`，並把 `out/` 發佈到 `gh-pages` 分支。
-
-步驟（本機測試）：
+## 本機開發
 
 ```bash
-# 安裝套件
-npm ci
-
-# 建置並靜態匯出（會產生 out/）
-npx next build
-npx next export
-
-# 簡單在本機預覽 out/ 內容（可選）
-npx http-server ./out -p 3000
-# 或
-npx serve out -p 3000
+npm install
+cp .env.local.example .env.local   # 填入下面說明的變數
+npm run dev                        # http://localhost:3000
 ```
 
-在 GitHub 上啟用 Pages：
+需要 **Node.js 22.13 以上**（`node:sqlite` 要免旗標可用）。
 
-1. 到你的 repository 頁面，點 Settings → Pages。
-2. 在 "Build and deployment"（或 "Source"）設定，選擇 Branch 為 `gh-pages`、Folder 選擇 `/ (root)`，然後儲存。
-3. 等候幾分鐘，GitHub 會發佈你的靜態站點（頁面網址會顯示在同一頁面）。
+### 環境變數
 
-注意事項與限制：
-- `next export` 只能處理完全靜態的頁面。若你的專案使用 SSR、API routes、或其他需要 server 的功能，請改用 Vercel / Render / 或部署到有 Node.js 的伺服器。
-- next/image 的最佳化在靜態匯出時可能失效，必要時請改用普通 `<img>` 或其他圖像處理策略。
-- 若需要環境變數或私有套件，請在 workflow 或部署平台設定相對應的 Secrets。
+```bash
+APP_URL=http://localhost:3000
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+AUTH_SECRET=$(node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))")
+ADMIN_EMAILS=you@gmail.com
+DATA_DIR=./data
+RESEND_API_KEY=re_...
+```
+
+本機要能登入，Google Cloud Console 的重新導向網址要多加一筆
+`http://localhost:3000/api/auth/callback/google`。
+
+沒填 Google 憑證也能跑，只是 `/admin/login` 會顯示「伺服器尚未完成設定」並停用登入按鈕。
+
+---
+
+## 主要路由
+
+| 路徑 | 權限 | 說明 |
+|---|---|---|
+| `/` | 公開 | 社群首頁 |
+| `/verify/[id]` | 公開 | 證書驗證頁，伺服器端算好簽章是否有效才回傳 |
+| `/admin/login` | 公開 | Google 登入 |
+| `/admin/dashboard` | 管理員 | 總覽 / 證書管理 / 稽核紀錄 |
+| `GET /api/health` | 公開 | 健康檢查，順便確認資料庫讀得到 |
+| `GET /api/auth/google` | 公開 | 導向 Google 授權頁 |
+| `GET /api/auth/callback/google` | 公開 | OAuth callback，發 session cookie |
+| `POST /api/auth/logout` | 公開 | 登出 |
+| `GET /api/auth/session` | 管理員 | 目前登入者 |
+| `GET /api/certificates` | 管理員 | 證書清單（含 Email 與寄送狀態） |
+| `POST /api/certificates` | 管理員 | 核發證書、存圖、寄信 |
+| `DELETE /api/certificates/[id]` | 管理員 | 撤銷證書並刪圖 |
+| `POST /api/certificates/[id]/resend` | 管理員 | 重寄通知信 |
+| `GET /api/certificates/[id]` | 公開 | 證書公開欄位（不含 Email） |
+| `GET /api/certificates/[id]/image` | 公開 | 證書 PNG |
+| `GET /api/certificates/[id]/qr` | 公開 | 驗證 QR Code PNG |
+| `GET /api/audit` | 管理員 | 稽核紀錄 |
+
+---
+
+## 安全性設計
+
+- **管理員白名單**：Google 驗證通過還要在 `ADMIN_EMAILS` / `ADMIN_EMAIL_DOMAINS` 內才放行，
+  被擋下的嘗試會記進 `audit_log`。白名單在**每次驗證 session 時**重新檢查，
+  把人從名單移除後即時生效，不用等 session 過期。
+- **Session**：HMAC-SHA256 簽章的 httpOnly / SameSite=Lax cookie，8 小時到期，JavaScript 讀不到。
+- **證書簽章**：伺服器用 `AUTH_SECRET` 對「UUID + 證號 + 姓名 + 活動 + 日期」算 HMAC。
+  簽章只有伺服器算得出來，資料被改過驗證頁會直接顯示「簽章無法驗證」。
+- **寄信端點**：舊版的 `/api/send-certificate` 是任何人都能呼叫、可指定任意收件人的開放端點，已移除；
+  現在寄信只發生在伺服器端且需要管理員身分。
+- **公開端點最小揭露**：驗證頁與公開 API 不回傳收件人 Email、寄送狀態、核發者。
+- **路徑穿越防護**：證書圖片檔名只允許 `[A-Za-z0-9._-]`，實體路徑一律由 `UPLOAD_DIR` 組出來。
+
+---
+
+## 部署
+
+見 [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)。簡述：
+
+```bash
+npx zeabur@latest deploy \
+  --project-id 6a7f18c22b4272705cd1df89 \
+  --service-id 6a7f18d2a21454a2cf6a0100 --json
+```
