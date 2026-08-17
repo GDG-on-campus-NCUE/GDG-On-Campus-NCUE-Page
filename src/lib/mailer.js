@@ -31,19 +31,16 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-/* ── 色票 ──────────────────────────────────────── */
-const BG       = '#1a1a1f';     // 整封信唯一底色
-const SURFACE  = '#25252b';     // 資訊區塊底色
-const INK      = '#f1f1f4';     // 主標題文字
-const BODY     = '#d1d1d6';     // 內文文字
-const MUTED    = '#9a9aa0';     // 次要文字
-const FAINT    = '#6b6b73';     // 最淡文字
-const LINE     = '#2e2e35';     // 分隔線
+/* ── 色票（白底信件） ─────────────────────────────── */
+const INK      = '#202124';     // 主標題文字
+const BODY     = '#3c4043';     // 內文文字
+const MUTED    = '#5f6368';     // 次要文字
+const FAINT    = '#80868b';     // 最淡文字
+const LINE     = '#e0e0e0';     // 分隔線
 const ACCENT   = '#4285f4';     // Google 藍
 const ACCENT_G = '#34a853';     // Google 綠
 const ACCENT_Y = '#fbbc04';     // Google 黃
 const ACCENT_R = '#ea4335';     // Google 紅
-const LOGO_BG  = '#ffffff';     // Logo 區白底，確保黑色文字可見
 const MONO_FONT = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace";
 const FONT      = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', Helvetica, Arial, sans-serif";
 
@@ -66,37 +63,18 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<meta name="supported-color-schemes" content="dark">
+<meta name="color-scheme" content="light only">
+<meta name="supported-color-schemes" content="light only">
 <title>證書核發通知</title>
 </head>
-<body style="margin:0;padding:0;background-color:${BG};-webkit-text-size-adjust:none;">
-  <div style="display:none;font-size:1px;color:${BG};max-height:0;overflow:hidden;">你參與「${safeEvent}」的數位證書已核發完成，點開即可檢視與下載。</div>
+<body style="margin:0;padding:0;-webkit-text-size-adjust:none;">
+  <div style="display:none;font-size:1px;max-height:0;overflow:hidden;">你參與「${safeEvent}」的數位證書已核發完成，點開即可檢視與下載。</div>
 
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:600px;margin:0 auto;background-color:${BG};">
-
-    <!-- Logo 區域：白底確保 logo 黑字可見 -->
-    <tr>
-      <td style="background:#ffffff !important;background-color:#ffffff;padding:40px 40px 28px;">
-        <img src="${baseUrl}/email/logo.png" alt="${ORG_NAME}" width="280" style="width:280px;max-width:80%;height:auto;display:block;border:0;">
-      </td>
-    </tr>
-
-    <!-- Google 四色裝飾條 -->
-    <tr>
-      <td style="font-size:0;line-height:0;">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-          <td style="height:4px;background:${ACCENT};" width="25%"></td>
-          <td style="height:4px;background:${ACCENT_R};" width="25%"></td>
-          <td style="height:4px;background:${ACCENT_Y};" width="25%"></td>
-          <td style="height:4px;background:${ACCENT_G};" width="25%"></td>
-        </tr></table>
-      </td>
-    </tr>
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:600px;margin:0 auto;">
 
     <!-- 標題 -->
     <tr>
-      <td style="padding:36px 40px 0;">
+      <td style="padding:40px 40px 0;">
         <h1 style="margin:0;font-family:${FONT};font-size:22px;line-height:1.5;font-weight:700;color:${INK};letter-spacing:-0.2px;">
           證書核發通知
         </h1>
@@ -106,9 +84,21 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
       </td>
     </tr>
 
+    <!-- Google 四色裝飾條 -->
+    <tr>
+      <td style="padding:20px 40px 0;font-size:0;line-height:0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="height:4px;background:${ACCENT};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_R};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_Y};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_G};" width="25%"></td>
+        </tr></table>
+      </td>
+    </tr>
+
     <!-- 內文 -->
     <tr>
-      <td style="padding:24px 40px 0;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
+      <td style="padding:28px 40px 0;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
         <p style="margin:0 0 16px;">親愛的 <strong style="color:${INK};">${safeName}</strong> 同學，您好：</p>
         <p style="margin:0;">
           感謝你參與「<strong style="color:${INK};">${safeEvent}</strong>」。
@@ -133,12 +123,10 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
     <!-- QR Code 區塊 -->
     <tr>
       <td style="padding:28px 40px 0;">
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:${SURFACE};border:1px solid ${LINE};border-radius:10px;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border:1px solid ${LINE};border-radius:10px;">
           <tr>
             <td width="110" style="padding:16px;" valign="middle">
-              <div style="background:#ffffff;border-radius:8px;padding:6px;display:inline-block;">
-                <img src="${qrUrl}" alt="驗證 QR Code" width="92" height="92" style="width:92px;height:92px;display:block;">
-              </div>
+              <img src="${qrUrl}" alt="驗證 QR Code" width="92" height="92" style="width:92px;height:92px;display:block;border-radius:6px;">
             </td>
             <td style="padding:16px 16px 16px 4px;font-family:${FONT};font-size:13px;line-height:1.8;color:${MUTED};" valign="middle">
               用手機掃描左側 QR Code，<br>即可在其他裝置開啟公開驗證頁面。
