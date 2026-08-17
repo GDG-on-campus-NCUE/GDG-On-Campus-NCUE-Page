@@ -75,22 +75,22 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
 
   <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:600px;margin:0 auto;background-color:${BG};">
 
+    <!-- Logo 區域：白底確保 logo 黑字可見 -->
+    <tr>
+      <td style="background:#ffffff !important;background-color:#ffffff;padding:40px 40px 28px;">
+        <img src="${baseUrl}/email/logo.png" alt="${ORG_NAME}" width="280" style="width:280px;max-width:80%;height:auto;display:block;border:0;">
+      </td>
+    </tr>
+
     <!-- Google 四色裝飾條 -->
     <tr>
-      <td style="padding:40px 0 0;font-size:0;line-height:0;">
+      <td style="font-size:0;line-height:0;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
           <td style="height:4px;background:${ACCENT};" width="25%"></td>
           <td style="height:4px;background:${ACCENT_R};" width="25%"></td>
           <td style="height:4px;background:${ACCENT_Y};" width="25%"></td>
           <td style="height:4px;background:${ACCENT_G};" width="25%"></td>
         </tr></table>
-      </td>
-    </tr>
-
-    <!-- Logo 區域：白底確保 logo 黑字可見 -->
-    <tr>
-      <td style="background-color:${LOGO_BG};padding:28px 40px;">
-        <img src="${baseUrl}/email/logo.png" alt="${ORG_NAME}" width="280" style="width:280px;max-width:80%;height:auto;display:block;border:0;">
       </td>
     </tr>
 
