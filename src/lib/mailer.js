@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 /* ── 寄件設定 ─────────────────────────────────── */
 const SMTP_USER = process.env.SMTP_USER || 'ideasspr@gmail.com';
 const SMTP_PASS = process.env.SMTP_PASS || '';
-const FROM_ADDRESS = `"GDGoC" <${SMTP_USER}>`;
+const FROM_ADDRESS = `"Google Developer Group" <${SMTP_USER}>`;
 const CONTACT_ADDRESS = process.env.MAIL_CONTACT || 'gdg-core@ncuesa.org.tw';
 const ORG_NAME = 'GDG on Campus NCUE';
 
@@ -31,22 +31,19 @@ function escapeHtml(value) {
         .replace(/'/g, '&#39;');
 }
 
-/* ── 現代深色系色票 ──────────────────────────────── */
-const PAGE      = '#0f0f11';     // 最外層底色
-const CARD_BG   = '#1a1a1f';     // 主卡片底色
-const CARD_TOP  = '#222228';     // 卡片頂部 header 區塊
-const SURFACE   = '#25252b';     // 資訊區塊底色
-const INK       = '#f1f1f4';     // 主標題文字
-const BODY      = '#d1d1d6';     // 內文文字
-const MUTED     = '#9a9aa0';     // 次要文字
-const FAINT     = '#6b6b73';     // 最淡文字
-const LINE      = '#2e2e35';     // 分隔線
-const ACCENT    = '#4285f4';     // Google 藍
-const ACCENT_G  = '#34a853';     // Google 綠
-const ACCENT_Y  = '#fbbc04';     // Google 黃
-const ACCENT_R  = '#ea4335';     // Google 紅
-const BTN_BG    = '#4285f4';     // 按鈕底色
-const BTN_HOVER = '#5a95f5';     // 按鈕 hover
+/* ── 色票 ──────────────────────────────────────── */
+const BG       = '#1a1a1f';     // 整封信唯一底色
+const SURFACE  = '#25252b';     // 資訊區塊底色
+const INK      = '#f1f1f4';     // 主標題文字
+const BODY     = '#d1d1d6';     // 內文文字
+const MUTED    = '#9a9aa0';     // 次要文字
+const FAINT    = '#6b6b73';     // 最淡文字
+const LINE     = '#2e2e35';     // 分隔線
+const ACCENT   = '#4285f4';     // Google 藍
+const ACCENT_G = '#34a853';     // Google 綠
+const ACCENT_Y = '#fbbc04';     // Google 黃
+const ACCENT_R = '#ea4335';     // Google 紅
+const LOGO_BG  = '#ffffff';     // Logo 區白底，確保黑色文字可見
 const MONO_FONT = "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace";
 const FONT      = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', Helvetica, Arial, sans-serif";
 
@@ -64,19 +61,6 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
                 <td style="padding:5px 0 5px 18px;font-family:${MONO_FONT};font-size:13px;line-height:1.7;color:${BODY};word-break:break-all;vertical-align:top;">${value}</td>
               </tr>`;
 
-    /* Google 四色裝飾條 */
-    const colorBar = `
-      <tr>
-        <td style="padding:0;font-size:0;line-height:0;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
-            <td style="height:4px;background:${ACCENT};border-radius:12px 0 0 0;" width="25%"></td>
-            <td style="height:4px;background:${ACCENT_R};" width="25%"></td>
-            <td style="height:4px;background:${ACCENT_Y};" width="25%"></td>
-            <td style="height:4px;background:${ACCENT_G};border-radius:0 12px 0 0;" width="25%"></td>
-          </tr></table>
-        </td>
-      </tr>`;
-
     return `<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -86,122 +70,125 @@ function renderHtml({ name, eventName, certId, certNumber, issueDate, certUrl, q
 <meta name="supported-color-schemes" content="dark">
 <title>證書核發通知</title>
 </head>
-<body style="margin:0;padding:0;background-color:${PAGE};-webkit-text-size-adjust:none;">
-  <div style="display:none;font-size:1px;color:${PAGE};max-height:0;overflow:hidden;">你參與「${safeEvent}」的數位證書已核發完成，點開即可檢視與下載。</div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${PAGE};">
+<body style="margin:0;padding:0;background-color:${BG};-webkit-text-size-adjust:none;">
+  <div style="display:none;font-size:1px;color:${BG};max-height:0;overflow:hidden;">你參與「${safeEvent}」的數位證書已核發完成，點開即可檢視與下載。</div>
+
+  <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" align="center" style="width:100%;max-width:600px;margin:0 auto;background-color:${BG};">
+
+    <!-- Google 四色裝飾條 -->
     <tr>
-      <td align="center" style="padding:40px 16px;">
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:100%;max-width:600px;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.4);">
+      <td style="padding:40px 0 0;font-size:0;line-height:0;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="height:4px;background:${ACCENT};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_R};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_Y};" width="25%"></td>
+          <td style="height:4px;background:${ACCENT_G};" width="25%"></td>
+        </tr></table>
+      </td>
+    </tr>
 
-          <!-- Google 四色裝飾條 -->
-          ${colorBar}
+    <!-- Logo 區域：白底確保 logo 黑字可見 -->
+    <tr>
+      <td style="background-color:${LOGO_BG};padding:28px 40px;">
+        <img src="${baseUrl}/email/logo.png" alt="${ORG_NAME}" width="280" style="width:280px;max-width:80%;height:auto;display:block;border:0;">
+      </td>
+    </tr>
 
-          <!-- Logo 區域 -->
+    <!-- 標題 -->
+    <tr>
+      <td style="padding:36px 40px 0;">
+        <h1 style="margin:0;font-family:${FONT};font-size:22px;line-height:1.5;font-weight:700;color:${INK};letter-spacing:-0.2px;">
+          證書核發通知
+        </h1>
+        <p style="margin:8px 0 0;font-family:${FONT};font-size:14px;color:${ACCENT};font-weight:600;letter-spacing:0.3px;">
+          ${safeEvent}
+        </p>
+      </td>
+    </tr>
+
+    <!-- 內文 -->
+    <tr>
+      <td style="padding:24px 40px 0;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
+        <p style="margin:0 0 16px;">親愛的 <strong style="color:${INK};">${safeName}</strong> 同學，您好：</p>
+        <p style="margin:0;">
+          感謝你參與「<strong style="color:${INK};">${safeEvent}</strong>」。
+          你的數位參與證書已核發完成，可以透過下方按鈕隨時檢視、下載與分享，連結長期有效。
+        </p>
+      </td>
+    </tr>
+
+    <!-- CTA 按鈕 -->
+    <tr>
+      <td style="padding:32px 40px 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0">
           <tr>
-            <td style="background-color:${CARD_TOP};padding:32px 40px 28px;">
-              <img src="${baseUrl}/email/logo.png" alt="${ORG_NAME}" width="280" style="width:280px;max-width:80%;height:auto;display:block;border:0;filter:brightness(1.1);">
+            <td style="background-color:${ACCENT};border-radius:8px;">
+              <a href="${certUrl}" style="display:inline-block;padding:14px 36px;font-family:${FONT};font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:0.3px;">檢視我的證書</a>
             </td>
           </tr>
-
-          <!-- 主要內容 -->
-          <tr>
-            <td style="background-color:${CARD_BG};padding:36px 40px 0;">
-              <h1 style="margin:0;font-family:${FONT};font-size:22px;line-height:1.5;font-weight:700;color:${INK};letter-spacing:-0.2px;">
-                📜 證書核發通知
-              </h1>
-              <p style="margin:8px 0 0;font-family:${FONT};font-size:14px;color:${ACCENT};font-weight:600;letter-spacing:0.3px;">
-                ${safeEvent}
-              </p>
-            </td>
-          </tr>
-
-          <tr>
-            <td style="background-color:${CARD_BG};padding:24px 40px 0;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
-              <p style="margin:0 0 16px;">親愛的 <strong style="color:${INK};">${safeName}</strong> 同學，您好：</p>
-              <p style="margin:0;">
-                感謝你參與「<strong style="color:${INK};">${safeEvent}</strong>」。
-                你的數位參與證書已核發完成，可以透過下方按鈕隨時檢視、下載與分享，連結長期有效。
-              </p>
-            </td>
-          </tr>
-
-          <!-- CTA 按鈕 -->
-          <tr>
-            <td style="background-color:${CARD_BG};padding:32px 40px 0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="background-color:${BTN_BG};border-radius:8px;box-shadow:0 2px 8px rgba(66,133,244,0.35);">
-                    <a href="${certUrl}" style="display:inline-block;padding:14px 36px;font-family:${FONT};font-size:15px;font-weight:700;color:#ffffff;text-decoration:none;letter-spacing:0.3px;">✦ 檢視我的證書</a>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- QR Code 區塊 -->
-          <tr>
-            <td style="background-color:${CARD_BG};padding:28px 40px 0;">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:${SURFACE};border:1px solid ${LINE};border-radius:10px;">
-                <tr>
-                  <td width="110" style="padding:16px;" valign="middle">
-                    <div style="background:#ffffff;border-radius:8px;padding:6px;display:inline-block;">
-                      <img src="${qrUrl}" alt="驗證 QR Code" width="92" height="92" style="width:92px;height:92px;display:block;">
-                    </div>
-                  </td>
-                  <td style="padding:16px 16px 16px 4px;font-family:${FONT};font-size:13px;line-height:1.8;color:${MUTED};" valign="middle">
-                    用手機掃描左側 QR Code，<br>即可在其他裝置開啟公開驗證頁面。
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- 證書資訊 -->
-          <tr>
-            <td style="background-color:${CARD_BG};padding:24px 40px 0;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr><td style="border-top:1px solid ${LINE};padding-top:20px;">
-                  <p style="margin:0 0 12px;font-family:${FONT};font-size:11px;font-weight:700;color:${FAINT};text-transform:uppercase;letter-spacing:1.5px;">Certificate Details</p>
-                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:${FONT};">
-${row('證書編號', safeCertNumber)}
-${row('核發日期', safeIssueDate)}
-${row('驗證 ID', safeCertId)}
-                  </table>
-                </td></tr>
-              </table>
-            </td>
-          </tr>
-
-          <!-- 結尾 -->
-          <tr>
-            <td style="background-color:${CARD_BG};padding:28px 40px 36px;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
-              若有任何疑問，歡迎隨時與我們聯繫。<br>
-              <strong style="color:${INK};">${ORG_NAME}</strong> 敬上
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="background-color:${CARD_TOP};padding:24px 40px;border-top:1px solid ${LINE};">
-              <p style="margin:0 0 12px;font-family:${FONT};font-size:13px;text-align:center;">
-                <a href="${certUrl}" style="color:${ACCENT};text-decoration:none;">證書驗證頁</a>
-                <span style="color:${FAINT};padding:0 10px;">·</span>
-                <a href="${baseUrl}" style="color:${ACCENT};text-decoration:none;">社群首頁</a>
-                <span style="color:${FAINT};padding:0 10px;">·</span>
-                <a href="mailto:${CONTACT_ADDRESS}" style="color:${ACCENT};text-decoration:none;">聯絡我們</a>
-              </p>
-              <p style="margin:0 0 4px;font-family:${FONT};font-size:12px;line-height:1.7;color:${FAINT};text-align:center;">
-                此信件由「${ORG_NAME} 證書管理系統」自動發送，請勿直接回覆。
-              </p>
-              <p style="margin:0;font-family:${FONT};font-size:12px;line-height:1.7;color:${FAINT};text-align:center;">
-                © ${year} ${ORG_NAME}. All Rights Reserved.
-              </p>
-            </td>
-          </tr>
-
         </table>
       </td>
     </tr>
+
+    <!-- QR Code 區塊 -->
+    <tr>
+      <td style="padding:28px 40px 0;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color:${SURFACE};border:1px solid ${LINE};border-radius:10px;">
+          <tr>
+            <td width="110" style="padding:16px;" valign="middle">
+              <div style="background:#ffffff;border-radius:8px;padding:6px;display:inline-block;">
+                <img src="${qrUrl}" alt="驗證 QR Code" width="92" height="92" style="width:92px;height:92px;display:block;">
+              </div>
+            </td>
+            <td style="padding:16px 16px 16px 4px;font-family:${FONT};font-size:13px;line-height:1.8;color:${MUTED};" valign="middle">
+              用手機掃描左側 QR Code，<br>即可在其他裝置開啟公開驗證頁面。
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <!-- 證書資訊 -->
+    <tr>
+      <td style="padding:24px 40px 0;">
+        <div style="border-top:1px solid ${LINE};padding-top:20px;">
+          <p style="margin:0 0 12px;font-family:${FONT};font-size:11px;font-weight:700;color:${FAINT};text-transform:uppercase;letter-spacing:1.5px;">Certificate Details</p>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="font-family:${FONT};">
+${row('證書編號', safeCertNumber)}
+${row('核發日期', safeIssueDate)}
+${row('驗證 ID', safeCertId)}
+          </table>
+        </div>
+      </td>
+    </tr>
+
+    <!-- 結尾 -->
+    <tr>
+      <td style="padding:28px 40px 36px;font-family:${FONT};font-size:15px;line-height:1.85;color:${BODY};">
+        若有任何疑問，歡迎隨時與我們聯繫。<br>
+        <strong style="color:${INK};">${ORG_NAME}</strong> 敬上
+      </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+      <td style="padding:24px 40px 40px;border-top:1px solid ${LINE};">
+        <p style="margin:0 0 12px;font-family:${FONT};font-size:13px;text-align:center;">
+          <a href="${certUrl}" style="color:${ACCENT};text-decoration:none;">證書驗證頁</a>
+          <span style="color:${FAINT};padding:0 10px;">·</span>
+          <a href="${baseUrl}" style="color:${ACCENT};text-decoration:none;">社群首頁</a>
+          <span style="color:${FAINT};padding:0 10px;">·</span>
+          <a href="mailto:${CONTACT_ADDRESS}" style="color:${ACCENT};text-decoration:none;">聯絡我們</a>
+        </p>
+        <p style="margin:0 0 4px;font-family:${FONT};font-size:12px;line-height:1.7;color:${FAINT};text-align:center;">
+          此信件由「${ORG_NAME} 證書管理系統」自動發送，請勿直接回覆。
+        </p>
+        <p style="margin:0;font-family:${FONT};font-size:12px;line-height:1.7;color:${FAINT};text-align:center;">
+          &copy; ${year} ${ORG_NAME}. All Rights Reserved.
+        </p>
+      </td>
+    </tr>
+
   </table>
 </body>
 </html>`;
