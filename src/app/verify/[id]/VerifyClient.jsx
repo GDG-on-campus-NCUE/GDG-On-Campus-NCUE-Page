@@ -94,7 +94,7 @@ export default function VerifyClient({ certificate, signatureValid }) {
                                 <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
                                     <div className="grid gap-5">
                                         <DetailItem icon={UserIcon} label="Recipient" value={certificate.recipient_name} />
-                                        <DetailItem icon={AcademicCapIcon} label="Programme" value={certificate.event_name} />
+                                        <DetailItem icon={AcademicCapIcon} label="Event" value={certificate.event_name} />
                                         <DetailItem icon={IdentificationIcon} label="Certificate No." value={certificate.cert_number} mono />
                                         <DetailItem icon={CalendarIcon} label="Issue Date" value={certificate.issue_date} />
                                     </div>
