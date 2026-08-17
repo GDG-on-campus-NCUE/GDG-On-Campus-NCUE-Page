@@ -27,7 +27,7 @@ function DetailItem({ icon: Icon, label, value, mono }) {
                 <Icon className="h-5 w-5 text-slate-400 dark:text-slate-500" />
             </span>
             <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">{label}</p>
+                <p className="text-xs font-medium text-slate-400 dark:text-slate-500">{label}</p>
                 <p
                     className={`mt-1 break-words text-lg font-bold text-slate-900 dark:text-white ${mono ? 'font-mono text-base tracking-tight' : ''}`}
                 >
@@ -120,8 +120,8 @@ export default function VerifyClient({ certificate, signatureValid }) {
 
                                 <div className="mt-8 flex flex-col items-start justify-between gap-5 border-t border-slate-100 pt-6 dark:border-slate-800 md:flex-row md:items-center lg:mt-10">
                                     <div className="min-w-0">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 dark:text-slate-500">
-                                            Integrity check
+                                        <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
+                                            Integrity Check
                                         </p>
                                         <p
                                             className={`mt-1.5 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${
